@@ -8,10 +8,8 @@
   <meta property="og:title" content="MapSky" />
   <meta property="og:description" content="台灣天氣 · 交通 · 停班停課 · 動態天空" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="assets/icon.svg" />
   <title>MapSky — 天氣與交通，一站掌握</title>
-  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
-  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <link rel="icon" type="image/png" href="assets/icon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -22,8 +20,8 @@
 
   <header class="nav">
     <a class="brand" href="#top">
-      <img class="logo-img" src="assets/icon.svg" width="36" height="36" alt="MapSky" />
-      <img class="wordmark" src="assets/wordmark.svg" height="22" alt="MapSky" />
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
     </a>
     <nav class="nav-links">
       <a href="#features">功能</a>
@@ -162,6 +160,10 @@
 
     <section id="download" class="section cta-block">
       <div class="cta-inner">
+        <div class="cta-brand">
+          <img data-logo="icon" width="56" height="56" alt="" class="logo-img cta" />
+          <img data-logo="wordmark" height="28" alt="MapSky" class="wordmark cta" />
+        </div>
         <h2>取得 MapSky</h2>
         <p>iOS App 準備上架 App Store。官網與後端已上線，歡迎先了解功能與隱私政策。</p>
         <div class="hero-cta">
@@ -174,7 +176,7 @@
 
   <footer class="footer">
     <div class="footer-brand">
-      <img class="logo-img sm" src="assets/icon.svg" width="28" height="28" alt="" />
+      <img class="logo-img sm" data-logo="icon" width="28" height="28" alt="" />
       <span>MapSky</span>
     </div>
     <div class="footer-links">
@@ -184,5 +186,6 @@
     </div>
     <p class="copy">© 2026 MapSky. 天氣與交通資料來源標示於 App 內。</p>
   </footer>
+  <script src="logo-data.js"></script>
 </body>
 </html>
