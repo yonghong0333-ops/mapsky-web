@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>登入 — MapSky</title>
+  <meta name="theme-color" content="#0B1220" />
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .login-wrap { max-width: 420px; margin: 48px auto 80px; padding: 0 20px; }
+    .login-card { background: var(--card); border: 1px solid var(--stroke); border-radius: 24px; padding: 28px 24px 24px; }
+    .login-card h1 { margin: 12px 0 6px; font-size: 24px; letter-spacing: -0.02em; }
+    .login-sub { margin: 0 0 22px; color: var(--muted); font-size: 14px; }
+    .login-brand { display: flex; align-items: center; gap: 12px; }
+    .provider-list { display: grid; gap: 10px; margin-bottom: 18px; }
+    .provider-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--stroke); background: rgba(255,255,255,0.04); color: var(--text); font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; transition: border-color .15s, background .15s; }
+    .provider-btn:hover { border-color: rgba(79,140,255,0.45); background: rgba(79,140,255,0.1); }
+    .divider { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; margin: 8px 0 16px; }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--stroke); }
+    .magic-row { display: flex; gap: 8px; }
+    .magic-row input { flex: 1; min-width: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--stroke); background: rgba(0,0,0,0.25); color: var(--text); font-size: 15px; outline: none; }
+    .magic-row input:focus { border-color: rgba(79,140,255,0.55); }
+    .magic-row button { border: 0; border-radius: 12px; padding: 0 16px; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--primary2)); color: #fff; cursor: pointer; white-space: nowrap; }
+    .magic-row button:disabled { opacity: 0.55; cursor: not-allowed; }
+    .hint { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+    .msg { margin: 12px 0 0; padding: 10px 12px; border-radius: 12px; font-size: 13px; display: none; }
+    .msg.show { display: block; }
+    .msg.ok { background: rgba(61,214,140,0.12); border: 1px solid rgba(61,214,140,0.35); color: #9af0c4; }
+    .msg.err { background: rgba(255,92,108,0.12); border: 1px solid rgba(255,92,108,0.35); color: #ffb3bc; }
+    .otp-box { display: none; margin-top: 14px; }
+    .otp-box.show { display: block; }
+    .account-panel { display: none; }
+    .account-panel.show { display: block; }
+    .account-panel p { color: var(--muted); margin: 0 0 14px; }
+    .account-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  </style>
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <header class="nav">
+    <a class="brand" href="index.html">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <a class="btn btn-sm btn-ghost" href="index.html">回首頁</a>
+  </header>
+
+  <div class="login-wrap">
+    <div class="login-card" id="loginCard">
+      <div class="login-brand">
+        <img class="logo-img" data-logo="icon" width="44" height="44" alt="" />
+        <div>
+          <h1>登入 MapSky</h1>
+          <p class="login-sub" style="margin:0">與 App / mapskyapp 同一套帳號</p>
+        </div>
+      </div>
+
+      <div id="guestPanel">
+        <p class="login-sub">選擇登入方式，或使用 Email 驗證碼。</p>
+        <div class="provider-list" id="providerList">
+          <a class="provider-btn" href="/api/auth/login?provider=google">使用 Google 登入</a>
+          <a class="provider-btn" href="/api/auth/login?provider=github">使用 GitHub 登入</a>
+        </div>
+        <div class="divider">或 Email 驗證碼</div>
+        <div class="magic-row">
+          <input id="emailInput" type="email" placeholder="your@email.com" autocomplete="email" />
+          <button type="button" id="sendBtn">寄送</button>
+        </div>
+        <p class="hint">我們會寄 6 位數驗證碼到你的信箱（與 MapSky 相同流程）。</p>
+        <div class="otp-box" id="otpBox">
+          <div class="magic-row" style="margin-top:10px">
+            <input id="codeInput" type="text" inputmode="numeric" maxlength="6" placeholder="6 位數驗證碼" autocomplete="one-time-code" />
+            <button type="button" id="verifyBtn">驗證</button>
+          </div>
+        </div>
+        <div class="msg" id="msg"></div>
+      </div>
+
+      <div class="account-panel" id="accountPanel">
+        <p id="accountText">你已登入。</p>
+        <div class="account-actions">
+          <a class="btn btn-primary" href="https://mapskyapp.vercel.app/">開啟 MapSky</a>
+          <button type="button" class="btn btn-ghost" id="logoutBtn">登出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    (function () {
+      var msg = document.getElementById("msg");
+      var otpBox = document.getElementById("otpBox");
+      var guestPanel = document.getElementById("guestPanel");
+      var accountPanel = document.getElementById("accountPanel");
+      var providerList = document.getElementById("providerList");
+      var pendingEmail = "";
+
+      function showMsg(text, ok) {
+        msg.textContent = text;
+        msg.className = "msg show " + (ok ? "ok" : "err");
+      }
+
+      function renderLoggedIn(s) {
+        guestPanel.style.display = "none";
+        accountPanel.classList.add("show");
+        document.getElementById("accountText").textContent =
+          "目前登入：" + (MapSkyAuth.displayName(s) || "帳號");
+      }
+
+      function renderGuest() {
+        guestPanel.style.display = "block";
+        accountPanel.classList.remove("show");
+      }
+
+      MapSkyAuth.session().then(function (res) {
+        if (res.body && res.body.loggedIn) renderLoggedIn(res.body);
+        else renderGuest();
+      }).catch(function () { renderGuest(); });
+
+      MapSkyAuth.providers().then(function (res) {
+        var list = (res.body && res.body.providers) || [];
+        var configured = list.filter(function (p) { return p.configured; });
+        if (!configured.length) return;
+        providerList.innerHTML = configured.map(function (p) {
+          return '<a class="provider-btn" href="' + MapSkyAuth.oauthUrl(p.id) + '">使用 ' + p.label + " 登入</a>";
+        }).join("");
+      }).catch(function () {});
+
+      document.getElementById("sendBtn").addEventListener("click", function () {
+        var email = document.getElementById("emailInput").value.trim();
+        if (!email) return showMsg("請輸入 Email", false);
+        pendingEmail = email;
+        document.getElementById("sendBtn").disabled = true;
+        MapSkyAuth.sendMagicLink(email).then(function (res) {
+          document.getElementById("sendBtn").disabled = false;
+          if (res.body && res.body.ok) {
+            otpBox.classList.add("show");
+            showMsg("驗證碼已寄出，請到信箱查看。", true);
+          } else {
+            var reason = (res.body && res.body.reason) || "send-failed";
+            var map = {
+              "invalid-email": "Email 格式不正確",
+              "too-soon": "請稍候再試（約 30 秒）",
+              "otp-unavailable": "驗證服務暫時無法使用",
+              "send-failed": "寄信失敗，請稍後再試"
+            };
+            showMsg(map[reason] || ("寄送失敗：" + reason), false);
+          }
+        }).catch(function () {
+          document.getElementById("sendBtn").disabled = false;
+          showMsg("網路錯誤，請稍後再試", false);
+        });
+      });
+
+      document.getElementById("verifyBtn").addEventListener("click", function () {
+        var code = document.getElementById("codeInput").value.trim();
+        if (!pendingEmail) pendingEmail = document.getElementById("emailInput").value.trim();
+        if (!pendingEmail || !code) return showMsg("請輸入 Email 與驗證碼", false);
+        document.getElementById("verifyBtn").disabled = true;
+        MapSkyAuth.verifyCode(pendingEmail, code).then(function (res) {
+          document.getElementById("verifyBtn").disabled = false;
+          if (res.body && res.body.ok) {
+            showMsg("登入成功", true);
+            return MapSkyAuth.session().then(function (s) {
+              if (s.body && s.body.loggedIn) {
+                renderLoggedIn(s.body);
+                MapSkyAuth.updateNav(s.body);
+              }
+            });
+          }
+          var reason = (res.body && res.body.reason) || "wrong-code";
+          var map = {
+            "wrong-code": "驗證碼錯誤",
+            "too-many-attempts": "嘗試次數過多，請重新寄送",
+            "invalid-code": "請輸入 6 位數字",
+            "invalid-email": "Email 格式不正確"
+          };
+          showMsg(map[reason] || ("驗證失敗：" + reason), false);
+        }).catch(function () {
+          document.getElementById("verifyBtn").disabled = false;
+          showMsg("網路錯誤，請稍後再試", false);
+        });
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", function () {
+        MapSkyAuth.logout().then(function () {
+          MapSkyAuth.updateNav({ loggedIn: false });
+          renderGuest();
+          showMsg("已登出", true);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
