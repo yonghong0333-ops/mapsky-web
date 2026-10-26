@@ -64,18 +64,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-weight: 700;
   letter-spacing: 0.02em;
 }
-.logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--primary2));
-  box-shadow: 0 8px 24px rgba(79, 140, 255, 0.35);
-}
-.logo.sm { width: 28px; height: 28px; font-size: 13px; border-radius: 8px; }
-
 .logo-img {
   width: 36px;
   height: 36px;
@@ -386,6 +374,19 @@ ul { margin: 0; padding: 0; list-style: none; }
 .cta-inner h2 { margin: 0 0 10px; font-size: 28px; }
 .cta-inner p { margin: 0 auto 22px; color: var(--muted); max-width: 36em; }
 .cta-inner .hero-cta { justify-content: center; }
+.cta-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.logo-img.cta {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+.wordmark.cta { height: 28px; }
 
 .footer {
   border-top: 1px solid var(--stroke);
