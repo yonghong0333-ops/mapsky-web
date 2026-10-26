@@ -76,6 +76,26 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .logo.sm { width: 28px; height: 28px; font-size: 13px; border-radius: 8px; }
 
+.logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: block;
+  box-shadow: 0 8px 24px rgba(79, 140, 255, 0.28);
+}
+.logo-img.sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.wordmark {
+  height: 22px;
+  width: auto;
+  display: block;
+  opacity: 0.95;
+}
+
 .nav-links {
   display: flex;
   gap: 18px;
