@@ -3,7 +3,7 @@
   // 官網只做介紹與登入，不代理 /app。
   var AUTH_ORIGIN = "https://mapskyapp.vercel.app";
   var API_PROXY = "/api/auth";
-  var WEB_RETURN = "https://mapskyweb.vercel.app/login.html";
+  var WEB_RETURN = "https://mapskyweb.vercel.app/login";
 
   function $all(sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
@@ -97,11 +97,11 @@
     $all("[data-auth-slot]").forEach(function (el) {
       if (s && s.loggedIn) {
         el.innerHTML =
-          '<a class="btn btn-sm btn-ghost" href="login.html">' +
+          '<a class="btn btn-sm btn-ghost" href="/login">' +
           escapeHtml(displayName(s)) +
           "</a>";
       } else {
-        el.innerHTML = '<a class="btn btn-sm btn-primary" href="login.html">登入</a>';
+        el.innerHTML = '<a class="btn btn-sm btn-primary" href="/login">登入</a>';
       }
     });
   }
