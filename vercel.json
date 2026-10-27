@@ -3,16 +3,21 @@
     { "source": "/api/:path*", "destination": "https://mapskyapp.vercel.app/api/:path*" },
     { "source": "/app", "destination": "https://mapskyapp.vercel.app/" },
     { "source": "/app/", "destination": "https://mapskyapp.vercel.app/" },
+    { "source": "/style.css", "destination": "https://mapskyapp.vercel.app/style.css" },
+    { "source": "/theme-tech-glass.css", "destination": "https://mapskyapp.vercel.app/theme-tech-glass.css" },
+    { "source": "/theme-tech-glass.css/(.*)", "destination": "https://mapskyapp.vercel.app/theme-tech-glass.css" },
     { "source": "/web-shim.js", "destination": "https://mapskyapp.vercel.app/web-shim.js" },
     { "source": "/chart-polish.js", "destination": "https://mapskyapp.vercel.app/chart-polish.js" },
     { "source": "/sun-moon-detail.js", "destination": "https://mapskyapp.vercel.app/sun-moon-detail.js" },
     { "source": "/offline-banner.js", "destination": "https://mapskyapp.vercel.app/offline-banner.js" },
+    { "source": "/manifest.json", "destination": "https://mapskyapp.vercel.app/manifest.json" },
     { "source": "/icons/:path*", "destination": "https://mapskyapp.vercel.app/icons/:path*" },
     { "source": "/images/:path*", "destination": "https://mapskyapp.vercel.app/images/:path*" },
     { "source": "/login-icons/:path*", "destination": "https://mapskyapp.vercel.app/login-icons/:path*" },
     { "source": "/sounds/:path*", "destination": "https://mapskyapp.vercel.app/sounds/:path*" },
     { "source": "/fonts/:path*", "destination": "https://mapskyapp.vercel.app/fonts/:path*" },
-    { "source": "/assets/app/:path*", "destination": "https://mapskyapp.vercel.app/assets/:path*" }
+    { "source": "/assets/:path*", "destination": "https://mapskyapp.vercel.app/assets/:path*" },
+    { "source": "/terms", "destination": "https://mapskyapp.vercel.app/terms" }
   ],
   "headers": [
     {
