@@ -38,6 +38,7 @@
       </div>
     </div>
   </header>
+  <div class="nav-spacer" id="navSpacer" aria-hidden="true"></div>
 
   <main id="top">
     <section class="hero">
@@ -82,7 +83,6 @@
             <div class="phone-screen">
               <div class="sky-layer"></div>
               <div class="phone-ui app-ui">
-                <!-- Main weather glass card -->
                 <div class="glass-card weather-main">
                   <div class="loc">📍 前鎮區</div>
                   <div class="weather-row">
@@ -103,7 +103,6 @@
                   <div class="wx-desc">陰時多雲短暫雨</div>
                 </div>
 
-                <!-- Hourly strip -->
                 <div class="glass-card hourly">
                   <div class="hourly-row">
                     <div class="h-item active"><span class="h-t">現在</span><span class="h-i">☀️</span><span class="h-v">30°</span></div>
@@ -113,14 +112,12 @@
                   </div>
                 </div>
 
-                <!-- Mini stats -->
                 <div class="mini-grid">
                   <div class="glass-card mini"><span class="m-label">風力</span><span class="m-val">2 級</span></div>
                   <div class="glass-card mini"><span class="m-label">紫外線</span><span class="m-val">0</span></div>
                   <div class="glass-card mini"><span class="m-label">體感</span><span class="m-val">32°</span></div>
                 </div>
 
-                <!-- Bottom chips -->
                 <div class="chips app-chips">
                   <span>紅線 3 分</span>
                   <span>正常上班</span>
@@ -225,23 +222,41 @@
   <script src="auth.js"></script>
   <script>
     (function () {
+      var nav = document.getElementById("topNav");
+      var spacer = document.getElementById("navSpacer");
       var toggle = document.getElementById("navToggle");
       var panel = document.getElementById("navRight");
-      if (!toggle || !panel) return;
-      toggle.addEventListener("click", function () {
-        var open = panel.classList.toggle("open");
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-        toggle.classList.toggle("open", open);
-        document.body.classList.toggle("nav-open", open);
-      });
-      panel.querySelectorAll("a").forEach(function (a) {
-        a.addEventListener("click", function () {
-          panel.classList.remove("open");
-          toggle.classList.remove("open");
-          toggle.setAttribute("aria-expanded", "false");
-          document.body.classList.remove("nav-open");
+      var threshold = 48;
+
+      function onScroll() {
+        var scrolled = window.scrollY > threshold;
+        if (nav) {
+          nav.classList.toggle("nav-pill", scrolled);
+        }
+        if (spacer) {
+          spacer.classList.toggle("active", scrolled);
+        }
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      if (toggle && panel) {
+        toggle.addEventListener("click", function () {
+          var open = panel.classList.toggle("open");
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          toggle.classList.toggle("open", open);
+          document.body.classList.toggle("nav-open", open);
         });
-      });
+        panel.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            panel.classList.remove("open");
+            toggle.classList.remove("open");
+            toggle.setAttribute("aria-expanded", "false");
+            document.body.classList.remove("nav-open");
+          });
+        });
+      }
     })();
   </script>
 </body>
