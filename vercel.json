@@ -1,6 +1,15 @@
 {
   "rewrites": [
-    { "source": "/api/auth/:path*", "destination": "https://mapskyapp.vercel.app/api/auth/:path*" }
+    { "source": "/api/auth/:path*", "destination": "https://mapskyapp.vercel.app/api/auth/:path*" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/features", "destination": "/features.html" },
+    { "source": "/login", "destination": "/login.html" }
+  ],
+  "redirects": [
+    { "source": "/privacy.html", "destination": "/privacy", "permanent": true },
+    { "source": "/features.html", "destination": "/features", "permanent": true },
+    { "source": "/login.html", "destination": "/login", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "headers": [
     {
