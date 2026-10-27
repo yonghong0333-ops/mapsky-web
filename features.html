@@ -12,15 +12,15 @@
     .page-hero {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 72px 22px 40px;
+      padding: 88px 22px 48px;
       text-align: center;
     }
     .page-hero h1 {
       margin: 0 0 14px;
-      font-size: clamp(36px, 6vw, 48px);
+      font-size: clamp(36px, 6vw, 52px);
       font-weight: 600;
-      letter-spacing: -0.015em;
-      line-height: 1.1;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
     }
     .page-hero p {
       margin: 0 auto;
@@ -29,61 +29,236 @@
       font-size: 19px;
       line-height: 1.4;
     }
-    .feature-block {
-      max-width: var(--max);
+    .hint-scroll {
+      margin-top: 36px;
+      color: var(--text-dim);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      opacity: 0.75;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px) scale(0.985);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+
+    .story {
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 28px 22px;
+      padding: 24px 22px 40px;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 72px;
     }
-    .feature-row {
+    .story-section {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      align-items: stretch;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: center;
     }
-    .feature-card {
-      background: #1d1d1f;
-      border-radius: 22px;
-      padding: 32px 28px;
-    }
-    .feature-card.wide { grid-column: 1 / -1; }
-    .feature-card .tag {
+    .story-section.reverse .story-copy { order: 2; }
+    .story-section.reverse .story-visual { order: 1; }
+
+    .story-copy .tag {
       display: inline-block;
       margin: 0 0 12px;
       color: var(--blue);
       font-size: 14px;
       font-weight: 600;
     }
-    .feature-card h2 {
-      margin: 0 0 12px;
-      font-size: 28px;
+    .story-copy h2 {
+      margin: 0 0 14px;
+      font-size: clamp(28px, 4vw, 36px);
       font-weight: 600;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.02em;
       line-height: 1.15;
     }
-    .feature-card p {
-      margin: 0;
+    .story-copy p {
+      margin: 0 0 12px;
       color: var(--text-dim);
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.5;
     }
-    .feature-card ul {
-      margin: 14px 0 0;
-      padding: 0 0 0 1.1em;
+    .story-copy ul {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .story-copy li {
+      position: relative;
+      padding: 8px 0 8px 22px;
       color: var(--text-dim);
       font-size: 15px;
-      line-height: 1.55;
+      line-height: 1.45;
+      border-top: 1px solid rgba(255,255,255,0.08);
     }
-    .feature-card li { margin: 6px 0; }
+    .story-copy li:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .story-copy li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 15px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--blue-btn);
+    }
+
+    .story-visual {
+      border-radius: 24px;
+      overflow: hidden;
+      min-height: 320px;
+      background: #1c1c1e;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    }
+    .story-visual img {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      object-fit: cover;
+      display: block;
+    }
+    .visual-sky {
+      min-height: 340px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35)),
+        url("https://mapskyapp.vercel.app/backgrounds/app-bg.jpg") center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22px;
+    }
+    .visual-sky .chip-row { display: grid; gap: 8px; }
+    .visual-sky .chip {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.16);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      width: fit-content;
+    }
+    .visual-map {
+      min-height: 340px;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(41,151,255,0.25), transparent 45%),
+        radial-gradient(circle at 70% 60%, rgba(255,214,10,0.18), transparent 40%),
+        linear-gradient(160deg, #1a2333, #0b1220 55%, #1d1d1f);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .map-card {
+      width: min(100%, 280px);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 18px;
+      color: #fff;
+    }
+    .map-card h3 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
+    .map-card p { margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; }
+    .swatch {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .swatch span {
+      width: 28px;
+      height: 10px;
+      border-radius: 6px;
+    }
+    .swatch .r { background: #ff453a; }
+    .swatch .y { background: #ffd60a; }
+    .swatch .g { background: #30d158; }
+    .swatch .b { background: #64d2ff; }
+
+    .visual-transit {
+      min-height: 340px;
+      background: linear-gradient(180deg, #111 0%, #1c1c1e 100%);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+    .line-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.red { background: #e60012; }
+    .dot.orange { background: #f59c00; }
+    .dot.green { background: #00a651; }
+    .dot.blue { background: #0070cc; }
+
+    .visual-bike {
+      min-height: 340px;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)),
+        url("https://mapskyapp.vercel.app/login-bg.jpg") center/cover no-repeat;
+      display: grid;
+      place-items: end stretch;
+      padding: 22px;
+    }
+    .bike-card {
+      border-radius: 16px;
+      background: rgba(20,20,22,0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 16px 18px;
+      color: #fff;
+    }
+    .bike-card strong { display: block; font-size: 16px; margin-bottom: 4px; }
+    .bike-card span { color: rgba(255,255,255,0.75); font-size: 14px; }
+
     .page-cta {
       max-width: var(--max);
-      margin: 24px auto 100px;
+      margin: 32px auto 100px;
       padding: 0 22px;
     }
-    @media (max-width: 800px) {
-      .feature-row { grid-template-columns: 1fr; }
+
+    @media (max-width: 860px) {
+      .story-section,
+      .story-section.reverse {
+        grid-template-columns: 1fr;
+      }
+      .story-section.reverse .story-copy,
+      .story-section.reverse .story-visual { order: unset; }
+      .story { gap: 56px; }
+      .story-visual,
+      .story-visual img,
+      .visual-sky,
+      .visual-map,
+      .visual-transit,
+      .visual-bike { min-height: 260px; }
     }
   </style>
 </head>
@@ -114,38 +289,65 @@
 
   <main>
     <section class="page-hero">
-      <h1>專為出門決策而設計。</h1>
-      <p>天氣、班次、停班停課與動態天空，收在同一個 MapSky。</p>
+      <h1 class="reveal">專為出門決策而設計。</h1>
+      <p class="reveal reveal-delay-1">往下捲動，展開每一項功能與畫面。</p>
+      <p class="hint-scroll reveal reveal-delay-2">向下捲動</p>
     </section>
 
-    <section class="feature-block">
-      <div class="feature-row">
-        <article class="feature-card wide">
+    <div class="story">
+      <!-- Weather -->
+      <section class="story-section">
+        <div class="story-copy reveal">
           <span class="tag">天氣</span>
           <h2>即時天氣與動態天空。</h2>
           <p>
-            顯示溫度、體感、濕度、紫外線、風向風速與雲量，並依真實日出日落與天候切換天空背景。
-            白天、黃昏、夜晚與多雲狀態會反映在畫面中，讓你一眼感受現在的天色。
+            溫度、體感、濕度、紫外線與風向風速一次掌握。
+            天空會依日出日落與雲量變化，讓畫面跟著真實天候走。
           </p>
           <ul>
-            <li>中央氣象署相關氣象資料整合</li>
+            <li>氣象資料整合，重點資訊前置</li>
             <li>日出、日落與每週天文資訊</li>
-            <li>隨天候變化的動態天空與城市剪影</li>
+            <li>白天／黃昏／夜晚與多雲狀態</li>
           </ul>
-        </article>
-        <article class="feature-card">
+        </div>
+        <div class="story-visual reveal reveal-delay-1" aria-hidden="true">
+          <div class="visual-sky">
+            <div class="chip-row">
+              <div class="chip">26° · 多雲 · 高雄</div>
+              <div class="chip">紫外線 中等</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transit -->
+      <section class="story-section reverse">
+        <div class="story-copy reveal">
           <span class="tag">軌道運輸</span>
           <h2>捷運 · 台鐵 · 高鐵。</h2>
           <p>
-            站點、班次與到站資訊一次掌握。支援當日時刻表與即時狀態，減少在多個 App 之間切換。
+            站點、班次與到站資訊收在同一處。支援當日時刻表與即時狀態，
+            過站班次自動淡出，少在多個 App 之間切換。
           </p>
           <ul>
             <li>高雄捷運紅線、橘線與輕軌</li>
             <li>台鐵、高鐵班次與站序</li>
-            <li>當日剩餘班次，過站自動淡出</li>
+            <li>當日剩餘班次，過站自動整理</li>
           </ul>
-        </article>
-        <article class="feature-card">
+        </div>
+        <div class="story-visual reveal reveal-delay-1" aria-hidden="true">
+          <div class="visual-transit">
+            <div class="line-pill"><span class="dot red"></span>紅線 · 約 3 分</div>
+            <div class="line-pill"><span class="dot orange"></span>橘線 · 約 6 分</div>
+            <div class="line-pill"><span class="dot green"></span>台鐵 · 準點</div>
+            <div class="line-pill"><span class="dot blue"></span>高鐵 · 12:40</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- YouBike -->
+      <section class="story-section">
+        <div class="story-copy reveal">
           <span class="tag">共享單車</span>
           <h2>YouBike 站點。</h2>
           <p>
@@ -155,40 +357,81 @@
             <li>站點列表與數量更新</li>
             <li>與交通資訊同一套介面</li>
           </ul>
-        </article>
-        <article class="feature-card wide">
+        </div>
+        <div class="story-visual reveal reveal-delay-1" aria-hidden="true">
+          <div class="visual-bike">
+            <div class="bike-card">
+              <strong>YouBike 站點</strong>
+              <span>可借 12 · 可還 8</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Closures -->
+      <section class="story-section reverse">
+        <div class="story-copy reveal">
           <span class="tag">停班停課</span>
           <h2>縣市地圖，一眼看懂。</h2>
           <p>
-            依人事行政總處公告著色：全天停班停課、部分停班停課、正常、尚未宣布。
-            支援今日與明日視圖，晚間自動換日；提早公告的縣市不會被覆蓋。
+            依人事行政總處公告著色：全天、部分、正常、尚未宣布。
+            支援今日與明日；晚間自動換日，提早公告不會被覆蓋。
           </p>
           <ul>
             <li>全台縣市地圖著色</li>
             <li>分區放假與離島標示</li>
             <li>後台可手動調整與預告</li>
           </ul>
-        </article>
-        <article class="feature-card">
-          <span class="tag">帳號</span>
-          <h2>同一套登入。</h2>
+        </div>
+        <div class="story-visual reveal reveal-delay-1" aria-hidden="true">
+          <div class="visual-map">
+            <div class="map-card">
+              <h3>停班停課狀態</h3>
+              <p>全天 · 部分 · 正常 · 尚未宣布</p>
+              <div class="swatch">
+                <span class="r" title="全天"></span>
+                <span class="y" title="部分"></span>
+                <span class="g" title="正常"></span>
+                <span class="b" title="尚未宣布"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Account -->
+      <section class="story-section">
+        <div class="story-copy reveal">
+          <span class="tag">帳號與在地</span>
+          <h2>同一套登入，為台灣而生。</h2>
           <p>
             Google、X、Microsoft、Discord、GitHub、Yahoo 或 Email 驗證碼，
-            與 MapSky App 共用同一帳號體系。
+            與 MapSky App 共用帳號。資料來源包含氣象、TDX 與人事行政總處。
           </p>
-        </article>
-        <article class="feature-card">
-          <span class="tag">體驗</span>
-          <h2>為台灣在地而生。</h2>
-          <p>
-            資料來源包含氣象、TDX 大眾運輸與人事行政總處停班停課，
-            介面以繁體中文與在地情境為主。
-          </p>
-        </article>
-      </div>
-    </section>
+          <ul>
+            <li>多種第三方登入與 Email 驗證碼</li>
+            <li>繁體中文與在地情境</li>
+            <li>官網與 App 同一帳號體系</li>
+          </ul>
+        </div>
+        <div class="story-visual reveal reveal-delay-1" aria-hidden="true">
+          <div class="visual-transit" style="align-items:stretch">
+            <div class="line-pill" style="justify-content:center;gap:14px">
+              <img src="https://mapskyapp.vercel.app/login-icons/google.png" width="22" height="22" alt="" />
+              <img src="https://mapskyapp.vercel.app/login-icons/x.svg" width="22" height="22" alt="" />
+              <img src="https://mapskyapp.vercel.app/login-icons/microsoft.png" width="22" height="22" alt="" />
+              <img src="https://mapskyapp.vercel.app/login-icons/github.png" width="22" height="22" alt="" />
+              <img src="https://mapskyapp.vercel.app/login-icons/discord.png" width="22" height="22" alt="" />
+              <img src="https://mapskyapp.vercel.app/login-icons/yahoo.png" width="22" height="22" alt="" />
+            </div>
+            <div class="line-pill" style="justify-content:center">Email 驗證碼</div>
+            <div class="line-pill" style="justify-content:center">與 App 同一帳號</div>
+          </div>
+        </div>
+      </section>
+    </div>
 
-    <section class="page-cta">
+    <section class="page-cta reveal">
       <div class="cta-box">
         <h2>準備好了嗎？</h2>
         <p>登入後即可使用同一套 MapSky 帳號。</p>
@@ -222,19 +465,39 @@
     (function () {
       var toggle = document.getElementById("navToggle");
       var panel = document.getElementById("navRight");
-      if (!toggle || !panel) return;
-      toggle.addEventListener("click", function () {
-        var open = panel.classList.toggle("open");
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-        toggle.classList.toggle("open", open);
-      });
-      panel.querySelectorAll("a").forEach(function (a) {
-        a.addEventListener("click", function () {
-          panel.classList.remove("open");
-          toggle.classList.remove("open");
-          toggle.setAttribute("aria-expanded", "false");
+      if (toggle && panel) {
+        toggle.addEventListener("click", function () {
+          var open = panel.classList.toggle("open");
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          toggle.classList.toggle("open", open);
         });
-      });
+        panel.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            panel.classList.remove("open");
+            toggle.classList.remove("open");
+            toggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      // Scroll reveal
+      var nodes = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        nodes.forEach(function (el) { el.classList.add("in"); });
+        return;
+      }
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in");
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.18, rootMargin: "0px 0px -8% 0px" }
+      );
+      nodes.forEach(function (el) { io.observe(el); });
     })();
   </script>
 </body>
