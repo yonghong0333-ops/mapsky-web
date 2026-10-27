@@ -37,13 +37,11 @@
       opacity: 0.75;
     }
 
-    /* Scroll reveal */
     .reveal {
       opacity: 0;
       transform: translateY(36px) scale(0.985);
       transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
                   transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: opacity, transform;
     }
     .reveal.in {
       opacity: 1;
@@ -121,13 +119,18 @@
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 24px 60px rgba(0,0,0,0.35);
     }
-    .story-visual img {
-      width: 100%;
-      height: 100%;
-      min-height: 320px;
-      object-fit: cover;
+    /* Prevent global img{max-width:100%} from blowing up icons */
+    .story-visual img.icon-sm,
+    .provider-icons img {
+      width: 28px !important;
+      height: 28px !important;
+      max-width: 28px !important;
+      max-height: 28px !important;
+      object-fit: contain;
+      flex: 0 0 28px;
       display: block;
     }
+
     .visual-sky {
       min-height: 340px;
       background:
@@ -150,6 +153,7 @@
       color: #fff;
       width: fit-content;
     }
+
     .visual-map {
       min-height: 340px;
       background:
@@ -170,17 +174,8 @@
     }
     .map-card h3 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
     .map-card p { margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; }
-    .swatch {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-    .swatch span {
-      width: 28px;
-      height: 10px;
-      border-radius: 6px;
-    }
+    .swatch { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+    .swatch span { width: 28px; height: 10px; border-radius: 6px; }
     .swatch .r { background: #ff453a; }
     .swatch .y { background: #ffd60a; }
     .swatch .g { background: #30d158; }
@@ -239,6 +234,37 @@
     .bike-card strong { display: block; font-size: 16px; margin-bottom: 4px; }
     .bike-card span { color: rgba(255,255,255,0.75); font-size: 14px; }
 
+    .visual-auth {
+      min-height: 340px;
+      background: linear-gradient(180deg, #141416 0%, #1c1c1e 100%);
+      padding: 28px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+      align-items: stretch;
+    }
+    .provider-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .auth-note {
+      text-align: center;
+      color: rgba(255,255,255,0.78);
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
     .page-cta {
       max-width: var(--max);
       margin: 32px auto 100px;
@@ -247,18 +273,16 @@
 
     @media (max-width: 860px) {
       .story-section,
-      .story-section.reverse {
-        grid-template-columns: 1fr;
-      }
+      .story-section.reverse { grid-template-columns: 1fr; }
       .story-section.reverse .story-copy,
       .story-section.reverse .story-visual { order: unset; }
       .story { gap: 56px; }
       .story-visual,
-      .story-visual img,
       .visual-sky,
       .visual-map,
       .visual-transit,
-      .visual-bike { min-height: 260px; }
+      .visual-bike,
+      .visual-auth { min-height: 260px; }
     }
   </style>
 </head>
@@ -295,15 +319,11 @@
     </section>
 
     <div class="story">
-      <!-- Weather -->
       <section class="story-section">
         <div class="story-copy reveal">
           <span class="tag">天氣</span>
           <h2>即時天氣與動態天空。</h2>
-          <p>
-            溫度、體感、濕度、紫外線與風向風速一次掌握。
-            天空會依日出日落與雲量變化，讓畫面跟著真實天候走。
-          </p>
+          <p>溫度、體感、濕度、紫外線與風向風速一次掌握。天空會依日出日落與雲量變化。</p>
           <ul>
             <li>氣象資料整合，重點資訊前置</li>
             <li>日出、日落與每週天文資訊</li>
@@ -320,15 +340,11 @@
         </div>
       </section>
 
-      <!-- Transit -->
       <section class="story-section reverse">
         <div class="story-copy reveal">
           <span class="tag">軌道運輸</span>
           <h2>捷運 · 台鐵 · 高鐵。</h2>
-          <p>
-            站點、班次與到站資訊收在同一處。支援當日時刻表與即時狀態，
-            過站班次自動淡出，少在多個 App 之間切換。
-          </p>
+          <p>站點、班次與到站資訊收在同一處。支援當日時刻表與即時狀態。</p>
           <ul>
             <li>高雄捷運紅線、橘線與輕軌</li>
             <li>台鐵、高鐵班次與站序</li>
@@ -345,14 +361,11 @@
         </div>
       </section>
 
-      <!-- YouBike -->
       <section class="story-section">
         <div class="story-copy reveal">
           <span class="tag">共享單車</span>
           <h2>YouBike 站點。</h2>
-          <p>
-            查看附近站點可借、可還數量，搭配定位快速決定要不要騎車接駁。
-          </p>
+          <p>查看附近站點可借、可還數量，搭配定位快速決定要不要騎車接駁。</p>
           <ul>
             <li>站點列表與數量更新</li>
             <li>與交通資訊同一套介面</li>
@@ -368,15 +381,11 @@
         </div>
       </section>
 
-      <!-- Closures -->
       <section class="story-section reverse">
         <div class="story-copy reveal">
           <span class="tag">停班停課</span>
           <h2>縣市地圖，一眼看懂。</h2>
-          <p>
-            依人事行政總處公告著色：全天、部分、正常、尚未宣布。
-            支援今日與明日；晚間自動換日，提早公告不會被覆蓋。
-          </p>
+          <p>依人事行政總處公告著色，支援今日與明日；晚間自動換日。</p>
           <ul>
             <li>全台縣市地圖著色</li>
             <li>分區放假與離島標示</li>
@@ -389,17 +398,16 @@
               <h3>停班停課狀態</h3>
               <p>全天 · 部分 · 正常 · 尚未宣布</p>
               <div class="swatch">
-                <span class="r" title="全天"></span>
-                <span class="y" title="部分"></span>
-                <span class="g" title="正常"></span>
-                <span class="b" title="尚未宣布"></span>
+                <span class="r"></span>
+                <span class="y"></span>
+                <span class="g"></span>
+                <span class="b"></span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Account -->
       <section class="story-section">
         <div class="story-copy reveal">
           <span class="tag">帳號與在地</span>
@@ -415,17 +423,17 @@
           </ul>
         </div>
         <div class="story-visual reveal reveal-delay-1" aria-hidden="true">
-          <div class="visual-transit" style="align-items:stretch">
-            <div class="line-pill" style="justify-content:center;gap:14px">
-              <img src="https://mapskyapp.vercel.app/login-icons/google.png" width="22" height="22" alt="" />
-              <img src="https://mapskyapp.vercel.app/login-icons/x.svg" width="22" height="22" alt="" />
-              <img src="https://mapskyapp.vercel.app/login-icons/microsoft.png" width="22" height="22" alt="" />
-              <img src="https://mapskyapp.vercel.app/login-icons/github.png" width="22" height="22" alt="" />
-              <img src="https://mapskyapp.vercel.app/login-icons/discord.png" width="22" height="22" alt="" />
-              <img src="https://mapskyapp.vercel.app/login-icons/yahoo.png" width="22" height="22" alt="" />
+          <div class="visual-auth">
+            <div class="provider-icons">
+              <img class="icon-sm" src="https://mapskyapp.vercel.app/login-icons/google.png" width="28" height="28" alt="Google" />
+              <img class="icon-sm" src="https://mapskyapp.vercel.app/login-icons/x.svg" width="28" height="28" alt="X" />
+              <img class="icon-sm" src="https://mapskyapp.vercel.app/login-icons/microsoft.png" width="28" height="28" alt="Microsoft" />
+              <img class="icon-sm" src="https://mapskyapp.vercel.app/login-icons/discord.png" width="28" height="28" alt="Discord" />
+              <img class="icon-sm" src="https://mapskyapp.vercel.app/login-icons/github.png" width="28" height="28" alt="GitHub" />
+              <img class="icon-sm" src="https://mapskyapp.vercel.app/login-icons/yahoo.png" width="28" height="28" alt="Yahoo" />
             </div>
-            <div class="line-pill" style="justify-content:center">Email 驗證碼</div>
-            <div class="line-pill" style="justify-content:center">與 App 同一帳號</div>
+            <div class="auth-note">Email 驗證碼</div>
+            <div class="auth-note">與 App 同一帳號</div>
           </div>
         </div>
       </section>
@@ -480,7 +488,6 @@
         });
       }
 
-      // Scroll reveal
       var nodes = document.querySelectorAll(".reveal");
       if (!("IntersectionObserver" in window)) {
         nodes.forEach(function (el) { el.classList.add("in"); });
