@@ -7,6 +7,8 @@
   --blue: #0066cc;
   --blue-btn: #0071e3;
   --blue-btn-hover: #0077ed;
+  --btn-dark: #1d1d1f;
+  --btn-dark-hover: #000000;
   --nav-h: 64px;
   --max: 980px;
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
@@ -34,7 +36,6 @@ a:hover { text-decoration: underline; }
 img { display: block; max-width: 100%; }
 .bg-glow { display: none; }
 
-/* —— Full nav bar (top) —— */
 .nav {
   position: sticky;
   top: 0;
@@ -57,7 +58,6 @@ body.is-scrolled .nav {
   pointer-events: none;
 }
 
-/* —— Floating pill (appears on scroll) —— */
 .nav-pill-bar {
   position: fixed;
   top: 12px;
@@ -92,9 +92,7 @@ body.is-scrolled .nav-pill-bar {
   transform: translateX(-50%) translateY(0);
 }
 
-.nav-pill-bar .brand {
-  gap: 0;
-}
+.nav-pill-bar .brand { gap: 0; }
 .nav-pill-bar .brand .logo-img {
   width: 28px;
   height: 28px;
@@ -109,11 +107,6 @@ body.is-scrolled .nav-pill-bar {
 .nav-pill-bar .btn-sm {
   padding: 8px 14px;
   font-size: 13px;
-  background: #1d1d1f;
-  color: #fff !important;
-}
-.nav-pill-bar .btn-sm:hover {
-  background: #000;
 }
 .nav-pill-bar .nav-toggle {
   display: inline-flex;
@@ -122,9 +115,7 @@ body.is-scrolled .nav-pill-bar {
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.04);
 }
-.nav-pill-bar .nav-toggle span {
-  width: 14px;
-}
+.nav-pill-bar .nav-toggle span { width: 14px; }
 
 .brand {
   display: flex;
@@ -205,7 +196,6 @@ body.is-scrolled .nav-pill-bar {
   background: var(--text);
   transition: transform 0.25s ease;
 }
-/* 2-line icon → X when open */
 .nav-toggle.open span:nth-child(1) { transform: translateY(4.25px) rotate(45deg); }
 .nav-toggle.open span:nth-child(2) { transform: translateY(-4.25px) rotate(-45deg); }
 
@@ -230,11 +220,12 @@ body.is-scrolled .nav-pill-bar {
   font-size: 14px;
   font-weight: 500;
 }
+/* Primary / 登入：黑底白字 */
 .btn-primary {
-  background: var(--blue-btn);
+  background: var(--btn-dark);
   color: #fff !important;
 }
-.btn-primary:hover { background: var(--blue-btn-hover); }
+.btn-primary:hover { background: var(--btn-dark-hover); }
 .btn-ghost {
   background: transparent;
   color: var(--blue) !important;
@@ -391,9 +382,7 @@ main { position: relative; }
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
-.weather-main {
-  padding: 14px 14px 12px;
-}
+.weather-main { padding: 14px 14px 12px; }
 .weather-main .loc {
   font-size: 12px;
   font-weight: 600;
@@ -413,10 +402,7 @@ main { position: relative; }
   line-height: 1;
   color: #1d1d1f;
 }
-.wx-icon {
-  flex-shrink: 0;
-  opacity: 0.95;
-}
+.wx-icon { flex-shrink: 0; opacity: 0.95; }
 .wx-meta {
   display: flex;
   justify-content: space-between;
@@ -432,9 +418,7 @@ main { position: relative; }
   color: rgba(0, 0, 0, 0.65);
 }
 
-.hourly {
-  padding: 10px 8px;
-}
+.hourly { padding: 10px 8px; }
 .hourly-row {
   display: flex;
   gap: 4px;
@@ -456,9 +440,7 @@ main { position: relative; }
   background: rgba(255, 255, 255, 0.55);
   color: #1d1d1f;
 }
-.h-item.sunset {
-  background: rgba(255, 200, 120, 0.35);
-}
+.h-item.sunset { background: rgba(255, 200, 120, 0.35); }
 .h-t { font-weight: 600; font-size: 9px; }
 .h-i { font-size: 14px; line-height: 1; }
 .h-v { font-weight: 600; font-size: 11px; color: #1d1d1f; }
@@ -747,8 +729,8 @@ main { position: relative; }
   outline: none;
 }
 .magic-row input:focus {
-  border-color: var(--blue-btn);
-  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.18);
+  border-color: var(--btn-dark);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
 }
 .magic-row button {
   border: 0;
@@ -757,11 +739,12 @@ main { position: relative; }
   font-weight: 500;
   font-size: 15px;
   font-family: inherit;
-  background: var(--blue-btn);
+  background: var(--btn-dark);
   color: #fff;
   cursor: pointer;
   white-space: nowrap;
 }
+.magic-row button:hover { background: var(--btn-dark-hover); }
 .magic-row button:disabled { opacity: 0.5; cursor: not-allowed; }
 .hint { margin: 10px 0 0; font-size: 13px; color: var(--text-dim); }
 .msg {
@@ -792,7 +775,6 @@ main { position: relative; }
     z-index: 1002;
   }
 
-  /* Mobile menu panel — animated */
   .nav-right {
     position: fixed;
     top: 0;
@@ -828,7 +810,6 @@ main { position: relative; }
     pointer-events: auto;
   }
 
-  /* Stagger link items when open */
   .nav-right .nav-links a,
   .nav-right .nav-actions {
     opacity: 0;
@@ -866,9 +847,7 @@ main { position: relative; }
     opacity: 1;
     text-decoration: none !important;
   }
-  .nav-links a:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
+  .nav-links a:hover { background: rgba(0, 0, 0, 0.04); }
   .nav-actions {
     flex-direction: column;
     align-items: stretch;
@@ -880,9 +859,7 @@ main { position: relative; }
     padding: 16px 20px;
     font-size: 17px;
   }
-  .nav-actions .btn-primary {
-    color: #fff !important;
-  }
+  .nav-actions .btn-primary { color: #fff !important; }
   body.nav-open {
     overflow: hidden !important;
     touch-action: none;
