@@ -4,43 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>登入 — MapSky</title>
-  <meta name="theme-color" content="#0B1220" />
+  <meta name="theme-color" content="#000000" />
   <link rel="icon" type="image/png" href="assets/icon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    .login-wrap { max-width: 420px; margin: 48px auto 80px; padding: 0 20px; }
-    .login-card { background: var(--card); border: 1px solid var(--stroke); border-radius: 24px; padding: 28px 24px 24px; }
-    .login-card h1 { margin: 12px 0 6px; font-size: 24px; letter-spacing: -0.02em; }
-    .login-sub { margin: 0 0 22px; color: var(--muted); font-size: 14px; }
-    .login-brand { display: flex; align-items: center; gap: 12px; }
-    .provider-list { display: grid; gap: 10px; margin-bottom: 18px; }
-    .provider-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--stroke); background: rgba(255,255,255,0.04); color: var(--text); font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; transition: border-color .15s, background .15s; }
-    .provider-btn:hover { border-color: rgba(79,140,255,0.45); background: rgba(79,140,255,0.1); }
-    .divider { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; margin: 8px 0 16px; }
-    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--stroke); }
-    .magic-row { display: flex; gap: 8px; }
-    .magic-row input { flex: 1; min-width: 0; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--stroke); background: rgba(0,0,0,0.25); color: var(--text); font-size: 15px; outline: none; }
-    .magic-row input:focus { border-color: rgba(79,140,255,0.55); }
-    .magic-row button { border: 0; border-radius: 12px; padding: 0 16px; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--primary2)); color: #fff; cursor: pointer; white-space: nowrap; }
-    .magic-row button:disabled { opacity: 0.55; cursor: not-allowed; }
-    .hint { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
-    .msg { margin: 12px 0 0; padding: 10px 12px; border-radius: 12px; font-size: 13px; display: none; }
-    .msg.show { display: block; }
-    .msg.ok { background: rgba(61,214,140,0.12); border: 1px solid rgba(61,214,140,0.35); color: #9af0c4; }
-    .msg.err { background: rgba(255,92,108,0.12); border: 1px solid rgba(255,92,108,0.35); color: #ffb3bc; }
-    .otp-box { display: none; margin-top: 14px; }
-    .otp-box.show { display: block; }
-    .account-panel { display: none; }
-    .account-panel.show { display: block; }
-    .account-panel p { color: var(--muted); margin: 0 0 14px; }
-    .account-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-  </style>
 </head>
 <body>
-  <div class="bg-glow" aria-hidden="true"></div>
   <header class="nav">
     <a class="brand" href="index.html">
       <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
@@ -62,8 +30,14 @@
       <div id="guestPanel">
         <p class="login-sub">選擇登入方式。第三方會短暫跳到驗證頁，完成後回到本站。</p>
         <div class="provider-list" id="providerList">
-          <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin.html">使用 Google 登入</a>
-          <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=github&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin.html">使用 GitHub 登入</a>
+          <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin.html">
+            <img class="provider-icon" src="https://mapskyapp.vercel.app/login-icons/google.png" alt="" width="22" height="22" />
+            <span>使用 Google 登入</span>
+          </a>
+          <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=github&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin.html">
+            <img class="provider-icon" src="https://mapskyapp.vercel.app/login-icons/github.png" alt="" width="22" height="22" />
+            <span>使用 GitHub 登入</span>
+          </a>
         </div>
         <div class="divider">或 Email 驗證碼</div>
         <div class="magic-row">
@@ -102,6 +76,7 @@
       var accountPanel = document.getElementById("accountPanel");
       var providerList = document.getElementById("providerList");
       var pendingEmail = "";
+      var iconBase = "https://mapskyapp.vercel.app/login-icons/";
 
       function showMsg(text, ok) {
         msg.textContent = text;
@@ -120,6 +95,11 @@
         accountPanel.classList.remove("show");
       }
 
+      function providerIcon(id) {
+        if (id === "x") return iconBase + "x.svg";
+        return iconBase + id + ".png";
+      }
+
       window.MapSkyAuthOnSession = function (body) {
         if (body && body.loggedIn) renderLoggedIn(body);
         else renderGuest();
@@ -135,7 +115,12 @@
         var configured = list.filter(function (p) { return p.configured; });
         if (!configured.length) return;
         providerList.innerHTML = configured.map(function (p) {
-          return '<a class="provider-btn" href="' + MapSkyAuth.oauthUrl(p.id) + '">使用 ' + p.label + " 登入</a>";
+          return (
+            '<a class="provider-btn" href="' + MapSkyAuth.oauthUrl(p.id) + '">' +
+              '<img class="provider-icon" src="' + providerIcon(p.id) + '" alt="" width="22" height="22" />' +
+              '<span>使用 ' + p.label + ' 登入</span>' +
+            '</a>'
+          );
         }).join("");
       }).catch(function () {});
 
