@@ -108,7 +108,7 @@
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: var(--blue-btn);
+      background: var(--btn-dark);
     }
 
     .story-visual {
@@ -119,7 +119,6 @@
       border: 1px solid rgba(0,0,0,0.08);
       box-shadow: 0 24px 60px rgba(0,0,0,0.08);
     }
-    /* Prevent global img{max-width:100%} from blowing up icons */
     .story-visual img.icon-sm,
     .provider-icons img {
       width: 28px !important;
@@ -295,15 +294,13 @@
       <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
     </a>
     <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
-      <span></span><span></span><span></span>
+      <span></span><span></span>
     </button>
     <div class="nav-right" id="navRight">
       <nav class="nav-links" aria-label="主選單">
+        <a href="index.html#news">最新消息</a>
         <a href="features.html">功能</a>
-        <a href="index.html#transit">交通</a>
-        <a href="index.html#closures">停班停課</a>
-        <a href="index.html#download">下載</a>
-        <a href="privacy.html">隱私權</a>
+        <a href="privacy.html">條款與隱私</a>
       </nav>
       <div class="nav-actions">
         <span data-auth-slot>
@@ -459,8 +456,9 @@
       <span>MapSky</span>
     </div>
     <div class="footer-links">
+      <a href="index.html#news">最新消息</a>
       <a href="features.html">功能</a>
-      <a href="privacy.html">隱私權政策</a>
+      <a href="privacy.html">條款與隱私</a>
       <a href="login.html">登入</a>
       <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
     </div>
@@ -480,11 +478,13 @@
           var open = panel.classList.toggle("open");
           toggle.setAttribute("aria-expanded", open ? "true" : "false");
           toggle.classList.toggle("open", open);
+          document.body.classList.toggle("nav-open", open);
         });
         panel.querySelectorAll("a").forEach(function (a) {
           a.addEventListener("click", function () {
             panel.classList.remove("open");
             toggle.classList.remove("open");
+            document.body.classList.remove("nav-open");
             toggle.setAttribute("aria-expanded", "false");
           });
         });
