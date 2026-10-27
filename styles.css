@@ -238,7 +238,7 @@ main { position: relative; }
   position: relative;
   margin: 56px auto 0;
   max-width: 920px;
-  min-height: 520px;
+  min-height: 540px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -250,7 +250,7 @@ main { position: relative; }
   max-width: 280px;
 }
 .phone {
-  width: min(260px, 68vw);
+  width: min(270px, 70vw);
   margin: 0 auto;
   border-radius: 36px;
   padding: 10px;
@@ -269,38 +269,172 @@ main { position: relative; }
 }
 .phone-screen {
   position: relative;
-  height: 460px;
+  height: 500px;
   border-radius: 28px;
   overflow: hidden;
-  background: #111;
+  background: #1a3048;
 }
+
+/* Sky background closer to real app */
 .sky-layer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #5b8fc7 0%, #9bb0c8 40%, #f0c8a0 75%, #1a2030 100%);
+  background:
+    linear-gradient(180deg,
+      rgba(120, 170, 220, 0.35) 0%,
+      rgba(180, 200, 220, 0.2) 35%,
+      rgba(200, 180, 160, 0.25) 70%,
+      rgba(40, 50, 70, 0.5) 100%),
+    linear-gradient(180deg, #6a9cc8 0%, #a8b8c8 40%, #d4c4b0 75%, #2a3548 100%);
 }
+.sky-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 40% at 70% 15%, rgba(255, 240, 200, 0.45), transparent 60%),
+    radial-gradient(ellipse 60% 30% at 30% 25%, rgba(255, 255, 255, 0.25), transparent 50%);
+  pointer-events: none;
+}
+
 .phone-ui {
   position: relative;
   z-index: 1;
-  padding: 36px 20px 20px;
+  padding: 28px 12px 14px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  color: #fff;
+  color: #1d1d1f;
   text-align: left;
+  gap: 8px;
 }
-.temp { font-size: 58px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
-.cond { margin-top: 6px; font-size: 16px; opacity: 0.92; }
-.chips { margin-top: auto; display: grid; gap: 8px; }
-.chips span {
-  display: block;
-  padding: 11px 13px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+
+/* Glass cards matching real app */
+.glass-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.weather-main {
+  padding: 14px 14px 12px;
+}
+.weather-main .loc {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.55);
+  margin-bottom: 4px;
+}
+.weather-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.weather-main .temp {
+  font-size: 48px;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #1d1d1f;
+}
+.wx-icon {
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+.wx-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+}
+.wx-desc {
+  margin-top: 4px;
   font-size: 13px;
   font-weight: 500;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Hourly */
+.hourly {
+  padding: 10px 8px;
+}
+.hourly-row {
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+}
+.h-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 2px;
+  border-radius: 10px;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.55);
+}
+.h-item.active {
+  background: rgba(255, 255, 255, 0.55);
+  color: #1d1d1f;
+}
+.h-item.sunset {
+  background: rgba(255, 200, 120, 0.35);
+}
+.h-t { font-weight: 600; font-size: 9px; }
+.h-i { font-size: 14px; line-height: 1; }
+.h-v { font-weight: 600; font-size: 11px; color: #1d1d1f; }
+
+/* Mini stats grid */
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.mini {
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.m-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.02em;
+}
+.m-val {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+}
+
+/* Bottom chips */
+.chips {
+  margin-top: auto;
+  display: grid;
+  gap: 6px;
+}
+.app-chips span {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f;
+  text-align: center;
 }
 
 /* Floating notification cards (Flighty-style) */
@@ -661,7 +795,7 @@ main { position: relative; }
   .hero { padding-top: 48px; }
   .hero h1 { font-size: 36px; }
   .lead { font-size: 17px; }
-  .phone-screen { height: 400px; }
+  .phone-screen { height: 440px; }
   .brand .wordmark { height: 18px; }
   .brand .logo-img { width: 28px; height: 28px; }
 }

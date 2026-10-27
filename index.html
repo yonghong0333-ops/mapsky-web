@@ -57,8 +57,8 @@
         <div class="float-cards">
           <div class="float-card fc-1">
             <div class="fc-icon">🌤</div>
-            <strong>高雄 · 26°</strong>
-            <span>多雲 · 紫外線中等</span>
+            <strong>前鎮區 · 29°</strong>
+            <span>陰時多雲短暫雨</span>
           </div>
           <div class="float-card fc-2">
             <div class="fc-icon">🚇</div>
@@ -81,12 +81,48 @@
             <div class="phone-notch"></div>
             <div class="phone-screen">
               <div class="sky-layer"></div>
-              <div class="phone-ui">
-                <div class="temp">26°</div>
-                <div class="cond">多雲 · 高雄</div>
-                <div class="chips">
+              <div class="phone-ui app-ui">
+                <!-- Main weather glass card -->
+                <div class="glass-card weather-main">
+                  <div class="loc">📍 前鎮區</div>
+                  <div class="weather-row">
+                    <div class="temp">29°</div>
+                    <div class="wx-icon" aria-hidden="true">
+                      <svg viewBox="0 0 64 64" width="48" height="48" fill="none">
+                        <circle cx="40" cy="22" r="10" fill="rgba(255,220,120,0.9)"/>
+                        <ellipse cx="28" cy="34" rx="18" ry="12" fill="rgba(255,255,255,0.92)"/>
+                        <ellipse cx="38" cy="32" rx="12" ry="10" fill="rgba(255,255,255,0.95)"/>
+                        <path d="M22 46v6M28 44v8M34 46v6" stroke="rgba(120,180,255,0.95)" stroke-width="2.5" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="wx-meta">
+                    <span>最高 23° · 最低 22°</span>
+                    <span>降雨 50%</span>
+                  </div>
+                  <div class="wx-desc">陰時多雲短暫雨</div>
+                </div>
+
+                <!-- Hourly strip -->
+                <div class="glass-card hourly">
+                  <div class="hourly-row">
+                    <div class="h-item active"><span class="h-t">現在</span><span class="h-i">☀️</span><span class="h-v">30°</span></div>
+                    <div class="h-item"><span class="h-t">17</span><span class="h-i">☀️</span><span class="h-v">29°</span></div>
+                    <div class="h-item sunset"><span class="h-t">日落</span><span class="h-i">🌅</span><span class="h-v">天黑了</span></div>
+                    <div class="h-item"><span class="h-t">19</span><span class="h-i">🌙</span><span class="h-v">28°</span></div>
+                  </div>
+                </div>
+
+                <!-- Mini stats -->
+                <div class="mini-grid">
+                  <div class="glass-card mini"><span class="m-label">風力</span><span class="m-val">2 級</span></div>
+                  <div class="glass-card mini"><span class="m-label">紫外線</span><span class="m-val">0</span></div>
+                  <div class="glass-card mini"><span class="m-label">體感</span><span class="m-val">32°</span></div>
+                </div>
+
+                <!-- Bottom chips -->
+                <div class="chips app-chips">
                   <span>紅線 3 分</span>
-                  <span>台鐵準點</span>
                   <span>正常上班</span>
                 </div>
               </div>
