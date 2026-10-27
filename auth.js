@@ -71,7 +71,15 @@
   }
 
   function oauthUrl(providerId) {
-    return AUTH_ORIGIN + "/api/auth/login?provider=" + encodeURIComponent(providerId);
+    // 一定要絕對網址指向 mapskyapp，避免 no-cookie；return_to 讓登入完回官網
+    var returnTo = encodeURIComponent("https://mapskyweb.vercel.app/login.html");
+    return (
+      AUTH_ORIGIN +
+      "/api/auth/login?provider=" +
+      encodeURIComponent(providerId) +
+      "&return_to=" +
+      returnTo
+    );
   }
 
   function displayName(s) {
