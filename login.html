@@ -55,22 +55,22 @@
         <img class="logo-img" data-logo="icon" width="44" height="44" alt="" />
         <div>
           <h1>登入 MapSky</h1>
-          <p class="login-sub" style="margin:0">與 App / mapskyapp 同一套帳號</p>
+          <p class="login-sub" style="margin:0">與 App 同一套帳號</p>
         </div>
       </div>
 
       <div id="guestPanel">
-        <p class="login-sub">選擇登入方式，或使用 Email 驗證碼。</p>
+        <p class="login-sub">第三方登入會導向 mapskyapp 完成驗證（請在同一視窗一次做完）。也可用 Email 驗證碼。</p>
         <div class="provider-list" id="providerList">
-          <a class="provider-btn" href="/api/auth/login?provider=google">使用 Google 登入</a>
-          <a class="provider-btn" href="/api/auth/login?provider=github">使用 GitHub 登入</a>
+          <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google">使用 Google 登入</a>
+          <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=github">使用 GitHub 登入</a>
         </div>
         <div class="divider">或 Email 驗證碼</div>
         <div class="magic-row">
           <input id="emailInput" type="email" placeholder="your@email.com" autocomplete="email" />
           <button type="button" id="sendBtn">寄送</button>
         </div>
-        <p class="hint">我們會寄 6 位數驗證碼到你的信箱（與 MapSky 相同流程）。</p>
+        <p class="hint">會寄 6 位數驗證碼（與 MapSky App 相同流程）。</p>
         <div class="otp-box" id="otpBox">
           <div class="magic-row" style="margin-top:10px">
             <input id="codeInput" type="text" inputmode="numeric" maxlength="6" placeholder="6 位數驗證碼" autocomplete="one-time-code" />
