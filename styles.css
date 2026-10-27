@@ -196,18 +196,18 @@ body.is-scrolled .nav-pill-bar {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
 }
 .nav-toggle span {
   display: block;
   width: 20px;
   height: 1.5px;
   background: var(--text);
-  transition: transform 0.25s ease, opacity 0.2s ease;
+  transition: transform 0.25s ease;
 }
-.nav-toggle.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
-.nav-toggle.open span:nth-child(2) { opacity: 0; }
-.nav-toggle.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+/* 2-line icon → X when open */
+.nav-toggle.open span:nth-child(1) { transform: translateY(4.25px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { transform: translateY(-4.25px) rotate(-45deg); }
 
 .btn {
   display: inline-flex;
