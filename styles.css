@@ -34,7 +34,7 @@ a:hover { text-decoration: underline; }
 img { display: block; max-width: 100%; }
 .bg-glow { display: none; }
 
-/* —— Nav: full bar at top, floating pill on scroll —— */
+/* —— Full nav bar (top) —— */
 .nav {
   position: sticky;
   top: 0;
@@ -49,80 +49,81 @@ img { display: block; max-width: 100%; }
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid transparent;
-  transition:
-    top 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    margin 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    padding 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    border-radius 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.35s ease,
-    box-shadow 0.35s ease,
-    border-color 0.35s ease;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+body.is-scrolled .nav {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-/* Scrolled: floating pill card (Flighty-style) */
-.nav.nav-pill {
+/* —— Floating pill (appears on scroll) —— */
+.nav-pill-bar {
   position: fixed;
   top: 12px;
   left: 50%;
-  right: auto;
+  transform: translateX(-50%) translateY(-8px);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   width: calc(100% - 28px);
-  max-width: 420px;
+  max-width: 400px;
   height: 52px;
-  margin-left: 0;
-  transform: translateX(-50%);
   padding: 0 10px 0 14px;
   border-radius: 980px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: saturate(180%) blur(24px);
   -webkit-backdrop-filter: saturate(180%) blur(24px);
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.04);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+}
+body.is-scrolled .nav-pill-bar {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
 }
 
-.nav.nav-pill .brand .wordmark {
-  display: none;
+.nav-pill-bar .brand {
+  gap: 0;
 }
-.nav.nav-pill .brand .logo-img {
+.nav-pill-bar .brand .logo-img {
   width: 28px;
   height: 28px;
   border-radius: 8px;
 }
-.nav.nav-pill .nav-links {
-  display: none;
-}
-.nav.nav-pill .nav-actions {
-  margin-left: auto;
+.nav-pill-bar .pill-actions {
+  display: flex;
+  align-items: center;
   gap: 6px;
+  margin-left: auto;
 }
-.nav.nav-pill .nav-toggle {
+.nav-pill-bar .btn-sm {
+  padding: 8px 14px;
+  font-size: 13px;
+  background: #1d1d1f;
+  color: #fff !important;
+}
+.nav-pill-bar .btn-sm:hover {
+  background: #000;
+}
+.nav-pill-bar .nav-toggle {
   display: inline-flex;
   width: 36px;
   height: 36px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.04);
 }
-.nav.nav-pill .nav-toggle span {
+.nav-pill-bar .nav-toggle span {
   width: 14px;
-}
-.nav.nav-pill .btn-sm {
-  padding: 8px 14px;
-  font-size: 13px;
-}
-
-/* Spacer so content doesn't jump when nav becomes fixed */
-.nav-spacer {
-  height: 0;
-  transition: height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.nav-spacer.active {
-  height: var(--nav-h);
 }
 
 .brand {
@@ -140,7 +141,6 @@ img { display: block; max-width: 100%; }
   border-radius: 8px;
   object-fit: contain;
   flex-shrink: 0;
-  transition: width 0.3s, height 0.3s;
 }
 .brand .wordmark {
   height: 20px;
@@ -148,7 +148,6 @@ img { display: block; max-width: 100%; }
   max-width: 110px;
   object-fit: contain;
   opacity: 0.98;
-  transition: opacity 0.25s, max-width 0.25s;
 }
 
 .nav-right {
@@ -198,7 +197,6 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: background 0.2s;
 }
 .nav-toggle span {
   display: block;
@@ -225,7 +223,7 @@ img { display: block; max-width: 100%; }
   border: 0;
   cursor: pointer;
   text-decoration: none !important;
-  transition: background 0.2s, opacity 0.2s, transform 0.15s;
+  transition: background 0.2s, opacity 0.2s;
 }
 .btn-sm {
   padding: 9px 18px;
@@ -256,18 +254,8 @@ img { display: block; max-width: 100%; }
   background: rgba(0, 0, 0, 0.04);
 }
 
-/* Dark pill button in scrolled nav (like Flighty "Get the app") */
-.nav.nav-pill .btn-primary {
-  background: #1d1d1f;
-  color: #fff !important;
-}
-.nav.nav-pill .btn-primary:hover {
-  background: #000;
-}
-
 main { position: relative; }
 
-/* —— Hero (Flighty-style) —— */
 .hero {
   max-width: 1100px;
   margin: 0 auto;
@@ -320,7 +308,6 @@ main { position: relative; }
 }
 .hero-meta li::before { content: ""; display: none; }
 
-/* Phone + floating cards */
 .hero-stage {
   position: relative;
   margin: 56px auto 0;
@@ -499,6 +486,7 @@ main { position: relative; }
   color: #1d1d1f;
   letter-spacing: -0.02em;
 }
+
 .chips {
   margin-top: auto;
   display: grid;
@@ -798,7 +786,7 @@ main { position: relative; }
   .grid-2 { grid-template-columns: 1fr; }
   .float-cards { display: none; }
   .hero-stage { min-height: auto; }
-  .nav-toggle {
+  .nav .nav-toggle {
     display: inline-flex;
     position: relative;
     z-index: 1002;
@@ -864,30 +852,18 @@ main { position: relative; }
   }
   body.nav-open .nav {
     background: #ffffff;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
   }
-  body.nav-open .nav.nav-pill {
-    /* keep pill while menu open, but raise above overlay */
-    z-index: 1003;
+  body.nav-open .nav-pill-bar {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
   body.nav-open .brand {
     position: relative;
     z-index: 1002;
-  }
-
-  /* On mobile, always show toggle; pill mode hides full links already */
-  .nav.nav-pill .nav-right {
-    /* when menu closed, nav-right is not the overlay */
-  }
-  .nav.nav-pill .nav-actions {
-    flex-direction: row;
-    align-items: center;
-    margin: 0;
-    gap: 6px;
-  }
-  .nav.nav-pill .nav-actions .btn {
-    width: auto;
-    padding: 8px 14px;
-    font-size: 13px;
   }
 }
 
@@ -898,7 +874,7 @@ main { position: relative; }
   .phone-screen { height: 440px; }
   .brand .wordmark { height: 18px; }
   .brand .logo-img { width: 28px; height: 28px; }
-  .nav.nav-pill {
+  .nav-pill-bar {
     max-width: none;
     width: calc(100% - 24px);
   }

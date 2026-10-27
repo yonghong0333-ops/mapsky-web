@@ -38,7 +38,19 @@
       </div>
     </div>
   </header>
-  <div class="nav-spacer" id="navSpacer" aria-hidden="true"></div>
+
+  <!-- Floating pill: separate element, crossfade with full nav -->
+  <div class="nav-pill-bar" id="navPill" aria-hidden="true">
+    <a class="brand" href="index.html">
+      <img class="logo-img" data-logo="icon" width="28" height="28" alt="MapSky" />
+    </a>
+    <div class="pill-actions">
+      <a class="btn btn-sm btn-primary" href="login.html">登入</a>
+      <button type="button" class="nav-toggle" id="navTogglePill" aria-label="開啟選單" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
 
   <main id="top">
     <section class="hero">
@@ -222,38 +234,51 @@
   <script src="auth.js"></script>
   <script>
     (function () {
-      var nav = document.getElementById("topNav");
-      var spacer = document.getElementById("navSpacer");
       var toggle = document.getElementById("navToggle");
+      var togglePill = document.getElementById("navTogglePill");
       var panel = document.getElementById("navRight");
-      var threshold = 48;
+      var pill = document.getElementById("navPill");
+      var threshold = 60;
 
       function onScroll() {
         var scrolled = window.scrollY > threshold;
-        if (nav) {
-          nav.classList.toggle("nav-pill", scrolled);
-        }
-        if (spacer) {
-          spacer.classList.toggle("active", scrolled);
-        }
+        document.body.classList.toggle("is-scrolled", scrolled);
+        if (pill) pill.setAttribute("aria-hidden", scrolled ? "false" : "true");
       }
 
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();
 
-      if (toggle && panel) {
-        toggle.addEventListener("click", function () {
+      function bindToggle(btn) {
+        if (!btn || !panel) return;
+        btn.addEventListener("click", function () {
           var open = panel.classList.toggle("open");
-          toggle.setAttribute("aria-expanded", open ? "true" : "false");
-          toggle.classList.toggle("open", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          btn.classList.toggle("open", open);
+          if (toggle) {
+            toggle.classList.toggle("open", open);
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
+          }
+          if (togglePill) {
+            togglePill.classList.toggle("open", open);
+            togglePill.setAttribute("aria-expanded", open ? "true" : "false");
+          }
           document.body.classList.toggle("nav-open", open);
         });
+      }
+      bindToggle(toggle);
+      bindToggle(togglePill);
+
+      if (panel) {
         panel.querySelectorAll("a").forEach(function (a) {
           a.addEventListener("click", function () {
             panel.classList.remove("open");
-            toggle.classList.remove("open");
-            toggle.setAttribute("aria-expanded", "false");
             document.body.classList.remove("nav-open");
+            [toggle, togglePill].forEach(function (b) {
+              if (!b) return;
+              b.classList.remove("open");
+              b.setAttribute("aria-expanded", "false");
+            });
           });
         });
       }
