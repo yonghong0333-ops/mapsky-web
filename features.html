@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="MapSky 功能介紹 — 天氣、動態天空、捷運台鐵高鐵、停班停課與 YouBike。" />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#ffffff" />
   <title>功能 — MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
   <link rel="stylesheet" href="styles.css" />
@@ -97,9 +97,9 @@
       color: var(--text-dim);
       font-size: 15px;
       line-height: 1.45;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(0,0,0,0.08);
     }
-    .story-copy li:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .story-copy li:last-child { border-bottom: 1px solid rgba(0,0,0,0.08); }
     .story-copy li::before {
       content: "";
       position: absolute;
@@ -115,9 +115,9 @@
       border-radius: 24px;
       overflow: hidden;
       min-height: 320px;
-      background: #1c1c1e;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      background: #f5f5f7;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.08);
     }
     /* Prevent global img{max-width:100%} from blowing up icons */
     .story-visual img.icon-sm,
@@ -157,9 +157,9 @@
     .visual-map {
       min-height: 340px;
       background:
-        radial-gradient(circle at 30% 40%, rgba(41,151,255,0.25), transparent 45%),
-        radial-gradient(circle at 70% 60%, rgba(255,214,10,0.18), transparent 40%),
-        linear-gradient(160deg, #1a2333, #0b1220 55%, #1d1d1f);
+        radial-gradient(circle at 30% 40%, rgba(41,151,255,0.18), transparent 45%),
+        radial-gradient(circle at 70% 60%, rgba(255,214,10,0.12), transparent 40%),
+        linear-gradient(160deg, #e8eef6, #f5f5f7 55%, #eef0f4);
       display: grid;
       place-items: center;
       padding: 24px;
@@ -167,13 +167,14 @@
     .map-card {
       width: min(100%, 280px);
       border-radius: 18px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
       padding: 18px;
-      color: #fff;
+      color: var(--text);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
     }
     .map-card h3 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
-    .map-card p { margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; }
+    .map-card p { margin: 0; color: var(--text-dim); font-size: 14px; }
     .swatch { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
     .swatch span { width: 28px; height: 10px; border-radius: 6px; }
     .swatch .r { background: #ff453a; }
@@ -183,7 +184,7 @@
 
     .visual-transit {
       min-height: 340px;
-      background: linear-gradient(180deg, #111 0%, #1c1c1e 100%);
+      background: linear-gradient(180deg, #f5f5f7 0%, #e8e8ed 100%);
       padding: 22px;
       display: flex;
       flex-direction: column;
@@ -196,11 +197,12 @@
       gap: 12px;
       padding: 14px 16px;
       border-radius: 14px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: #fff;
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
+      color: var(--text);
       font-size: 15px;
       font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .dot {
       width: 12px;
@@ -216,7 +218,7 @@
     .visual-bike {
       min-height: 340px;
       background:
-        linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55)),
+        linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.4)),
         url("https://mapskyapp.vercel.app/login-bg.jpg") center/cover no-repeat;
       display: grid;
       place-items: end stretch;
@@ -224,19 +226,19 @@
     }
     .bike-card {
       border-radius: 16px;
-      background: rgba(20,20,22,0.72);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(0,0,0,0.08);
       padding: 16px 18px;
-      color: #fff;
+      color: var(--text);
     }
     .bike-card strong { display: block; font-size: 16px; margin-bottom: 4px; }
-    .bike-card span { color: rgba(255,255,255,0.75); font-size: 14px; }
+    .bike-card span { color: var(--text-dim); font-size: 14px; }
 
     .visual-auth {
       min-height: 340px;
-      background: linear-gradient(180deg, #141416 0%, #1c1c1e 100%);
+      background: linear-gradient(180deg, #f5f5f7 0%, #e8e8ed 100%);
       padding: 28px 22px;
       display: flex;
       flex-direction: column;
@@ -252,17 +254,17 @@
       align-items: center;
       padding: 18px;
       border-radius: 16px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
     }
     .auth-note {
       text-align: center;
-      color: rgba(255,255,255,0.78);
+      color: var(--text-dim);
       font-size: 14px;
       padding: 12px;
       border-radius: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
     }
 
     .page-cta {
