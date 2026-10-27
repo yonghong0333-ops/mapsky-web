@@ -171,12 +171,14 @@
         var open = panel.classList.toggle("open");
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
         toggle.classList.toggle("open", open);
+        document.body.classList.toggle("nav-open", open);
       });
       panel.querySelectorAll("a").forEach(function (a) {
         a.addEventListener("click", function () {
           panel.classList.remove("open");
           toggle.classList.remove("open");
           toggle.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("nav-open");
         });
       });
     })();
