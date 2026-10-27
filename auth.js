@@ -1,10 +1,9 @@
 (function () {
-  // OAuth 在 mapskyapp 起跳（Cookie 安全）；完成後 xchg 導回官網，代理寫入 mapskyweb session。
-  // 登入後進入 /app（代理完整 MapSky 網頁版）。
+  // OAuth 在 mapskyapp 起跳；完成後 xchg 導回官網並寫入 mapskyweb session。
+  // 官網只做介紹與登入，不代理 /app。
   var AUTH_ORIGIN = "https://mapskyapp.vercel.app";
   var API_PROXY = "/api/auth";
   var WEB_RETURN = "https://mapskyweb.vercel.app/login.html";
-  var APP_PATH = "/app";
 
   function $all(sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
@@ -98,9 +97,6 @@
     $all("[data-auth-slot]").forEach(function (el) {
       if (s && s.loggedIn) {
         el.innerHTML =
-          '<a class="btn btn-sm btn-primary" href="' +
-          APP_PATH +
-          '">進入 MapSky</a> ' +
           '<a class="btn btn-sm btn-ghost" href="login.html">' +
           escapeHtml(displayName(s)) +
           "</a>";
@@ -108,10 +104,6 @@
         el.innerHTML = '<a class="btn btn-sm btn-primary" href="login.html">登入</a>';
       }
     });
-  }
-
-  function goApp() {
-    window.location.href = APP_PATH;
   }
 
   function bootNav() {
@@ -127,11 +119,6 @@
               u.searchParams.delete("login");
               window.history.replaceState({}, "", u.pathname + (u.search || "") + u.hash);
             } catch (_) {}
-            if (res && res.ok !== false) {
-              // 登入成功：直接進 /app 使用
-              goApp();
-              return null;
-            }
             return session();
           })
           .then(function (res) {
@@ -160,7 +147,6 @@
 
   window.MapSkyAuth = {
     AUTH_ORIGIN: AUTH_ORIGIN,
-    APP_PATH: APP_PATH,
     session: session,
     logout: logout,
     providers: providers,
@@ -171,7 +157,6 @@
     displayName: displayName,
     bootNav: bootNav,
     updateNav: updateNav,
-    goApp: goApp,
   };
 
   if (document.readyState === "loading") {
