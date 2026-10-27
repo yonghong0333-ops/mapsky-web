@@ -1,9 +1,10 @@
 (function () {
-  // OAuth 必須在 mapskyapp 起跳；完成後用 xchg 導回官網，再經代理寫入 session Cookie。
+  // OAuth 在 mapskyapp 起跳（Cookie 安全）；完成後 xchg 導回官網，代理寫入 mapskyweb session。
+  // 登入後進入 /app（代理完整 MapSky 網頁版）。
   var AUTH_ORIGIN = "https://mapskyapp.vercel.app";
   var API_PROXY = "/api/auth";
-  var API_DIRECT = AUTH_ORIGIN + "/api/auth";
   var WEB_RETURN = "https://mapskyweb.vercel.app/login.html";
+  var APP_PATH = "/app";
 
   function $all(sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
@@ -26,21 +27,15 @@
   }
 
   function session() {
-    return fetchJSON(API_PROXY + "/session").catch(function () {
-      return fetchJSON(API_DIRECT + "/session");
-    });
+    return fetchJSON(API_PROXY + "/session");
   }
 
   function logout() {
-    return fetchJSON(API_PROXY + "/session?action=logout").catch(function () {
-      return fetchJSON(API_DIRECT + "/session?action=logout");
-    });
+    return fetchJSON(API_PROXY + "/session?action=logout");
   }
 
   function providers() {
-    return fetchJSON(API_PROXY + "/session?action=providers").catch(function () {
-      return fetchJSON(API_DIRECT + "/session?action=providers");
-    });
+    return fetchJSON(API_PROXY + "/session?action=providers");
   }
 
   function sendMagicLink(email) {
@@ -48,12 +43,6 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email }),
-    }).catch(function () {
-      return fetchJSON(API_DIRECT + "/login?provider=email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email }),
-      });
     });
   }
 
@@ -62,12 +51,6 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email, code: code }),
-    }).catch(function () {
-      return fetchJSON(API_DIRECT + "/login?provider=email&action=verify-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email, code: code }),
-      });
     });
   }
 
@@ -81,32 +64,19 @@
     );
   }
 
-  function claimXchg(xchg) {
-    return fetchJSON(API_PROXY + "/login?xchg=" + encodeURIComponent(xchg)).then(function (res) {
-      var token = res.body && res.body.token;
-      if (!token) {
-        return fetchJSON(API_DIRECT + "/login?xchg=" + encodeURIComponent(xchg)).then(function (res2) {
-          token = res2.body && res2.body.token;
-          if (!token) return { ok: false, body: res2.body };
-          return setSession(token);
-        });
-      }
-      return setSession(token);
-    });
-  }
-
   function setSession(token) {
     return fetchJSON(API_PROXY + "/login?action=set-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: token }),
-    }).then(function (res) {
-      if (res.body && res.body.ok) return { ok: true, body: res.body };
-      return fetchJSON(API_DIRECT + "/login?action=set-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: token }),
-      });
+    });
+  }
+
+  function claimXchg(xchg) {
+    return fetchJSON(API_PROXY + "/login?xchg=" + encodeURIComponent(xchg)).then(function (res) {
+      var token = res.body && res.body.token;
+      if (!token) return { ok: false, body: res.body };
+      return setSession(token);
     });
   }
 
@@ -128,7 +98,10 @@
     $all("[data-auth-slot]").forEach(function (el) {
       if (s && s.loggedIn) {
         el.innerHTML =
-          '<a class="btn btn-sm btn-ghost" href="login.html" title="帳號">' +
+          '<a class="btn btn-sm btn-primary" href="' +
+          APP_PATH +
+          '">進入 MapSky</a> ' +
+          '<a class="btn btn-sm btn-ghost" href="login.html">' +
           escapeHtml(displayName(s)) +
           "</a>";
       } else {
@@ -137,23 +110,34 @@
     });
   }
 
+  function goApp() {
+    window.location.href = APP_PATH;
+  }
+
   function bootNav() {
     try {
       var params = new URLSearchParams(window.location.search);
       var xchg = params.get("xchg");
       if (xchg) {
         claimXchg(xchg)
-          .then(function () {
+          .then(function (res) {
             try {
               var u = new URL(window.location.href);
               u.searchParams.delete("xchg");
-              window.history.replaceState({}, "", u.pathname + (u.search ? u.search : "") + u.hash);
+              u.searchParams.delete("login");
+              window.history.replaceState({}, "", u.pathname + (u.search || "") + u.hash);
             } catch (_) {}
+            if (res && res.ok !== false) {
+              // 登入成功：直接進 /app 使用
+              goApp();
+              return null;
+            }
             return session();
           })
           .then(function (res) {
-            updateNav(res && res.body);
-            if (window.MapSkyAuthOnSession) window.MapSkyAuthOnSession(res && res.body);
+            if (!res) return;
+            updateNav(res.body);
+            if (window.MapSkyAuthOnSession) window.MapSkyAuthOnSession(res.body);
           })
           .catch(function () {
             session().then(function (res) {
@@ -176,6 +160,7 @@
 
   window.MapSkyAuth = {
     AUTH_ORIGIN: AUTH_ORIGIN,
+    APP_PATH: APP_PATH,
     session: session,
     logout: logout,
     providers: providers,
@@ -186,6 +171,7 @@
     displayName: displayName,
     bootNav: bootNav,
     updateNav: updateNav,
+    goApp: goApp,
   };
 
   if (document.readyState === "loading") {

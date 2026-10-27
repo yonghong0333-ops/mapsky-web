@@ -1,6 +1,18 @@
 {
   "rewrites": [
-    { "source": "/api/auth/(.*)", "destination": "https://mapskyapp.vercel.app/api/auth/$1" }
+    { "source": "/api/:path*", "destination": "https://mapskyapp.vercel.app/api/:path*" },
+    { "source": "/app", "destination": "https://mapskyapp.vercel.app/" },
+    { "source": "/app/", "destination": "https://mapskyapp.vercel.app/" },
+    { "source": "/web-shim.js", "destination": "https://mapskyapp.vercel.app/web-shim.js" },
+    { "source": "/chart-polish.js", "destination": "https://mapskyapp.vercel.app/chart-polish.js" },
+    { "source": "/sun-moon-detail.js", "destination": "https://mapskyapp.vercel.app/sun-moon-detail.js" },
+    { "source": "/offline-banner.js", "destination": "https://mapskyapp.vercel.app/offline-banner.js" },
+    { "source": "/icons/:path*", "destination": "https://mapskyapp.vercel.app/icons/:path*" },
+    { "source": "/images/:path*", "destination": "https://mapskyapp.vercel.app/images/:path*" },
+    { "source": "/login-icons/:path*", "destination": "https://mapskyapp.vercel.app/login-icons/:path*" },
+    { "source": "/sounds/:path*", "destination": "https://mapskyapp.vercel.app/sounds/:path*" },
+    { "source": "/fonts/:path*", "destination": "https://mapskyapp.vercel.app/fonts/:path*" },
+    { "source": "/assets/app/:path*", "destination": "https://mapskyapp.vercel.app/assets/:path*" }
   ],
   "headers": [
     {
