@@ -4,24 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="MapSky — 台灣天氣、停班停課、捷運台鐵高鐵與動態天空，一站掌握。" />
-  <meta name="theme-color" content="#0B1220" />
+  <meta name="theme-color" content="#000000" />
   <meta property="og:title" content="MapSky" />
   <meta property="og:description" content="台灣天氣 · 交通 · 停班停課 · 動態天空" />
   <meta property="og:type" content="website" />
-  <title>MapSky — 天氣與交通，一站掌握</title>
+  <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="bg-glow" aria-hidden="true"></div>
-
   <header class="nav" id="topNav">
     <a class="brand" href="index.html">
-      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
-      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+      <img class="logo-img" data-logo="icon" width="22" height="22" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="14" alt="MapSky" />
     </a>
 
     <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
@@ -40,7 +35,6 @@
         <span data-auth-slot>
           <a class="btn btn-sm btn-primary" href="login.html">登入</a>
         </span>
-        <a class="btn btn-sm btn-ghost" href="#download">取得 App</a>
       </div>
     </div>
   </header>
@@ -48,21 +42,15 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">台灣在地 · 天氣與交通</p>
-        <h1>天空、班次、停班停課<br /><span class="grad">一站看清楚</span></h1>
+        <p class="eyebrow">MapSky</p>
+        <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
         <p class="lead">
-          MapSky 整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課資訊，
-          搭配動態天空與城市剪影，讓你用最少步驟掌握出門決策。
+          整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，搭配動態天空，讓出門決策更簡單。
         </p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="login.html">登入</a>
-          <a class="btn btn-ghost" href="#features">了解功能</a>
+          <a class="btn btn-ghost" href="#features">進一步了解 ›</a>
         </div>
-        <ul class="hero-meta">
-          <li>中央氣象署資料</li>
-          <li>TDX 大眾運輸</li>
-          <li>人事行政總處停班停課</li>
-        </ul>
       </div>
       <div class="hero-visual" aria-hidden="true">
         <div class="phone">
@@ -85,69 +73,69 @@
 
     <section id="features" class="section">
       <div class="section-head">
-        <h2>核心功能</h2>
-        <p>把出門前最常查的資訊收在同一個地方。</p>
+        <h2>核心功能。</h2>
+        <p>把出門前最常查的資訊，收在同一個地方。</p>
       </div>
       <div class="grid-3">
         <article class="card">
           <div class="card-icon">🌤</div>
-          <h3>即時天氣與動態天空</h3>
-          <p>溫度、體感、紫外線、日出日落與雲量，搭配會隨真實天候變化的天空背景。</p>
+          <h3>天氣與動態天空</h3>
+          <p>溫度、體感、紫外線與日出日落，背景隨真實天候變化。</p>
         </article>
         <article class="card">
           <div class="card-icon">🚇</div>
           <h3>捷運 · 台鐵 · 高鐵</h3>
-          <p>站點、班次與到站資訊一次看，支援當日時刻表與即時狀態。</p>
+          <p>站點與班次一次看，支援當日時刻表與即時狀態。</p>
         </article>
         <article class="card">
           <div class="card-icon">🏫</div>
-          <h3>停班停課地圖</h3>
-          <p>依縣市著色顯示全天／部分停班停課，並標示尚未宣布狀態。</p>
+          <h3>停班停課</h3>
+          <p>縣市地圖著色，全天／部分／尚未宣布一目了然。</p>
         </article>
       </div>
     </section>
 
     <section id="transit" class="section section-alt">
       <div class="section-head">
-        <h2>交通資訊</h2>
-        <p>高雄捷運、台鐵、高鐵與 YouBike 資料串接。</p>
+        <h2>交通資訊。</h2>
+        <p>高雄捷運、台鐵、高鐵與 YouBike。</p>
       </div>
       <div class="grid-2">
         <article class="card">
           <h3>軌道運輸</h3>
-          <p>紅線／橘線／輕軌、台鐵與高鐵班次，支援當日剩餘時刻與即時更新。</p>
+          <p>紅線／橘線／輕軌、台鐵與高鐵班次，支援當日剩餘時刻。</p>
         </article>
         <article class="card">
           <h3>YouBike</h3>
-          <p>附近站點可借可還數量，搭配定位快速決策。</p>
+          <p>附近站點可借可還，搭配定位快速決策。</p>
         </article>
       </div>
     </section>
 
     <section id="closures" class="section">
       <div class="section-head">
-        <h2>停班停課</h2>
-        <p>對齊人事行政總處公告，並支援後台手動調整與隔日預告。</p>
+        <h2>停班停課。</h2>
+        <p>對齊人事行政總處公告，支援今日與明日。</p>
       </div>
       <div class="grid-2">
         <article class="card">
-          <h3>縣市地圖著色</h3>
-          <p>全天、部分、正常、尚未宣布以顏色區分，一目了然。</p>
+          <h3>縣市地圖</h3>
+          <p>以顏色區分全天、部分、正常與尚未宣布。</p>
         </article>
         <article class="card">
-          <h3>今日與明日</h3>
-          <p>晚間自動換日，提早公告的縣市不會被覆蓋。</p>
+          <h3>自動換日</h3>
+          <p>晚間自動帶入隔日；提早公告不會被覆蓋。</p>
         </article>
       </div>
     </section>
 
     <section id="download" class="section section-cta">
       <div class="cta-box">
-        <h2>開始使用 MapSky</h2>
-        <p>網頁版可立即體驗；iOS App 即將上架 App Store。</p>
+        <h2>開始使用 MapSky。</h2>
+        <p>登入後即可使用同一套帳號；iOS App 即將上架。</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="login.html">登入帳號</a>
-          <a class="btn btn-ghost" href="#features">了解功能</a>
+          <a class="btn btn-primary" href="login.html">登入</a>
+          <a class="btn btn-ghost" href="#features">查看功能 ›</a>
         </div>
       </div>
     </section>
@@ -155,7 +143,7 @@
 
   <footer class="footer">
     <div class="footer-brand">
-      <img class="logo-img" data-logo="icon" width="28" height="28" alt="" />
+      <img class="logo-img" data-logo="icon" width="16" height="16" alt="" />
       <span>MapSky</span>
     </div>
     <div class="footer-links">
@@ -163,7 +151,7 @@
       <a href="login.html">登入</a>
       <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
     </div>
-    <p class="footer-note">© MapSky · mapskyapp@gmail.com</p>
+    <p class="footer-note">Copyright © MapSky. mapskyapp@gmail.com</p>
   </footer>
 
   <script src="logo-icon.js"></script>
