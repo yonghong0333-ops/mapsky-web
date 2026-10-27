@@ -36,6 +36,7 @@ a:hover { text-decoration: underline; }
 img { display: block; max-width: 100%; }
 .bg-glow { display: none; }
 
+/* —— Desktop nav: always full menu —— */
 .nav {
   position: sticky;
   top: 0;
@@ -50,72 +51,12 @@ img { display: block; max-width: 100%; }
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid transparent;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
-}
-body.is-scrolled .nav {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
 }
 
+/* Pill only used on mobile — hidden on desktop */
 .nav-pill-bar {
-  position: fixed;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: calc(100% - 28px);
-  max-width: 400px;
-  height: 52px;
-  padding: 0 10px 0 14px;
-  border-radius: 980px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.04);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+  display: none;
 }
-body.is-scrolled .nav-pill-bar {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-.nav-pill-bar .brand { gap: 0; }
-.nav-pill-bar .brand .logo-img {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-}
-.nav-pill-bar .pill-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: auto;
-}
-.nav-pill-bar .btn-sm {
-  padding: 8px 14px;
-  font-size: 13px;
-}
-.nav-pill-bar .nav-toggle {
-  display: inline-flex;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.04);
-}
-.nav-pill-bar .nav-toggle span { width: 14px; }
 
 .brand {
   display: flex;
@@ -176,6 +117,7 @@ body.is-scrolled .nav-pill-bar {
   margin-left: 8px;
 }
 
+/* Hamburger hidden on desktop */
 .nav-toggle {
   display: none;
   width: 44px;
@@ -220,7 +162,6 @@ body.is-scrolled .nav-pill-bar {
   font-size: 14px;
   font-weight: 500;
 }
-/* Primary / 登入：黑底白字 */
 .btn-primary {
   background: var(--btn-dark);
   color: #fff !important;
@@ -764,16 +705,86 @@ main { position: relative; }
 .account-panel p { color: var(--text-dim); margin: 0 0 14px; }
 .account-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
+/* —— Mobile only: hamburger + floating pill —— */
 @media (max-width: 900px) {
   .grid-3,
   .grid-2 { grid-template-columns: 1fr; }
   .float-cards { display: none; }
   .hero-stage { min-height: auto; }
+
+  .nav {
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+  body.is-scrolled .nav {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .nav .nav-toggle {
     display: inline-flex;
     position: relative;
     z-index: 1002;
   }
+
+  /* Floating pill */
+  .nav-pill-bar {
+    display: flex;
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    z-index: 1001;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: calc(100% - 28px);
+    max-width: 400px;
+    height: 52px;
+    padding: 0 10px 0 14px;
+    border-radius: 980px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+  }
+  body.is-scrolled .nav-pill-bar {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .nav-pill-bar .brand { gap: 0; }
+  .nav-pill-bar .brand .logo-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+  }
+  .nav-pill-bar .pill-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+  .nav-pill-bar .btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  .nav-pill-bar .nav-toggle {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.04);
+  }
+  .nav-pill-bar .nav-toggle span { width: 14px; }
 
   .nav-right {
     position: fixed;
@@ -826,9 +837,7 @@ main { position: relative; }
   .nav-right.open .nav-links a:nth-child(1) { transition-delay: 0.04s; }
   .nav-right.open .nav-links a:nth-child(2) { transition-delay: 0.08s; }
   .nav-right.open .nav-links a:nth-child(3) { transition-delay: 0.12s; }
-  .nav-right.open .nav-links a:nth-child(4) { transition-delay: 0.16s; }
-  .nav-right.open .nav-links a:nth-child(5) { transition-delay: 0.2s; }
-  .nav-right.open .nav-actions { transition-delay: 0.24s; }
+  .nav-right.open .nav-actions { transition-delay: 0.16s; }
 
   .nav-links {
     flex-direction: column;
