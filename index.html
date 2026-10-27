@@ -171,6 +171,41 @@
   <script src="logo-apply.js"></script>
   <script src="auth.js"></script>
   <script>
+    // MapSky /app 會把導向寫成 /?login=success；官網首頁接到後：
+    // 已登入 → 回 /app；未登入 → /login.html
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get("login") !== "success") return;
+        function go(url) {
+          try {
+            var u = new URL(window.location.href);
+            u.searchParams.delete("login");
+            window.history.replaceState({}, "", u.pathname + (u.search || "") + u.hash);
+          } catch (e) {}
+          window.location.replace(url);
+        }
+        var done = false;
+        function finish(url) {
+          if (done) return;
+          done = true;
+          go(url);
+        }
+        setTimeout(function () { finish("/login.html"); }, 4000);
+        function check() {
+          if (!window.MapSkyAuth) return setTimeout(check, 50);
+          MapSkyAuth.session()
+            .then(function (res) {
+              if (res && res.body && res.body.loggedIn) finish("/app");
+              else finish("/login.html");
+            })
+            .catch(function () { finish("/login.html"); });
+        }
+        check();
+      } catch (e) {}
+    })();
+  </script>
+  <script>
     (function () {
       var toggle = document.getElementById("navToggle");
       var panel = document.getElementById("navRight");
