@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>登入 — MapSky</title>
   <meta name="theme-color" content="#0B1220" />
-  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -55,12 +55,12 @@
         <img class="logo-img" data-logo="icon" width="44" height="44" alt="" />
         <div>
           <h1>登入 MapSky</h1>
-          <p class="login-sub" style="margin:0">登入後在 mapskyweb 使用完整功能</p>
+          <p class="login-sub" style="margin:0">與 App 同一套帳號</p>
         </div>
       </div>
 
       <div id="guestPanel">
-        <p class="login-sub">選擇登入方式。第三方會短暫跳到驗證頁，完成後回到本站並進入 MapSky。</p>
+        <p class="login-sub">選擇登入方式。第三方會短暫跳到驗證頁，完成後回到本站。</p>
         <div class="provider-list" id="providerList">
           <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin.html">使用 Google 登入</a>
           <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=github&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin.html">使用 GitHub 登入</a>
@@ -83,7 +83,7 @@
       <div class="account-panel" id="accountPanel">
         <p id="accountText">你已登入。</p>
         <div class="account-actions">
-          <a class="btn btn-primary" href="/app">進入 MapSky 使用</a>
+          <a class="btn btn-primary" href="index.html">回首頁</a>
           <button type="button" class="btn btn-ghost" id="logoutBtn">登出</button>
         </div>
       </div>
@@ -173,12 +173,11 @@
         MapSkyAuth.verifyCode(pendingEmail, code).then(function (res) {
           document.getElementById("verifyBtn").disabled = false;
           if (res.body && res.body.ok) {
-            showMsg("登入成功，正在進入…", true);
+            showMsg("登入成功", true);
             return MapSkyAuth.session().then(function (s) {
               if (s.body && s.body.loggedIn) {
                 renderLoggedIn(s.body);
                 MapSkyAuth.updateNav(s.body);
-                if (MapSkyAuth.goApp) setTimeout(function () { MapSkyAuth.goApp(); }, 400);
               }
             });
           }
