@@ -149,6 +149,7 @@ body {
 
 #details.section {
   padding-top: 64px;
+  padding-bottom: 8px;
   position: relative;
   z-index: 1;
   max-width: 1080px;
@@ -228,4 +229,32 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .hero-pin { height: auto !important; }
   .hero-layer-detail { display: none !important; }
+}
+
+/* Black ending: MAPSKY wordmark, then 進一步了解 */
+.ink-finale {
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px 16px 72px;
+}
+.ink-finale-mark {
+  display: block;
+  width: min(920px, 100%);
+  height: auto;
+  margin: 0 auto;
+}
+.ink-finale .btn-hero {
+  margin-top: 4px;
+  min-height: 44px;
+}
+@media (max-width: 800px) {
+  .ink-finale {
+    padding: 0 8px 56px;
+  }
+  .ink-finale-mark {
+    width: min(560px, 100%);
+  }
 }
