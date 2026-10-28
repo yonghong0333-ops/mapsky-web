@@ -160,7 +160,6 @@
     <p class="footer-note">Copyright © MapSky. mapskyapp@gmail.com</p>
   </footer>
 
-  <script src="assets-inline.js"></script>
   <script src="logo-icon.js"></script>
   <script src="logo-wordmark.js"></script>
   <script src="logo-apply.js"></script>
@@ -233,6 +232,7 @@
             layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
             layerDetail.setAttribute("aria-hidden", detailOpacity < 0.15 ? "true" : "false");
           }
+          var lineProgress = progress > landingEnd * 0.5 ? Math.min(1, (progress - landingEnd * 0.5) / (introEnd - landingEnd * 0.5)) : 0;
           if (detailSlides.length) {
             var count = detailSlides.length || 1;
             var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.58);
