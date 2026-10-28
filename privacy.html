@@ -8,21 +8,46 @@
   <link rel="icon" type="image/png" href="assets/icon.png" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .doc { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+    body.page-light { background: #fff; color: #1d1d1f; }
+    body.page-light .nav {
+      background: rgba(255,255,255,0.92);
+      color: #1d1d1f;
+      border-bottom-color: rgba(0,0,0,0.06);
+    }
+    body.page-light .nav-toggle { background: rgba(0,0,0,0.06); }
+    body.page-light .nav-toggle span { background: currentColor; }
+    body.page-light .wordmark { filter: brightness(0); }
+    body.page-light:not(.nav-open) .nav .btn-primary { background: #1d1d1f; color: #fff; }
+    body.page-light.nav-open .nav { color: #f5f5f7; background: transparent; }
+    body.page-light.nav-open .wordmark { filter: none; }
+    body.page-light.nav-open .nav-toggle { background: rgba(255,255,255,0.18); }
+    body.page-light.nav-open .nav-toggle span { background: #f5f5f7; }
+    @media (max-width: 768px) {
+      body.page-light .nav-right { color: #f5f5f7; }
+    }
+    .doc {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h) + 28px) 24px 80px;
+    }
+    .doc > h1, .doc-panel h1, .doc h2, .doc strong { color: #1d1d1f; }
     .doc > h1 { font-size: 32px; margin: 0 0 8px; letter-spacing: -0.02em; }
-    .doc .meta { color: var(--text-dim); margin-bottom: 20px; font-size: 14px; }
+    .doc .meta { color: #6e6e73; margin-bottom: 20px; font-size: 14px; }
     .doc h2 { font-size: 20px; margin: 28px 0 10px; letter-spacing: -0.015em; }
-    .doc p, .doc li { color: var(--text-dim); line-height: 1.55; }
+    .doc p, .doc li { color: #424245; line-height: 1.55; }
+    .doc a { color: #0071e3; }
     .doc ul { padding-left: 1.2em; list-style: disc; display: grid; gap: 8px; }
-    .doc-tabs { display: flex; gap: 8px; margin: 0 0 28px; padding: 6px; border-radius: 14px; background: var(--bg-elevated); }
-    .doc-tabs button { flex: 1; padding: 12px 14px; border: 0; border-radius: 10px; background: transparent; color: var(--text-dim); font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s, box-shadow 0.2s; }
-    .doc-tabs button.active { background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .doc-tabs { display: flex; gap: 8px; margin: 0 0 28px; padding: 6px; border-radius: 14px; background: #f5f5f7; }
+    .doc-tabs button { flex: 1; padding: 12px 14px; border: 0; border-radius: 10px; background: transparent; color: #6e6e73; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s, box-shadow 0.2s; }
+    .doc-tabs button.active { background: #fff; color: #1d1d1f; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
     .doc-panel { display: none; }
     .doc-panel.active { display: block; }
     .doc-panel h1 { font-size: 26px; margin: 0 0 8px; letter-spacing: -0.02em; }
+    body.page-light .footer { background: #fff; color: #6e6e73; border-top-color: rgba(0,0,0,0.08); }
+    body.page-light .footer-brand { color: #1d1d1f; }
   </style>
 </head>
-<body>
+<body class="page-light">
   <header class="nav" id="topNav">
     <a class="brand" href="/">
       <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
