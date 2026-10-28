@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="MapSky — 台灣天氣、停班停課、捷運台鐵高鐵與動態天空，一站掌握。" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta property="og:title" content="MapSky" />
+  <meta property="og:description" content="台灣天氣 · 交通 · 停班停課 · 動態天空" />
+  <meta property="og:type" content="website" />
+  <title>MapSky</title>
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="nav" id="topNav">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-right" id="navRight">
+      <nav class="nav-links" aria-label="主選單">
+        <a href="#news">最新消息</a>
+        <a href="/features">功能</a>
+        <a href="/privacy">隱私與條款</a>
+      </nav>
+      <div class="nav-actions">
+        <span data-auth-slot>
+          <a class="btn btn-sm btn-primary" href="/login">登入</a>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-pill-bar" id="navPill" aria-hidden="true">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="28" height="28" alt="MapSky" />
+    </a>
+    <div class="pill-actions">
+      <a class="btn btn-sm btn-primary" href="/login">登入</a>
+      <button type="button" class="nav-toggle" id="navTogglePill" aria-label="開啟選單" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">MapSky</p>
+        <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
+        <p class="lead">
+          整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，搭配動態天空，讓出門決策更簡單。
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="/login">登入</a>
+          <a class="btn btn-ghost" href="/features">進一步了解 ›</a>
+        </div>
+      </div>
+
+      <div class="hero-stage" aria-hidden="true">
+        <div class="float-cards">
+          <div class="float-card fc-1">
+            <div class="fc-icon">🌤</div>
+            <strong>前鎮區 · 29°</strong>
+            <span>陰時多雲短暫雨</span>
+          </div>
+          <div class="float-card fc-2">
+            <div class="fc-icon">🚇</div>
+            <strong>紅線 · 約 3 分</strong>
+            <span>下一班即將進站</span>
+          </div>
+          <div class="float-card fc-3">
+            <div class="fc-icon">🏫</div>
+            <strong>正常上班上課</strong>
+            <span>今日無停班停課公告</span>
+          </div>
+          <div class="float-card fc-4">
+            <div class="fc-icon">🚲</div>
+            <strong>YouBike 可借 12</strong>
+            <span>附近站點 · 可還 8</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="device-frame">
+            <img
+              class="app-shot"
+              src="assets/app-preview.jpg"
+              width="1200"
+              height="838"
+              alt="MapSky App 畫面：天氣、地圖與未來七天預報"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="news" class="section">
+      <div class="section-head">
+        <h2>最新消息。</h2>
+        <p>產品更新與公告。</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>官網改版上線</h3>
+          <p>淺色介面、浮動導覽與 App 實機預覽，更貼近真實使用體驗。</p>
+        </article>
+        <article class="card">
+          <h3>iOS App 即將上架</h3>
+          <p>登入後即可使用同一套帳號；上架時程將於本頁更新。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="features" class="section section-alt">
+      <div class="section-head">
+        <h2>核心功能。</h2>
+        <p>把出門前最常查的資訊，收在同一個地方。</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <div class="card-icon">🌤</div>
+          <h3>天氣與動態天空</h3>
+          <p>溫度、體感、紫外線與日出日落，背景隨真實天候變化。</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🚇</div>
+          <h3>捷運 · 台鐵 · 高鐵</h3>
+          <p>站點與班次一次看，支援當日時刻表與即時狀態。</p>
+        </article>
+        <article class="card">
+          <div class="card-icon">🏫</div>
+          <h3>停班停課</h3>
+          <p>縣市地圖著色，全天／部分／尚未宣布一目了然。</p>
+        </article>
+      </div>
+      <div class="hero-cta" style="justify-content:center;margin-top:32px">
+        <a class="btn btn-ghost" href="/features">查看完整功能介紹 ›</a>
+      </div>
+    </section>
+
+    <section id="transit" class="section">
+      <div class="section-head">
+        <h2>交通資訊。</h2>
+        <p>高雄捷運、台鐵、高鐵與 YouBike。</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>軌道運輸</h3>
+          <p>紅線／橘線／輕軌、台鐵與高鐵班次，支援當日剩餘時刻。</p>
+        </article>
+        <article class="card">
+          <h3>YouBike</h3>
+          <p>附近站點可借可還，搭配定位快速決策。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="closures" class="section section-alt">
+      <div class="section-head">
+        <h2>停班停課。</h2>
+        <p>對齊人事行政總處公告，支援今日與明日。</p>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>縣市地圖</h3>
+          <p>以顏色區分全天、部分、正常與尚未宣布。</p>
+        </article>
+        <article class="card">
+          <h3>自動換日</h3>
+          <p>晚間自動帶入隔日；提早公告不會被覆蓋。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="download" class="section section-cta">
+      <div class="cta-box">
+        <h2>開始使用 MapSky。</h2>
+        <p>登入後即可使用同一套帳號；iOS App 即將上架。</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="/login">登入</a>
+          <a class="btn btn-ghost" href="/features">查看功能 ›</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand">
+      <img class="logo-img" data-logo="icon" width="28" height="28" alt="" />
+      <span>MapSky</span>
+    </div>
+    <div class="footer-links">
+      <a href="#news">最新消息</a>
+      <a href="/features">功能</a>
+      <a href="/privacy">隱私與條款</a>
+      <a href="/login">登入</a>
+      <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
+    </div>
+    <p class="footer-note">Copyright © MapSky. mapskyapp@gmail.com</p>
+  </footer>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    (function () {
+      var toggle = document.getElementById("navToggle");
+      var togglePill = document.getElementById("navTogglePill");
+      var panel = document.getElementById("navRight");
+      var pill = document.getElementById("navPill");
+      var threshold = 60;
+      function onScroll() {
+        var scrolled = window.scrollY > threshold;
+        document.body.classList.toggle("is-scrolled", scrolled);
+        if (pill) pill.setAttribute("aria-hidden", scrolled ? "false" : "true");
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+      function bindToggle(btn) {
+        if (!btn || !panel) return;
+        btn.addEventListener("click", function () {
+          var open = panel.classList.toggle("open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          btn.classList.toggle("open", open);
+          if (toggle) { toggle.classList.toggle("open", open); toggle.setAttribute("aria-expanded", open ? "true" : "false"); }
+          if (togglePill) { togglePill.classList.toggle("open", open); togglePill.setAttribute("aria-expanded", open ? "true" : "false"); }
+          document.body.classList.toggle("nav-open", open);
+        });
+      }
+      bindToggle(toggle);
+      bindToggle(togglePill);
+      if (panel) {
+        panel.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            panel.classList.remove("open");
+            document.body.classList.remove("nav-open");
+            [toggle, togglePill].forEach(function (b) {
+              if (!b) return;
+              b.classList.remove("open");
+              b.setAttribute("aria-expanded", "false");
+            });
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
