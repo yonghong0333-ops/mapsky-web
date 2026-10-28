@@ -1,7 +1,6 @@
 /* ============================================================
-   Torn paper edge – last child of .ink-sheet (black block).
-   SVG paints black above the jagged line; transparent below
-   so the white #news section shows through the teeth.
+   Torn paper bridge – sits BETWEEN .ink-sheet (black) and #news (white).
+   SVG black fill forms the teeth; transparent gaps show white underneath.
    ============================================================ */
 
 .ink-sheet {
@@ -13,33 +12,34 @@
   z-index: 2;
 }
 
+/* Bridge element – no background, only the SVG paint */
 .torn-edge {
   position: relative;
-  z-index: 5;
+  z-index: 6;
   display: block;
   width: 100%;
-  height: 72px;
-  margin: 0 0 -36px 0; /* hang teeth into the white section below */
+  height: 64px;
+  margin: 0;
   padding: 0;
   line-height: 0;
   pointer-events: none;
-  background: transparent;
+  background: transparent !important;
   overflow: visible;
 }
 
 .torn-svg {
   display: block;
   width: 100%;
-  height: 72px;
+  height: 64px;
 }
 
-/* White page starts under the hanging teeth */
+/* White page pulls up under the teeth */
 #news.section {
   position: relative;
   z-index: 1;
   max-width: none;
-  padding-top: 64px;
-  margin-top: 0;
+  padding-top: 48px;
+  margin-top: -40px; /* sit under the jagged SVG */
   background: #ffffff !important;
   color: #1d1d1f;
   overflow: visible;
@@ -219,8 +219,9 @@
   .detail-frame { margin-top: 14px; border-radius: 14px; }
   .detail-frame img { max-height: min(36dvh, 280px); }
   #details.section { padding-top: 20px; }
-  .torn-edge { height: 56px; margin-bottom: -28px; }
-  .torn-svg { height: 56px; }
+  .torn-edge { height: 52px; }
+  .torn-svg { height: 52px; }
+  #news.section { margin-top: -32px; padding-top: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-pin { height: auto !important; }
