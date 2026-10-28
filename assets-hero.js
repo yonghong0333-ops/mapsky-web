@@ -1,3 +1,2 @@
-window.MAPSKY_ASSETS=window.MAPSKY_ASSETS||{};
-/* high-res hero loaded from original user screenshot */
-console.log('[mapsky] assets-hero placeholder - upload pending');
+/* hero HQ: replace assets/hero-app.jpg via GitHub UI with the provided original */
+window.MAPSKY_ASSETS = window.MAPSKY_ASSETS || {};
