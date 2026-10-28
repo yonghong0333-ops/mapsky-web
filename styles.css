@@ -21,7 +21,6 @@ body {
   color: var(--fg);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  /* clip avoids the iOS filter/drop-shadow crop that overflow-x:hidden causes */
   overflow-x: clip;
 }
 body.nav-open { overflow: hidden; }
@@ -122,19 +121,26 @@ body.is-scrolled .nav-pill-bar { opacity: 1; pointer-events: auto; }
 .hero-layer-detail { z-index: 1; background: #000; }
 .hero-copy {
   max-width: 520px; padding: 0 24px; text-align: center; margin: 0 auto;
+  /* keep copy in upper half so phone has room */
+  position: relative;
+  z-index: 2;
+  margin-bottom: 38vh;
 }
 .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-h1 { font-size: clamp(32px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px; }
+h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px; }
 .lead { font-size: 17px; color: var(--muted); margin-bottom: 28px; max-width: 420px; margin-left: auto; margin-right: auto; }
 .hero-cta { display: flex; justify-content: center; gap: 12px; }
 .hero-stage { position: absolute; inset: 0; pointer-events: none; }
 .device-frame {
-  position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%);
-  width: min(280px, 72vw); border-radius: 28px; overflow: hidden;
+  position: absolute; left: 50%; bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: min(260px, 68vw);
+  border-radius: 28px; overflow: hidden;
   box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
 }
 .device-frame .app-shot {
-  width: 100%; height: auto; object-fit: contain; max-height: min(56vh, 560px);
+  width: 100%; height: auto; object-fit: contain;
+  max-height: min(42vh, 420px);
   image-rendering: -webkit-optimize-contrast;
 }
 .float-cards { position: absolute; inset: 0; pointer-events: none; }
@@ -142,15 +148,42 @@ h1 { font-size: clamp(32px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   position: absolute; background: rgba(28,28,30,0.92); backdrop-filter: blur(12px);
   border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px;
   font-size: 12px; opacity: 0; transform: translateY(12px); transition: opacity 0.5s, transform 0.5s;
+  z-index: 3;
 }
 .float-card.is-visible { opacity: 1; transform: none; }
 .float-card strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .float-card span { color: var(--muted); }
 .fc-icon { font-size: 16px; margin-bottom: 4px; }
-.fc-1 { top: 18%; left: 6%; }
-.fc-2 { top: 28%; right: 5%; }
-.fc-3 { bottom: 32%; left: 4%; }
-.fc-4 { bottom: 22%; right: 6%; }
+.fc-1 { top: 14%; left: 4%; }
+.fc-2 { top: 22%; right: 3%; }
+.fc-3 { bottom: 38%; left: 3%; }
+.fc-4 { bottom: 28%; right: 3%; }
+
+/* Mobile: tighter hero so phone is never clipped */
+@media (max-width: 700px) {
+  .hero-copy {
+    padding: 0 18px;
+    margin-bottom: 34vh;
+    margin-top: calc(var(--nav-h) + var(--safe-top) + 8px);
+  }
+  h1 { font-size: clamp(26px, 7.2vw, 34px); margin-bottom: 10px; }
+  .lead { font-size: 15px; margin-bottom: 16px; }
+  .btn-hero { padding: 12px 22px; font-size: 15px; }
+  .device-frame {
+    width: min(240px, 64vw);
+    bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    border-radius: 22px;
+  }
+  .device-frame .app-shot {
+    max-height: min(36vh, 340px);
+  }
+  .float-card { padding: 10px 12px; font-size: 11px; }
+  .float-card strong { font-size: 12px; }
+  .fc-1 { top: 12%; left: 3%; }
+  .fc-2 { top: 20%; right: 2%; }
+  .fc-3 { bottom: 36%; left: 2%; }
+  .fc-4 { bottom: 26%; right: 2%; }
+}
 
 /* Intro lines */
 .intro-lines { position: relative; width: 100%; height: 100%; }
