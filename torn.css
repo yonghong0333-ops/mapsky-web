@@ -1,42 +1,47 @@
-/* Torn paper edge – keep fully visible on iOS (no parent clip) */
+/* ============================================================
+   Torn paper edge – sits at the bottom of the black block.
+   No negative margins, no filter drop-shadow (iOS-safe).
+   ============================================================ */
+
+.ink-sheet {
+  background: #0a0a0a;
+  color: #f5f5f7;
+  overflow: visible;
+  /* tear is the last child; no padding-bottom so SVG can sit flush */
+  padding-bottom: 0;
+}
+
 .torn-edge {
   position: relative;
-  z-index: 20;
+  z-index: 5;
+  display: block;
   width: 100%;
-  height: 72px;
-  margin-top: -1px;
-  /* reserve space below for shadow + tips */
-  margin-bottom: -28px;
-  padding-bottom: 18px;
-  box-sizing: content-box;
+  height: 48px;
+  margin: 0;
+  padding: 0;
   line-height: 0;
   pointer-events: none;
-  background: transparent;
+  background: #0a0a0a; /* fill any gap above the path */
   overflow: visible;
-  /* lighter shadow so less likely to be clipped */
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.28));
 }
+
 .torn-svg {
   display: block;
   width: 100%;
-  height: 72px;
-  overflow: visible;
+  height: 48px;
+  /* SVG itself draws black fill + soft shadow via filter inside SVG if needed */
 }
 
-.ink-sheet,
-.finale-pin,
-#news.section {
-  overflow: visible;
-}
-
-/* White page after the tear */
+/* White page starts cleanly after the black block */
 #news.section {
   position: relative;
   z-index: 1;
   max-width: none;
   padding-top: 56px;
+  margin-top: 0;
   background: #ffffff !important;
   color: #1d1d1f;
+  overflow: visible;
 }
 #news.section > * {
   max-width: 980px;
@@ -51,6 +56,7 @@
 .footer { background: #ffffff; }
 #closures.section { background: #f5f5f7; }
 
+/* ---- rest of marketing layout (unchanged) ---- */
 .hero-pin { height: 560vh; }
 @media (max-width: 900px) {
   .hero-pin { height: 500vh; }
@@ -135,10 +141,7 @@
 .section-details .section-head h2 { color: #f5f5f7; }
 #details.section .section-head p,
 .section-details .section-head p { color: rgba(255, 255, 255, 0.62); }
-.ink-sheet {
-  background: #0a0a0a;
-  color: #f5f5f7;
-}
+
 .shot-hero {
   border-radius: 28px;
   overflow: hidden;
@@ -226,6 +229,7 @@
   position: relative;
   height: 220vh;
   background: #0a0a0a;
+  overflow: visible;
 }
 .ink-finale {
   position: sticky;
