@@ -87,10 +87,10 @@
 
   function escapeHtml(str) {
     return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, """);
   }
 
   function updateNav(s) {
@@ -159,9 +159,19 @@
     updateNav: updateNav,
   };
 
+  function showHiddenText() {
+    var css = document.createElement("style");
+    css.textContent = ".reveal,.intro-line,.ink-finale-mark,.finale-cta,.float-card{opacity:1!important;transform:none!important}.hero-copy{position:absolute!important;top:84px!important;left:0!important;right:0!important;margin:0 auto!important;z-index:5!important}";
+    document.head.appendChild(css);
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootNav);
+    document.addEventListener("DOMContentLoaded", function () {
+      bootNav();
+      showHiddenText();
+    });
   } else {
     bootNav();
+    showHiddenText();
   }
 })();
