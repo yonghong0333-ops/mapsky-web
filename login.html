@@ -9,53 +9,85 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     body.login-page {
-      min-height: 100vh;
-      min-height: 100dvh;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.15) 100%),
+      min-height: 100vh; min-height: 100dvh;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.15) 100%),
         url("https://mapskyapp.vercel.app/login-bg.jpg") center / cover no-repeat fixed;
       background-color: #6a9cc8;
     }
-    body.login-page .nav {
-      background: transparent;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      border: 0;
-    }
+    body.login-page .nav { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; }
     body.login-page .brand { color: #fff; }
-    body.login-page .brand:hover { opacity: 0.9; }
-    body.login-page .nav-links a {
-      color: rgba(255, 255, 255, 0.92) !important;
-    }
-    body.login-page .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff !important;
-    }
-    body.login-page .nav-toggle span {
-      background: #fff;
-    }
+    body.login-page .nav-links a { color: rgba(255,255,255,0.92) !important; }
+    body.login-page .nav-links a:hover { background: rgba(255,255,255,0.12); color: #fff !important; }
+    body.login-page .nav-toggle span { background: #fff; }
     body.login-page .nav .btn-ghost {
-      color: #fff !important;
-      background: rgba(255,255,255,0.18);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 980px;
-      padding: 8px 16px;
-      text-decoration: none !important;
+      color: #fff !important; background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-radius: 980px; padding: 8px 16px; text-decoration: none !important;
     }
-    body.login-page .nav .btn-ghost:hover {
-      background: rgba(255,255,255,0.28);
-      text-decoration: none !important;
-    }
+    body.login-page .nav .btn-ghost:hover { background: rgba(255,255,255,0.28); text-decoration: none !important; }
     @media (max-width: 900px) {
       body.login-page .nav-right.open {
         background: rgba(20, 28, 40, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       }
-      body.login-page .nav-right.open .nav-links a {
-        color: #fff !important;
-      }
+      body.login-page .nav-right.open .nav-links a { color: #fff !important; }
+    }
+    .login-stage {
+      min-height: calc(100vh - var(--nav-h)); min-height: calc(100dvh - var(--nav-h));
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 24px 64px; text-align: center;
+    }
+    .login-hero-logo { margin-bottom: 16px; }
+    .login-hero-logo .wordmark-lg {
+      height: 48px; width: auto; max-width: 260px; margin: 0 auto;
+      filter: drop-shadow(0 2px 12px rgba(0,0,0,0.15)); opacity: 0.95;
+    }
+    .login-tagline {
+      margin: 0 0 48px; color: rgba(255,255,255,0.92); font-size: 16px; font-weight: 500;
+      letter-spacing: 0.02em; text-shadow: 0 1px 8px rgba(0,0,0,0.2);
+    }
+    .login-panel { width: min(100%, 380px); display: flex; flex-direction: column; gap: 14px; }
+    #providerList { display: flex; flex-direction: column; gap: 14px; }
+    .login-panel .provider-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
+      padding: 16px 22px; border-radius: 980px; border: 0;
+      background: rgba(45, 55, 72, 0.55); backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%); color: #fff !important;
+      font-weight: 500; font-size: 16px; cursor: pointer; text-decoration: none !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12); transition: background 0.2s, transform 0.15s;
+    }
+    .login-panel .provider-btn:hover { background: rgba(45, 55, 72, 0.72); transform: translateY(-1px); }
+    .provider-icon { width: 22px; height: 22px; border-radius: 4px; }
+    .login-more {
+      background: none; border: 0; color: rgba(255,255,255,0.85); font-size: 14px;
+      cursor: pointer; padding: 8px; font-family: inherit;
+    }
+    .login-email { display: none; text-align: left; }
+    .login-email.open { display: block; }
+    .magic-row { display: flex; gap: 8px; }
+    .magic-row input {
+      flex: 1; padding: 12px 14px; border-radius: 12px; border: 0;
+      background: rgba(255,255,255,0.92); font-size: 15px; font-family: inherit;
+    }
+    .magic-row button {
+      padding: 12px 16px; border-radius: 12px; border: 0; background: #1d1d1f; color: #fff;
+      font-weight: 500; cursor: pointer; font-family: inherit;
+    }
+    .hint { margin: 8px 0 0; font-size: 13px; color: rgba(255,255,255,0.75); }
+    .msg { margin-top: 10px; font-size: 14px; min-height: 1.2em; }
+    .login-agree {
+      display: flex; align-items: flex-start; gap: 8px; margin-top: 8px;
+      font-size: 13px; color: rgba(255,255,255,0.88); text-align: left;
+    }
+    .login-agree a { color: #fff; text-decoration: underline; }
+    .account-panel-sky {
+      display: none; width: min(100%, 380px); padding: 28px 24px;
+      border-radius: 24px; background: rgba(255,255,255,0.95);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    }
+    .account-panel-sky p { margin: 0 0 18px; color: #1d1d1f; font-size: 16px; }
+    .account-panel-sky .account-actions {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
     }
   </style>
 </head>
@@ -81,13 +113,20 @@
       </div>
     </div>
   </header>
+
   <div class="login-stage">
     <div class="login-hero-logo">
       <img class="wordmark-lg" data-logo="wordmark" alt="MAPSKY" />
     </div>
     <p class="login-tagline">讓天氣看得見，讓未來更清晰</p>
+
     <div class="login-panel" id="guestPanel">
-      <div id="providerList"></div>
+      <div id="providerList">
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <img class="provider-icon" src="https://mapskyapp.vercel.app/login-icons/google.png" alt="" width="22" height="22" />
+          <span>使用 Google 登入</span>
+        </a>
+      </div>
       <button type="button" class="login-more" id="toggleEmail">或使用 Email 驗證碼 ▾</button>
       <div class="login-email" id="emailBox">
         <div class="magic-row">
@@ -108,6 +147,7 @@
         <span>已閱讀並同意 <a href="/privacy#terms">服務條款</a>與<a href="/privacy">隱私權政策</a></span>
       </label>
     </div>
+
     <div class="account-panel-sky" id="accountPanel">
       <p id="accountText">你已登入。</p>
       <div class="account-actions">
@@ -116,6 +156,7 @@
       </div>
     </div>
   </div>
+
   <script src="logo-icon.js"></script>
   <script src="logo-wordmark.js"></script>
   <script src="logo-apply.js"></script>
@@ -139,10 +180,7 @@
           a.addEventListener("click", function () {
             panel.classList.remove("open");
             document.body.classList.remove("nav-open");
-            if (toggle) {
-              toggle.classList.remove("open");
-              toggle.setAttribute("aria-expanded", "false");
-            }
+            if (toggle) { toggle.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); }
           });
         });
       }
@@ -154,6 +192,7 @@
       var otpBox = document.getElementById("otpBox");
       var guestPanel = document.getElementById("guestPanel");
       var accountPanel = document.getElementById("accountPanel");
+      var pendingEmail = "";
       function showMsg(t, ok) {
         if (!msg) return;
         msg.textContent = t || "";
@@ -166,7 +205,7 @@
       }
       function renderAccount(s) {
         if (guestPanel) guestPanel.style.display = "none";
-        if (accountPanel) accountPanel.style.display = "";
+        if (accountPanel) accountPanel.style.display = "block";
         var name = (s && s.profile && (s.profile.nickname || s.profile.name || s.profile.email)) || "已登入";
         var el = document.getElementById("accountText");
         if (el) el.textContent = "目前登入：" + name;
@@ -182,6 +221,46 @@
       }).catch(function () {
         MapSkyAuth.updateNav({ loggedIn: false });
         renderGuest();
+      });
+      document.getElementById("toggleEmail").addEventListener("click", function () {
+        document.getElementById("emailBox").classList.toggle("open");
+      });
+      document.getElementById("sendBtn").addEventListener("click", function () {
+        if (!document.getElementById("agreeBox").checked) return showMsg("請先同意服務條款與隱私權政策", false);
+        var email = document.getElementById("emailInput").value.trim();
+        if (!email) return showMsg("請輸入 Email", false);
+        pendingEmail = email;
+        document.getElementById("sendBtn").disabled = true;
+        MapSkyAuth.sendMagicLink(email).then(function (res) {
+          document.getElementById("sendBtn").disabled = false;
+          if (res.body && res.body.ok) {
+            otpBox.style.display = "block";
+            showMsg("驗證碼已寄出，請到信箱查看。", true);
+          } else {
+            showMsg("寄送失敗，請稍後再試", false);
+          }
+        }).catch(function () {
+          document.getElementById("sendBtn").disabled = false;
+          showMsg("網路錯誤，請稍後再試", false);
+        });
+      });
+      document.getElementById("verifyBtn").addEventListener("click", function () {
+        var code = document.getElementById("codeInput").value.trim();
+        if (!pendingEmail) pendingEmail = document.getElementById("emailInput").value.trim();
+        if (!pendingEmail || !code) return showMsg("請輸入 Email 與驗證碼", false);
+        document.getElementById("verifyBtn").disabled = true;
+        MapSkyAuth.verifyCode(pendingEmail, code).then(function (res) {
+          document.getElementById("verifyBtn").disabled = false;
+          if (res.body && res.body.ok) {
+            showMsg("登入成功，正在返回首頁…", true);
+            setTimeout(goHome, 500);
+            return;
+          }
+          showMsg("驗證失敗", false);
+        }).catch(function () {
+          document.getElementById("verifyBtn").disabled = false;
+          showMsg("網路錯誤，請稍後再試", false);
+        });
       });
       document.getElementById("logoutBtn").addEventListener("click", function () {
         MapSkyAuth.logout().then(function () {
