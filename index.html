@@ -214,13 +214,18 @@
       var togglePill = document.getElementById("navTogglePill");
       var panel = document.getElementById("navRight");
       var pill = document.getElementById("navPill");
-      var threshold = 60;
+      function scrollThreshold() {
+        var hero = document.querySelector(".hero");
+        if (hero) return Math.max(80, hero.offsetHeight * 0.55);
+        return Math.max(80, window.innerHeight * 0.55);
+      }
       function onScroll() {
-        var scrolled = window.scrollY > threshold;
+        var scrolled = window.scrollY > scrollThreshold();
         document.body.classList.toggle("is-scrolled", scrolled);
         if (pill) pill.setAttribute("aria-hidden", scrolled ? "false" : "true");
       }
       window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
       onScroll();
       function bindToggle(btn) {
         if (!btn || !panel) return;
