@@ -126,11 +126,18 @@ body.is-scrolled .nav {
 @media (max-width: 768px) {
   .nav-toggle {
     display: flex;
+    z-index: 2001;
   }
   .nav-right {
     position: fixed;
-    inset: 0;
-    z-index: 1001;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    z-index: 2000;
     background: #000;
     flex-direction: column;
     justify-content: center;
@@ -138,9 +145,16 @@ body.is-scrolled .nav {
     gap: 32px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s;
+    transition: opacity 0.25s ease;
+    padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .nav-right.open { opacity: 1; pointer-events: auto; }
+  .nav-right.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
   .nav-links {
     flex-direction: column;
     align-items: center;
