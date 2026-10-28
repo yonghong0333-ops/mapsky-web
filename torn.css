@@ -1,37 +1,31 @@
-/* Torn paper edge: black ends, then rips into the white page */
+/* Torn paper edge – keep fully visible on iOS (no parent clip) */
 .torn-edge {
   position: relative;
   z-index: 20;
   width: 100%;
-  height: 96px;
+  height: 72px;
   margin-top: -1px;
-  margin-bottom: -48px;
+  /* reserve space below for shadow + tips */
+  margin-bottom: -28px;
+  padding-bottom: 18px;
+  box-sizing: content-box;
   line-height: 0;
   pointer-events: none;
   background: transparent;
   overflow: visible;
-  filter:
-    drop-shadow(0 12px 16px rgba(0, 0, 0, 0.32))
-    drop-shadow(0 4px 6px rgba(0, 0, 0, 0.18));
+  /* lighter shadow so less likely to be clipped */
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.28));
 }
 .torn-svg {
   display: block;
   width: 100%;
-  height: 96px;
+  height: 72px;
   overflow: visible;
 }
 
-/* Give black block room so tear is not clipped */
-.ink-sheet {
-  background: #0a0a0a;
-  color: #f5f5f7;
-  overflow: visible;
-  padding-bottom: 0;
-}
-.finale-pin {
-  position: relative;
-  height: 220vh;
-  background: #0a0a0a;
+.ink-sheet,
+.finale-pin,
+#news.section {
   overflow: visible;
 }
 
@@ -40,10 +34,9 @@
   position: relative;
   z-index: 1;
   max-width: none;
-  padding-top: 72px;
+  padding-top: 56px;
   background: #ffffff !important;
   color: #1d1d1f;
-  overflow: visible;
 }
 #news.section > * {
   max-width: 980px;
@@ -130,11 +123,6 @@
   background: #121820;
 }
 
-.page-below {
-  background: #ffffff;
-  color: #1d1d1f;
-}
-
 #details.section,
 .section-details {
   background: #0a0a0a;
@@ -147,7 +135,10 @@
 .section-details .section-head h2 { color: #f5f5f7; }
 #details.section .section-head p,
 .section-details .section-head p { color: rgba(255, 255, 255, 0.62); }
-
+.ink-sheet {
+  background: #0a0a0a;
+  color: #f5f5f7;
+}
 .shot-hero {
   border-radius: 28px;
   overflow: hidden;
@@ -231,6 +222,11 @@
   .hero-layer-detail { display: none !important; }
 }
 
+.finale-pin {
+  position: relative;
+  height: 220vh;
+  background: #0a0a0a;
+}
 .ink-finale {
   position: sticky;
   top: 0;
@@ -295,7 +291,6 @@
   }
 }
 
-/* Sharper marketing screenshots */
 .device-frame .app-shot,
 .shot-frame img,
 .detail-frame img,
@@ -304,9 +299,7 @@
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-.device-frame {
-  background: #0b1220;
-}
+.device-frame { background: #0b1220; }
 .device-frame .app-shot {
   display: block;
   width: 100%;
