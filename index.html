@@ -48,10 +48,8 @@
   </div>
 
   <main id="top">
-    <!-- Tall pin zone: black stays fixed while scroll drives text sequence -->
     <div class="hero-pin" id="heroPin">
       <section class="hero" id="heroSticky">
-        <!-- Layer 1: original landing (title + device) -->
         <div class="hero-layer hero-layer-landing" data-layer="landing">
           <div class="hero-copy">
             <p class="eyebrow">MapSky</p>
@@ -102,13 +100,14 @@
           </div>
         </div>
 
-        <!-- Layer 2: sequential intro lines on pure black -->
         <div class="hero-layer hero-layer-intro" data-layer="intro" aria-hidden="true">
           <div class="intro-lines">
             <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
             <p class="intro-line" data-line="1">天氣、捷運、停班停課。</p>
             <p class="intro-line" data-line="2">現在，一站看清楚。</p>
-            <p class="intro-line intro-line-final" data-line="3">MapSky</p>
+            <div class="intro-line intro-line-final" data-line="3">
+              <img class="intro-logo" src="https://i.imgur.com/nXTexK0.jpeg" width="900" height="242" alt="MAPSKY" />
+            </div>
           </div>
         </div>
       </section>
@@ -271,7 +270,6 @@
         });
       }
 
-      /* ——— Float cards entrance ——— */
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) {
         requestAnimationFrame(function () {
@@ -279,14 +277,12 @@
         });
       }
 
-      /* ——— Scroll-driven pin + intro sequence ——— */
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var heroSticky = document.getElementById("heroSticky");
       var layerLanding = document.querySelector(".hero-layer-landing");
       var layerIntro = document.querySelector(".hero-layer-intro");
       var introLines = document.querySelectorAll(".intro-line");
 
-      if (heroPin && heroSticky && layerLanding && layerIntro && !reduceMotion) {
+      if (heroPin && layerLanding && layerIntro && !reduceMotion) {
         var pinTicking = false;
 
         function updatePin() {
@@ -357,7 +353,6 @@
         if (layerIntro) { layerIntro.style.display = "none"; }
       }
 
-      /* ——— Section reveals ——— */
       var reveals = document.querySelectorAll(".reveal");
       if (reveals.length && "IntersectionObserver" in window) {
         var io = new IntersectionObserver(

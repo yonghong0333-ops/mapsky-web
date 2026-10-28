@@ -206,7 +206,6 @@ body.is-scrolled .nav-pill-bar {
 .pill-actions { display: flex; align-items: center; gap: 6px; }
 .nav-pill-bar .nav-toggle span { background: var(--text); }
 
-/* ——— Sticky pin hero ——— */
 .hero-pin {
   position: relative;
   height: 320vh;
@@ -412,14 +411,23 @@ body.is-scrolled .nav-pill-bar {
   pointer-events: none;
 }
 .intro-line-final {
-  font-size: clamp(36px, 7vw, 56px);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.7));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  -webkit-text-fill-color: unset;
   color: transparent;
+  font-size: 0;
+}
+.intro-logo {
+  display: block;
+  width: min(88vw, 520px);
+  height: auto;
+  max-height: 28vh;
+  object-fit: contain;
+  filter: brightness(1.05) contrast(1.05);
+  pointer-events: none;
+  user-select: none;
 }
 
 @keyframes heroFadeIn {
@@ -564,6 +572,10 @@ body.is-scrolled .nav-pill-bar {
   .device-frame { border-radius: 14px; }
   .device-frame .app-shot { max-height: min(42vh, 360px); }
   .intro-line { font-size: clamp(24px, 6vw, 34px); }
+  .intro-logo {
+    width: min(92vw, 420px);
+    max-height: 22vh;
+  }
 
   .nav {
     transition: opacity 0.25s ease, visibility 0.25s ease, background 0.25s ease;
