@@ -48,16 +48,46 @@ body.is-scrolled .nav {
 .brand { display: flex; align-items: center; gap: 8px; z-index: 2; }
 .logo-img { border-radius: 8px; }
 .wordmark { height: 20px; width: auto; opacity: 0.95; }
+
+/* Two-line circular menu toggle (Flighty style) */
 .nav-toggle {
-  display: none; width: 44px; height: 44px; border: 0; background: transparent;
-  cursor: pointer; z-index: 1002; position: relative;
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  z-index: 1002;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+  transition: background 0.2s;
+}
+.nav-toggle:hover {
+  background: rgba(255,255,255,0.18);
 }
 .nav-toggle span {
-  display: block; width: 18px; height: 1.5px; background: var(--fg);
-  margin: 5px auto; transition: transform 0.25s, opacity 0.2s;
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--fg);
+  border-radius: 1px;
+  margin: 0;
+  transition: transform 0.25s ease, opacity 0.2s;
 }
-.nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open {
+  background: rgba(255,255,255,0.18);
+}
+.nav-toggle.open span:nth-child(1) {
+  transform: translateY(3.25px) rotate(45deg);
+}
+.nav-toggle.open span:nth-child(2) {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
 
 /* Desktop: Flighty-style floating pill for links + actions */
 .nav-right {
@@ -110,7 +140,9 @@ body.is-scrolled .nav {
   body.is-scrolled .nav {
     background: rgba(10,10,10,0.88);
   }
-  .nav-toggle { display: block; }
+  .nav-toggle {
+    display: flex;
+  }
   .nav-right {
     position: fixed;
     inset: 0;
@@ -177,6 +209,17 @@ body.is-scrolled .nav {
 }
 body.is-scrolled .nav-pill-bar { opacity: 1; pointer-events: auto; }
 .pill-actions { display: flex; align-items: center; gap: 6px; }
+
+/* Also style the pill bar toggle the same way */
+.nav-pill-bar .nav-toggle {
+  display: flex;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.1);
+}
+.nav-pill-bar .nav-toggle span {
+  width: 14px;
+}
 
 /* Hero pin */
 .hero-pin { position: relative; height: 280vh; }
