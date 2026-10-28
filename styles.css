@@ -213,11 +213,15 @@ body.is-scrolled .nav-pill-bar {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .hero-copy {
   max-width: 980px;
   margin: 0 auto;
   width: 100%;
+  opacity: 0;
+  transform: translateY(24px);
+  animation: heroFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
 }
 .hero .eyebrow {
   font-size: 13px;
@@ -254,9 +258,12 @@ body.is-scrolled .nav-pill-bar {
   color: #0a0a0a !important;
   padding: 12px 22px;
   font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-hero:hover {
   background: rgba(255, 255, 255, 0.88);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .hero-stage {
@@ -268,6 +275,9 @@ body.is-scrolled .nav-pill-bar {
   align-items: center;
   justify-content: center;
   flex-shrink: 1;
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  animation: heroStageIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
 }
 .hero-visual {
   position: relative;
@@ -275,6 +285,8 @@ body.is-scrolled .nav-pill-bar {
   margin: 0;
   max-width: 860px;
   width: 100%;
+  will-change: transform;
+  transition: transform 0.1s linear;
 }
 .device-frame {
   width: 100%;
@@ -286,6 +298,7 @@ body.is-scrolled .nav-pill-bar {
   box-shadow:
     0 50px 100px -24px rgba(0, 0, 0, 0.5),
     0 20px 40px -16px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 .device-frame .app-shot {
   display: block;
@@ -315,6 +328,9 @@ body.is-scrolled .nav-pill-bar {
   text-align: left;
   min-width: 140px;
   color: #1d1d1f;
+  opacity: 0;
+  transform: translateY(28px) scale(0.92);
+  will-change: transform, opacity;
 }
 .float-card strong { display: block; font-size: 13px; margin-bottom: 2px; }
 .float-card span { font-size: 12px; color: #6e6e73; }
@@ -323,6 +339,47 @@ body.is-scrolled .nav-pill-bar {
 .fc-2 { top: 22%; right: 0; }
 .fc-3 { bottom: 28%; left: 0; }
 .fc-4 { bottom: 12%; right: 4%; }
+
+/* Staggered entrance + continuous gentle float (Flighty-style) */
+.float-card.is-visible {
+  animation:
+    cardPopIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    cardFloat 5.5s ease-in-out 0.75s infinite;
+}
+.fc-1.is-visible { animation-delay: 0.55s, 1.3s; }
+.fc-2.is-visible { animation-delay: 0.7s, 1.45s; }
+.fc-3.is-visible { animation-delay: 0.85s, 1.6s; }
+.fc-4.is-visible { animation-delay: 1s, 1.75s; }
+
+@keyframes heroFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroStageIn {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes cardPopIn {
+  0% { opacity: 0; transform: translateY(28px) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Section reveal (scroll-triggered) */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
 
 .section {
   padding: 72px 24px;
@@ -354,6 +411,11 @@ body.is-scrolled .nav-pill-bar {
   padding: 24px;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
 }
 .section-alt .card { border-color: transparent; }
 .card-icon { font-size: 28px; margin-bottom: 10px; }
@@ -518,5 +580,23 @@ body.is-scrolled .nav-pill-bar {
   .nav-pill-bar {
     max-width: none;
     width: calc(100% - 24px);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy,
+  .hero-stage,
+  .float-card,
+  .reveal {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .float-card.is-visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
