@@ -226,16 +226,21 @@
       </div>
     </section>
 
-    <section class="ink-finale" id="learn-more" aria-label="進一步了解">
-      <img
-        class="ink-finale-mark reveal"
-        src="assets/mapsky-finale.jpg"
-        width="1500"
-        height="432"
-        alt="MAPSKY"
-      />
-      <a class="btn btn-hero reveal" href="/features">進一步了解 ›</a>
-    </section>
+    <div class="finale-pin" id="finalePin">
+      <section class="ink-finale" id="learn-more" aria-label="進一步了解">
+        <div class="finale-stage">
+          <img
+            class="ink-finale-mark"
+            id="finaleMark"
+            src="assets/mapsky-finale.jpg"
+            width="1500"
+            height="432"
+            alt="MAPSKY"
+          />
+          <a class="btn btn-hero finale-cta" id="finaleCta" href="/features">進一步了解 ›</a>
+        </div>
+      </section>
+    </div>
     </div>
 
     <div class="torn-edge" aria-hidden="true">
@@ -419,48 +424,46 @@
 
       if (heroPin && layerLanding && layerIntro && !reduceMotion) {
         var pinTicking = false;
-
         function updatePin() {
           var rect = heroPin.getBoundingClientRect();
           var pinH = heroPin.offsetHeight;
-          var vh = window.innerHeight;
+          var vh = window.innerHeight || 1;
           var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
           var progress = scrolled / Math.max(pinH - vh, 1);
 
-          var landOpacity = 1;
-          var landScale = 1;
-          if (progress > 0.10) {
-            landOpacity = Math.max(0, 1 - (progress - 0.10) / 0.08);
-            landScale = 1 - Math.min(1, (progress - 0.10) / 0.12) * 0.06;
-          }
-          layerLanding.style.opacity = String(landOpacity);
-          layerLanding.style.transform = "scale(" + landScale + ")";
-          layerLanding.style.pointerEvents = landOpacity < 0.15 ? "none" : "auto";
+          var landingEnd = 0.18;
+          var introEnd = 0.42;
+          var detailStart = 0.4;
 
-          var introStart = 0.16;
+          var landingOpacity = progress <= 0 ? 1 : progress >= landingEnd ? 0 : 1 - progress / landingEnd;
+          layerLanding.style.opacity = String(Math.max(0, Math.min(1, landingOpacity)));
+          layerLanding.style.pointerEvents = landingOpacity > 0.2 ? "auto" : "none";
+
           var introOpacity = 0;
-          if (progress > introStart) {
-            introOpacity = Math.min(1, (progress - introStart) / 0.05);
-            if (progress > 0.36) {
-              introOpacity = Math.max(0, 1 - (progress - 0.36) / 0.07);
-            }
+          if (progress > landingEnd * 0.6 && progress < introEnd) {
+            if (progress < landingEnd + 0.06) introOpacity = (progress - landingEnd * 0.6) / (landingEnd * 0.4 + 0.06);
+            else if (progress < introEnd - 0.06) introOpacity = 1;
+            else introOpacity = Math.max(0, (introEnd - progress) / 0.06);
           }
-          layerIntro.style.opacity = String(introOpacity);
-          layerIntro.setAttribute("aria-hidden", introOpacity < 0.1 ? "true" : "false");
+          layerIntro.style.opacity = String(Math.max(0, Math.min(1, introOpacity)));
+          layerIntro.setAttribute("aria-hidden", introOpacity < 0.15 ? "true" : "false");
+
+          var detailOpacity = 0;
+          if (progress >= detailStart) {
+            detailOpacity = Math.min(1, (progress - detailStart) / 0.08);
+          }
+          if (layerDetail) {
+            layerDetail.style.opacity = String(detailOpacity);
+            layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
+            layerDetail.setAttribute("aria-hidden", detailOpacity < 0.15 ? "true" : "false");
+          }
 
           var lineProgress = 0;
-          if (progress > introStart) {
-            lineProgress = Math.min(1, (progress - introStart) / 0.20);
+          if (progress > landingEnd * 0.5) {
+            lineProgress = Math.min(1, (progress - landingEnd * 0.5) / (introEnd - landingEnd * 0.5));
           }
 
-          var detailStart = 0.40;
-          var detailOpacity = 0;
-          if (layerDetail) {
-            if (progress > detailStart) {
-              detailOpacity = Math.min(1, (progress - detailStart) / 0.05);
-            }
-            layerDetail.style.opacity = String(detailOpacity);
-            layerDetail.setAttribute("aria-hidden", detailOpacity < 0.1 ? "true" : "false");
+          if (detailSlides.length) {
             var count = detailSlides.length || 1;
             var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.58);
             detailSlides.forEach(function (slide, i) {
@@ -519,19 +522,67 @@
         if (layerIntro) { layerIntro.style.display = "none"; }
       }
 
+      /* Finale pin: MAPSKY + CTA holds while scrolling, then release to news */
+      var finalePin = document.getElementById("finalePin");
+      var finaleMark = document.getElementById("finaleMark");
+      var finaleCta = document.getElementById("finaleCta");
+      if (finalePin && finaleMark && !reduceMotion) {
+        var finaleTicking = false;
+        function updateFinale() {
+          var rect = finalePin.getBoundingClientRect();
+          var pinH = finalePin.offsetHeight;
+          var vh = window.innerHeight || 1;
+          var scrolled = Math.min(Math.max(-rect.top, 0), Math.max(pinH - vh, 1));
+          var progress = scrolled / Math.max(pinH - vh, 1);
+
+          var logoT = 0;
+          if (progress < 0.08) logoT = 0;
+          else if (progress < 0.45) logoT = (progress - 0.08) / 0.37;
+          else logoT = 1;
+          logoT = Math.max(0, Math.min(1, logoT));
+          finaleMark.style.opacity = String(logoT);
+          finaleMark.style.transform = "translateY(" + ((1 - logoT) * 36) + "px) scale(" + (0.9 + logoT * 0.1) + ")";
+
+          var ctaT = 0;
+          if (finaleCta) {
+            if (progress < 0.32) ctaT = 0;
+            else if (progress < 0.72) ctaT = (progress - 0.32) / 0.4;
+            else ctaT = 1;
+            ctaT = Math.max(0, Math.min(1, ctaT));
+            finaleCta.style.opacity = String(ctaT);
+            finaleCta.style.transform = "translateY(" + ((1 - ctaT) * 22) + "px)";
+            finaleCta.style.pointerEvents = ctaT > 0.5 ? "auto" : "none";
+          }
+          finaleTicking = false;
+        }
+        window.addEventListener("scroll", function () {
+          if (!finaleTicking) {
+            requestAnimationFrame(updateFinale);
+            finaleTicking = true;
+          }
+        }, { passive: true });
+        window.addEventListener("resize", updateFinale, { passive: true });
+        updateFinale();
+      } else if (finaleMark) {
+        finaleMark.style.opacity = "1";
+        finaleMark.style.transform = "none";
+        if (finaleCta) {
+          finaleCta.style.opacity = "1";
+          finaleCta.style.transform = "none";
+          finaleCta.style.pointerEvents = "auto";
+        }
+      }
+
       var reveals = document.querySelectorAll(".reveal");
-      if (reveals.length && "IntersectionObserver" in window) {
-        var io = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("is-visible");
-                io.unobserve(entry.target);
-              }
-            });
-          },
-          { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
-        );
+      if ("IntersectionObserver" in window && reveals.length) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
         reveals.forEach(function (el) { io.observe(el); });
       } else {
         reveals.forEach(function (el) { el.classList.add("is-visible"); });
