@@ -48,56 +48,71 @@
   </div>
 
   <main id="top">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">MapSky</p>
-        <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
-        <p class="lead">
-          整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，搭配動態天空，讓出門決策更簡單。
-        </p>
-        <div class="hero-cta">
-          <a class="btn btn-hero" href="/features">進一步了解 ›</a>
+    <!-- Tall pin zone: black stays fixed while scroll drives text sequence -->
+    <div class="hero-pin" id="heroPin">
+      <section class="hero" id="heroSticky">
+        <!-- Layer 1: original landing (title + device) -->
+        <div class="hero-layer hero-layer-landing" data-layer="landing">
+          <div class="hero-copy">
+            <p class="eyebrow">MapSky</p>
+            <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
+            <p class="lead">
+              整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，搭配動態天空，讓出門決策更簡單。
+            </p>
+            <div class="hero-cta">
+              <a class="btn btn-hero" href="/features">進一步了解 ›</a>
+            </div>
+          </div>
+          <div class="hero-stage" aria-hidden="true">
+            <div class="float-cards">
+              <div class="float-card fc-1">
+                <div class="fc-icon">🌤</div>
+                <strong>前鎮區 · 29°</strong>
+                <span>陰時多雲短暫雨</span>
+              </div>
+              <div class="float-card fc-2">
+                <div class="fc-icon">🚇</div>
+                <strong>紅線 · 約 3 分</strong>
+                <span>下一班即將進站</span>
+              </div>
+              <div class="float-card fc-3">
+                <div class="fc-icon">🏫</div>
+                <strong>正常上班上課</strong>
+                <span>今日無停班停課公告</span>
+              </div>
+              <div class="float-card fc-4">
+                <div class="fc-icon">🚲</div>
+                <strong>YouBike 可借 12</strong>
+                <span>附近站點 · 可還 8</span>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <div class="device-frame">
+                <img
+                  class="app-shot"
+                  src="https://i.imgur.com/Ov1S6Yh.jpeg"
+                  width="560"
+                  height="391"
+                  alt="MapSky App 畫面：天氣、地圖與未來七天預報"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="hero-stage" aria-hidden="true">
-        <div class="float-cards">
-          <div class="float-card fc-1">
-            <div class="fc-icon">🌤</div>
-            <strong>前鎮區 · 29°</strong>
-            <span>陰時多雲短暫雨</span>
-          </div>
-          <div class="float-card fc-2">
-            <div class="fc-icon">🚇</div>
-            <strong>紅線 · 約 3 分</strong>
-            <span>下一班即將進站</span>
-          </div>
-          <div class="float-card fc-3">
-            <div class="fc-icon">🏫</div>
-            <strong>正常上班上課</strong>
-            <span>今日無停班停課公告</span>
-          </div>
-          <div class="float-card fc-4">
-            <div class="fc-icon">🚲</div>
-            <strong>YouBike 可借 12</strong>
-            <span>附近站點 · 可還 8</span>
+        <!-- Layer 2: sequential intro lines on pure black -->
+        <div class="hero-layer hero-layer-intro" data-layer="intro" aria-hidden="true">
+          <div class="intro-lines">
+            <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
+            <p class="intro-line" data-line="1">天氣、捷運、停班停課。</p>
+            <p class="intro-line" data-line="2">現在，一站看清楚。</p>
+            <p class="intro-line intro-line-final" data-line="3">MapSky</p>
           </div>
         </div>
-        <div class="hero-visual">
-          <div class="device-frame">
-            <img
-              class="app-shot"
-              src="https://i.imgur.com/Ov1S6Yh.jpeg"
-              width="560"
-              height="391"
-              alt="MapSky App 畫面：天氣、地圖與未來七天預報"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <section id="news" class="section">
       <div class="section-head reveal">
@@ -214,9 +229,10 @@
       var togglePill = document.getElementById("navTogglePill");
       var panel = document.getElementById("navRight");
       var pill = document.getElementById("navPill");
+      var heroPin = document.getElementById("heroPin");
+
       function scrollThreshold() {
-        var hero = document.querySelector(".hero");
-        if (hero) return Math.max(80, hero.offsetHeight * 0.55);
+        if (heroPin) return Math.max(80, heroPin.offsetHeight * 0.72);
         return Math.max(80, window.innerHeight * 0.55);
       }
       function onScroll() {
@@ -227,6 +243,7 @@
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", onScroll, { passive: true });
       onScroll();
+
       function bindToggle(btn) {
         if (!btn || !panel) return;
         btn.addEventListener("click", function () {
@@ -254,39 +271,93 @@
         });
       }
 
-      /* ——— Flighty-style motion ——— */
-      // 1. Float cards entrance
+      /* ——— Float cards entrance ——— */
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) {
         requestAnimationFrame(function () {
-          floatCards.forEach(function (card) {
-            card.classList.add("is-visible");
-          });
+          floatCards.forEach(function (card) { card.classList.add("is-visible"); });
         });
       }
 
-      // 2. Subtle parallax on hero device while scrolling in hero
-      var heroVisual = document.querySelector(".hero-visual");
-      var heroSection = document.querySelector(".hero");
-      if (heroVisual && heroSection && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        var ticking = false;
-        function updateParallax() {
-          var rect = heroSection.getBoundingClientRect();
-          var progress = Math.min(1, Math.max(0, -rect.top / (rect.height * 0.6)));
-          var y = progress * 28;
-          var scale = 1 - progress * 0.04;
-          heroVisual.style.transform = "translateY(" + y + "px) scale(" + scale + ")";
-          ticking = false;
+      /* ——— Scroll-driven pin + intro sequence ——— */
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var heroSticky = document.getElementById("heroSticky");
+      var layerLanding = document.querySelector(".hero-layer-landing");
+      var layerIntro = document.querySelector(".hero-layer-intro");
+      var introLines = document.querySelectorAll(".intro-line");
+
+      if (heroPin && heroSticky && layerLanding && layerIntro && !reduceMotion) {
+        var pinTicking = false;
+
+        function updatePin() {
+          var rect = heroPin.getBoundingClientRect();
+          var pinH = heroPin.offsetHeight;
+          var vh = window.innerHeight;
+          var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
+          var progress = scrolled / Math.max(pinH - vh, 1);
+
+          var landOpacity = 1;
+          var landScale = 1;
+          if (progress > 0.18) {
+            landOpacity = Math.max(0, 1 - (progress - 0.18) / 0.14);
+            landScale = 1 - Math.min(1, (progress - 0.18) / 0.2) * 0.06;
+          }
+          layerLanding.style.opacity = String(landOpacity);
+          layerLanding.style.transform = "scale(" + landScale + ")";
+          layerLanding.style.pointerEvents = landOpacity < 0.15 ? "none" : "auto";
+
+          var introStart = 0.28;
+          var introOpacity = 0;
+          if (progress > introStart) {
+            introOpacity = Math.min(1, (progress - introStart) / 0.08);
+            if (progress > 0.88) {
+              introOpacity = Math.max(0, 1 - (progress - 0.88) / 0.12);
+            }
+          }
+          layerIntro.style.opacity = String(introOpacity);
+          layerIntro.setAttribute("aria-hidden", introOpacity < 0.1 ? "true" : "false");
+
+          var lineProgress = 0;
+          if (progress > introStart) {
+            lineProgress = Math.min(1, (progress - introStart) / 0.57);
+          }
+          introLines.forEach(function (line, i) {
+            var start = i / 4;
+            var peak = start + 0.08;
+            var end = start + 0.22;
+            var t = 0;
+            if (lineProgress >= start && lineProgress < peak) {
+              t = (lineProgress - start) / (peak - start);
+            } else if (lineProgress >= peak && lineProgress < end) {
+              t = 1;
+            } else if (lineProgress >= end && lineProgress < end + 0.08) {
+              t = 1 - (lineProgress - end) / 0.08;
+            }
+            if (i === 3 && lineProgress >= peak) {
+              t = Math.min(1, Math.max(t, 1 - Math.max(0, (lineProgress - 0.92) / 0.08)));
+              if (lineProgress < 0.92) t = 1;
+            }
+            line.style.opacity = String(Math.max(0, Math.min(1, t)));
+            line.style.transform = "translate(-50%, -50%) translateY(" + ((1 - t) * 28) + "px)";
+          });
+
+          pinTicking = false;
         }
+
         window.addEventListener("scroll", function () {
-          if (!ticking) {
-            requestAnimationFrame(updateParallax);
-            ticking = true;
+          if (!pinTicking) {
+            requestAnimationFrame(updatePin);
+            pinTicking = true;
           }
         }, { passive: true });
+        window.addEventListener("resize", updatePin, { passive: true });
+        updatePin();
+      } else if (reduceMotion) {
+        if (layerLanding) { layerLanding.style.opacity = "1"; }
+        if (layerIntro) { layerIntro.style.display = "none"; }
       }
 
-      // 3. Scroll-triggered reveal for sections & cards
+      /* ——— Section reveals ——— */
       var reveals = document.querySelectorAll(".reveal");
       if (reveals.length && "IntersectionObserver" in window) {
         var io = new IntersectionObserver(

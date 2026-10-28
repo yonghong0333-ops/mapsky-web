@@ -198,10 +198,16 @@ body.is-scrolled .nav-pill-bar {
 .pill-actions { display: flex; align-items: center; gap: 6px; }
 .nav-pill-bar .nav-toggle span { background: var(--text); }
 
-/* Full-screen black hero — scroll down to reveal intro sections */
+/* ——— Sticky pin hero ——— */
+.hero-pin {
+  position: relative;
+  height: 320vh;
+}
 .hero {
-  min-height: 100vh;
-  min-height: 100dvh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
   padding: calc(var(--nav-h) + 24px) 24px 48px;
   text-align: center;
   max-width: none;
@@ -215,6 +221,27 @@ body.is-scrolled .nav-pill-bar {
   box-sizing: border-box;
   overflow: hidden;
 }
+
+.hero-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-h) + 24px) 24px 48px;
+  will-change: opacity, transform;
+}
+.hero-layer-landing {
+  z-index: 2;
+  opacity: 1;
+}
+.hero-layer-intro {
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .hero-copy {
   max-width: 980px;
   margin: 0 auto;
@@ -285,8 +312,6 @@ body.is-scrolled .nav-pill-bar {
   margin: 0;
   max-width: 860px;
   width: 100%;
-  will-change: transform;
-  transition: transform 0.1s linear;
 }
 .device-frame {
   width: 100%;
@@ -298,7 +323,6 @@ body.is-scrolled .nav-pill-bar {
   box-shadow:
     0 50px 100px -24px rgba(0, 0, 0, 0.5),
     0 20px 40px -16px rgba(0, 0, 0, 0.35);
-  transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 .device-frame .app-shot {
   display: block;
@@ -340,7 +364,6 @@ body.is-scrolled .nav-pill-bar {
 .fc-3 { bottom: 28%; left: 0; }
 .fc-4 { bottom: 12%; right: 4%; }
 
-/* Staggered entrance + continuous gentle float (Flighty-style) */
 .float-card.is-visible {
   animation:
     cardPopIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards,
@@ -350,6 +373,47 @@ body.is-scrolled .nav-pill-bar {
 .fc-2.is-visible { animation-delay: 0.7s, 1.45s; }
 .fc-3.is-visible { animation-delay: 0.85s, 1.6s; }
 .fc-4.is-visible { animation-delay: 1s, 1.75s; }
+
+/* Intro text lines */
+.intro-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 720px;
+  min-height: 200px;
+  position: relative;
+}
+.intro-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  margin: 0;
+  padding: 0 20px;
+  transform: translate(-50%, -50%) translateY(28px);
+  opacity: 0;
+  font-size: clamp(28px, 5.5vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  color: #f5f5f7;
+  text-align: center;
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+.intro-line-final {
+  font-size: clamp(36px, 7vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
 
 @keyframes heroFadeIn {
   to { opacity: 1; transform: translateY(0); }
@@ -366,7 +430,6 @@ body.is-scrolled .nav-pill-bar {
   50% { transform: translateY(-10px); }
 }
 
-/* Section reveal (scroll-triggered) */
 .reveal {
   opacity: 0;
   transform: translateY(32px);
@@ -481,13 +544,19 @@ body.is-scrolled .nav-pill-bar {
   .grid-3,
   .grid-2 { grid-template-columns: 1fr; }
   .float-cards { display: none; }
+  .hero-pin { height: 280vh; }
   .hero {
+    padding-top: calc(var(--nav-h) + 16px);
+    padding-bottom: 32px;
+  }
+  .hero-layer {
     padding-top: calc(var(--nav-h) + 16px);
     padding-bottom: 32px;
   }
   .hero-stage { margin-top: 28px; max-width: 100%; padding: 0 4px; }
   .device-frame { border-radius: 14px; }
   .device-frame .app-shot { max-height: min(42vh, 360px); }
+  .intro-line { font-size: clamp(24px, 6vw, 34px); }
 
   .nav {
     transition: opacity 0.25s ease, visibility 0.25s ease, background 0.25s ease;
@@ -583,8 +652,11 @@ body.is-scrolled .nav-pill-bar {
   }
 }
 
-/* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
+  .hero-pin { height: auto; }
+  .hero { position: relative; height: auto; min-height: 100vh; min-height: 100dvh; }
+  .hero-layer { position: relative; inset: auto; }
+  .hero-layer-intro { display: none; }
   .hero-copy,
   .hero-stage,
   .float-card,
