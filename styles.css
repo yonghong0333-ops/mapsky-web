@@ -39,7 +39,7 @@ img { max-width: 100%; height: auto; display: block; }
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid transparent;
-  transition: background 0.25s, border-color 0.25s;
+  transition: background 0.35s, border-color 0.35s, color 0.35s;
 }
 body.is-scrolled .nav {
   background: rgba(10,10,10,0.88);
@@ -377,3 +377,55 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 #news .section-head p { color: #6e6e73; }
 #news .card { background: #fff; border-color: rgba(0,0,0,0.06); color: #1d1d1f; }
 #news .card p { color: #6e6e73; }
+
+/* Home opens white, then turns black as the hero scrolls away */
+body.home .hero { background: #000; }
+body.home .hero-layer-landing {
+  background: #ffffff;
+  color: #1d1d1f;
+}
+body.home .hero-layer-landing .eyebrow,
+body.home .hero-layer-landing .lead { color: #6e6e73; }
+body.home .hero-layer-landing .btn-hero {
+  background: #1d1d1f;
+  color: #fff;
+}
+body.home .hero-layer-landing .float-card {
+  background: rgba(255,255,255,0.94);
+  color: #1d1d1f;
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+}
+body.home .hero-layer-landing .float-card span { color: #6e6e73; }
+body.home .nav {
+  background: rgba(255,255,255,0.86);
+  color: #1d1d1f;
+}
+body.home .nav-toggle { background: rgba(0,0,0,0.06); }
+body.home .nav-toggle span { background: currentColor; }
+body.home .wordmark { filter: brightness(0); }
+body.home:not(.is-dark):not(.nav-open) .nav .btn-primary {
+  background: #1d1d1f;
+  color: #fff;
+}
+body.home.is-dark .nav,
+body.home.is-scrolled .nav {
+  background: rgba(10,10,10,0.88);
+  color: #f5f5f7;
+  border-bottom-color: rgba(255,255,255,0.08);
+}
+body.home.is-dark .nav-toggle,
+body.home.is-scrolled .nav-toggle {
+  background: rgba(255,255,255,0.12);
+}
+body.home.is-dark .wordmark,
+body.home.is-scrolled .wordmark,
+body.home.nav-open .wordmark { filter: none; }
+body.home.nav-open .nav {
+  color: #f5f5f7;
+  background: transparent;
+}
+body.home.nav-open .nav-toggle { background: rgba(255,255,255,0.18); }
+@media (max-width: 768px) {
+  body.home .nav-right { color: #f5f5f7; }
+}

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="MapSky — 台灣天氣、停班停課、捷運台鐵高鐵與動態天空，一站掌握。" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#ffffff" />
   <meta property="og:title" content="MapSky" />
   <meta property="og:description" content="台灣天氣 · 交通 · 停班停課 · 動態天空" />
   <meta property="og:type" content="website" />
@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="torn.css" />
 </head>
-<body>
+<body class="home">
   <header class="nav" id="topNav">
     <a class="brand" href="/">
       <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
@@ -288,6 +288,9 @@
             line.style.opacity = String(Math.max(0, Math.min(1, t)));
             line.style.transform = "translate(-50%, -50%) translateY(" + ((1 - t) * 28) + "px)";
           });
+          document.body.classList.toggle("is-dark", landingOpacity < 0.65);
+          var themeMeta = document.querySelector('meta[name="theme-color"]');
+          if (themeMeta) themeMeta.setAttribute("content", landingOpacity < 0.65 ? "#0a0a0a" : "#ffffff");
           pinTicking = false;
         };
         function onPinScroll() {
