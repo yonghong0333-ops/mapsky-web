@@ -9,7 +9,6 @@
   line-height: 0;
   pointer-events: none;
   background: transparent;
-  /* stronger shadow under the tear for paper depth */
   filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.22))
           drop-shadow(0 2px 2px rgba(0, 0, 0, 0.12));
 }
@@ -18,7 +17,6 @@
   width: 100%;
   height: 72px;
 }
-/* White page starts under the tear with 最新消息 */
 #news.section {
   position: relative;
   z-index: 1;
@@ -32,25 +30,14 @@
   margin-left: auto;
   margin-right: auto;
 }
-#news.section .section-head h2 {
-  color: #1d1d1f;
-}
-#news.section .section-head p {
-  color: #6e6e73;
-}
-#features.section {
-  background: #f5f5f7;
-}
+#news.section .section-head h2 { color: #1d1d1f; }
+#news.section .section-head p { color: #6e6e73; }
+#features.section { background: #f5f5f7; }
 #transit.section,
 #download.section,
-.footer {
-  background: #ffffff;
-}
-#closures.section {
-  background: #f5f5f7;
-}
+.footer { background: #ffffff; }
+#closures.section { background: #f5f5f7; }
 
-/* Longer pin so the detail frames have room before the tear */
 .hero-pin { height: 560vh; }
 @media (max-width: 900px) {
   .hero-pin { height: 500vh; }
@@ -117,19 +104,17 @@
   display: block;
   width: 100%;
   height: auto;
-  max-height: min(40dvh, 320px);
+  max-height: min(42dvh, 360px);
   object-fit: contain;
   object-position: center;
   background: #121820;
 }
 
-/* Page below pin stays light */
 .page-below {
   background: #ffffff;
   color: #1d1d1f;
 }
 
-/* 畫面細節 section (black sheet) */
 #details.section,
 .section-details {
   background: #0a0a0a;
@@ -139,13 +124,9 @@
   padding-bottom: 8px;
 }
 #details.section .section-head h2,
-.section-details .section-head h2 {
-  color: #f5f5f7;
-}
+.section-details .section-head h2 { color: #f5f5f7; }
 #details.section .section-head p,
-.section-details .section-head p {
-  color: rgba(255, 255, 255, 0.62);
-}
+.section-details .section-head p { color: rgba(255, 255, 255, 0.62); }
 .ink-sheet {
   background: #0a0a0a;
   color: #f5f5f7;
@@ -169,10 +150,7 @@
   color: var(--text-dim);
   font-size: 15px;
 }
-.shot-list {
-  display: grid;
-  gap: 18px;
-}
+.shot-list { display: grid; gap: 18px; }
 .shot-row {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -228,7 +206,7 @@
   .shot-row.reverse .shot-copy { order: unset; }
   .detail-lead { font-size: 15px; }
   .detail-frame { margin-top: 14px; border-radius: 14px; }
-  .detail-frame img { max-height: min(34dvh, 240px); }
+  .detail-frame img { max-height: min(36dvh, 280px); }
   #details.section { padding-top: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -236,7 +214,7 @@
   .hero-layer-detail { display: none !important; }
 }
 
-/* Black ending pin: scroll holds on MAPSKY + CTA, then releases to news */
+/* Black ending pin */
 .finale-pin {
   position: relative;
   height: 220vh;
@@ -286,12 +264,8 @@
 }
 @media (max-width: 800px) {
   .finale-pin { height: 200vh; }
-  .ink-finale {
-    padding: 16px 12px 32px;
-  }
-  .ink-finale-mark {
-    width: min(560px, 100%);
-  }
+  .ink-finale { padding: 16px 12px 32px; }
+  .ink-finale-mark { width: min(560px, 100%); }
 }
 @media (prefers-reduced-motion: reduce) {
   .finale-pin { height: auto !important; }
@@ -307,5 +281,31 @@
     opacity: 1 !important;
     transform: none !important;
     pointer-events: auto !important;
+  }
+}
+
+/* Sharper marketing screenshots */
+.device-frame .app-shot,
+.shot-frame img,
+.detail-frame img,
+.ink-finale-mark {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.device-frame {
+  background: #0b1220;
+}
+.device-frame .app-shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(56vh, 560px) !important;
+  object-fit: contain !important;
+  object-position: top center;
+}
+@media (max-width: 900px) {
+  .device-frame .app-shot {
+    max-height: min(50vh, 460px) !important;
   }
 }
