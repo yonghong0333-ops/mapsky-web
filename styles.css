@@ -19,10 +19,18 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--font);
-  background: var(--bg);
+  background: #0a0a0a;
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease;
+}
+body.is-scrolled {
+  background: var(--bg);
+}
+main > .section,
+.footer {
+  background: var(--bg);
 }
 a { color: var(--blue); text-decoration: none; }
 img { max-width: 100%; height: auto; }
@@ -374,7 +382,6 @@ body.is-scrolled .nav-pill-bar {
 .fc-3.is-visible { animation-delay: 0.85s, 1.6s; }
 .fc-4.is-visible { animation-delay: 1s, 1.75s; }
 
-/* Intro text lines */
 .intro-lines {
   display: flex;
   flex-direction: column;
