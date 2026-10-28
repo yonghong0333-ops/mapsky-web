@@ -275,9 +275,10 @@
     </div>
 
     <div class="account-panel-sky" id="accountPanel">
-      <p id="accountText">登入成功，正在返回首頁…</p>
+      <p id="accountText">你已登入。</p>
       <div class="account-actions">
         <a class="btn btn-primary" href="/">回首頁</a>
+        <button type="button" class="btn btn-ghost" id="logoutBtn" style="color:#1d1d1f !important">登出</button>
       </div>
     </div>
   </div>
@@ -310,8 +311,7 @@
         guestPanel.style.display = "none";
         accountPanel.classList.add("show");
         document.getElementById("accountText").textContent =
-          "目前登入：" + (MapSkyAuth.displayName(s) || "帳號") + "，正在返回首頁…";
-        setTimeout(goHome, 600);
+          "目前登入：" + (MapSkyAuth.displayName(s) || "帳號");
       }
 
       function renderGuest() {
@@ -407,6 +407,13 @@
         }).catch(function () {
           document.getElementById("verifyBtn").disabled = false;
           showMsg("網路錯誤，請稍後再試", false);
+        });
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", function () {
+        MapSkyAuth.logout().then(function () {
+          MapSkyAuth.updateNav({ loggedIn: false });
+          renderGuest();
         });
       });
     })();
