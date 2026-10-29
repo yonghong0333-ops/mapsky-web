@@ -192,25 +192,24 @@ body.is-scrolled .nav {
   border-radius: 980px;
 }
 
-/* White fixed; black slides up — short pin */
+/* Hero — normal height; black wipe auto-plays via class */
 .hero-pin {
   position: relative;
-  height: 110vh;
+  height: 100vh;
+  height: 100dvh;
 }
 .hero {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100vh; height: 100dvh;
   min-height: 100vh; min-height: 100dvh;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   contain: paint;
-  transform: translateZ(0);
 }
 .hero-layer {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
 }
-/* Black slide-up wipe over white hero */
+/* Black wipe — CSS transition, triggered by .is-wiped */
 .hero-black-wipe {
   position: absolute;
   left: 0;
@@ -220,9 +219,12 @@ body.is-scrolled .nav {
   z-index: 5;
   background: #0a0a0a;
   transform: translate3d(0, 100%, 0);
-  will-change: transform;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   backface-visibility: hidden;
+}
+.hero-pin.is-wiped .hero-black-wipe {
+  transform: translate3d(0, 0, 0);
 }
 .hero-layer-landing { z-index: 3; }
 .hero-layer-intro { z-index: 2; background: #000; }
