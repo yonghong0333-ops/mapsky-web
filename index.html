@@ -50,20 +50,27 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 14px;
+      gap: 16px;
       padding-bottom: 28px;
       border-bottom: 1px solid #d2d2d7;
     }
-    .footer-brand-block .footer-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
+    .footer-logo-lockup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .footer-logo-lockup .footer-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
       display: block;
     }
-    .footer-brand-block .footer-word {
-      width: min(220px, 55vw);
+    .footer-logo-lockup .footer-word {
+      width: min(160px, 42vw);
       height: auto;
       display: block;
+      margin-top: -4px;
       filter: invert(1);
     }
     .footer-brand-block p {
@@ -144,8 +151,10 @@
   <footer class="site-footer" role="contentinfo">
     <div class="site-footer-inner">
       <div class="footer-brand-block">
-        <img class="footer-icon" src="assets/icon.png" width="56" height="56" alt="MapSky" />
-        <img class="footer-word" src="assets/wordmark.png" width="220" height="60" alt="MAPSKY" />
+        <div class="footer-logo-lockup">
+          <img class="footer-icon" src="assets/icon.png" width="44" height="44" alt="MapSky" />
+          <img class="footer-word" src="assets/wordmark.png" width="160" height="44" alt="MAPSKY" />
+        </div>
         <p>天氣、班次、停班停課，一站看清楚。</p>
       </div>
 
