@@ -252,18 +252,23 @@
             var target = mark || intro;
             var absY = target ? (target.getBoundingClientRect().top + window.scrollY) : 0;
             var heroH = pin.offsetHeight || window.innerHeight;
+            var dest = Math.max(0, absY - heroH);
             pin.classList.add("is-done");
+            window.scrollTo(0, dest);
             document.body.classList.remove("is-wipe-lock");
             window.removeEventListener("wheel", lockScroll, { passive: false });
             window.removeEventListener("touchmove", lockScroll, { passive: false });
             requestAnimationFrame(function () {
-              window.scrollTo(0, Math.max(0, absY - heroH));
-              locking = false;
-              unlockUndoAt = Date.now() + 1000;
-              try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
+              window.scrollTo(0, dest);
+              requestAnimationFrame(function () {
+                window.scrollTo(0, dest);
+                locking = false;
+                unlockUndoAt = Date.now() + 900;
+                try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
+              });
             });
           }
-          setTimeout(finish, 820);
+          setTimeout(finish, 780);
         }
 
         function canUndo() {
