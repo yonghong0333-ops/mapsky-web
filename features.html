@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="MapSky 功能介紹 — 天氣、動態天空、捷運台鐵高鐵、停班停課與 YouBike。" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#ffffff" />
   <title>功能 — MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
   <link rel="preload" as="image" href="assets/mountain.svg" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="home is-dark is-scrolled">
+<body class="home">
   <header class="nav" id="topNav">
     <a class="brand" href="/">
       <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
@@ -35,15 +35,70 @@
   </header>
 
   <main id="top">
-    <div class="ink-top-mark" aria-label="MapSky">
+    <div class="hero-pin" id="heroPin">
+    <section class="hero" id="heroSticky">
+        <div class="hero-black-wipe" id="heroBlackWipe" aria-hidden="true">
+          <div class="wipe-rise" id="wipeRise">
+            <div class="ink-top-mark wipe-mark" aria-label="MapSky">
+              <img class="ink-brand-mark" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
+            </div>
+            <div class="intro-scene wipe-scene" aria-hidden="true">
+              <div class="intro-scene-frame">
+                <img class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" decoding="async" />
+                <div class="intro-scene-overlay" aria-hidden="true"></div>
+                <div class="intro-caption">
+                  <p class="intro-caption-kicker">MapSky</p>
+                  <p class="intro-caption-title">出門前，你最常查什麼？</p>
+                  <p class="intro-caption-body">
+                    <span class="tint-weather">天氣</span>、<span class="tint-metro">捷運</span>、<span class="tint-school">停班停課</span>。<br />
+                    現在，一站看清楚。
+                  </p>
+                </div>
+                <div class="intro-tabs wipe-tabs" role="presentation">
+                  <span class="intro-tab is-active"></span>
+                  <span class="intro-tab"></span>
+                  <span class="intro-tab"></span>
+                  <span class="intro-tab"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-layer hero-layer-landing" data-layer="landing">
+          <div class="hero-copy">
+            <p class="eyebrow">MapSky</p>
+            <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
+            <p class="lead">整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，搭配動態天空，讓出門決策更簡單。</p>
+            <div class="hero-cta">
+              <a class="btn btn-hero" href="#introScene">進一步了解 ›</a>
+            </div>
+          </div>
+          <div class="hero-stage" aria-hidden="true">
+            <div class="float-cards">
+              <div class="float-card fc-1"><div class="fc-icon">🌤</div><strong>前鎮區 · 29°</strong><span>陰時多雲短暫雨</span></div>
+              <div class="float-card fc-2"><div class="fc-icon">🚇</div><strong>紅線 · 約 3 分</strong><span>下一班即將進站</span></div>
+              <div class="float-card fc-3"><div class="fc-icon">🏫</div><strong>正常上班上課</strong><span>今日無停班停課公告</span></div>
+              <div class="float-card fc-4"><div class="fc-icon">🚲</div><strong>YouBike 可借 12</strong><span>附近站點 · 可還 8</span></div>
+            </div>
+            <div class="hero-visual">
+              <div class="device-frame">
+                <img class="app-shot" data-asset="hero-app" src="assets/hero-app.jpg" width="1200" height="838" alt="MapSky App 畫面" loading="eager" decoding="async" />
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+    </div>
+
+    <div class="ink-top-mark after-wipe" aria-label="MapSky">
       <img class="ink-brand-mark" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
     </div>
 
-    <section class="intro-scene" id="introScene" aria-label="出門前最常查什麼">
+    <section class="intro-scene after-wipe" id="introScene" aria-label="出門前最常查什麼">
       <div class="intro-scene-frame">
         <img id="introBgImg" class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" fetchpriority="high" decoding="async" />
         <div class="intro-scene-overlay" aria-hidden="true"></div>
-        <div class="intro-caption is-visible" id="introCaption">
+        <div class="intro-caption" id="introCaption">
           <p class="intro-caption-kicker">MapSky</p>
           <p class="intro-caption-title">出門前，你最常查什麼？</p>
           <p class="intro-caption-body">
@@ -90,6 +145,15 @@
     (function () {
       var toggle = document.getElementById("navToggle");
       var panel = document.getElementById("navRight");
+      var heroPin = document.getElementById("heroSticky");
+      function scrollThreshold() { if (heroPin) return Math.max(80, heroPin.offsetHeight * 0.6); return Math.max(80, window.innerHeight * 0.55); }
+      function onScroll() {
+        var scrolled = window.scrollY > scrollThreshold();
+        document.body.classList.toggle("is-scrolled", scrolled);
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      onScroll();
       if (toggle && panel) {
         toggle.addEventListener("click", function () {
           var open = panel.classList.toggle("open");
@@ -106,49 +170,196 @@
           });
         });
       }
+      var floatCards = document.querySelectorAll(".float-card");
+      if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
+      (function () { var img = new Image(); img.src = "assets/mountain.svg"; })();
 
-      var tabs = document.querySelectorAll("#introScene .intro-tab");
-      var bgImg = document.getElementById("introBgImg");
-      var caption = document.getElementById("introCaption");
-      if (!tabs.length || !bgImg) return;
-      function setCaption(tab) {
-        if (!caption || !tab) return;
-        var title = tab.getAttribute("data-title");
-        var body = tab.getAttribute("data-body") || "";
-        var tint = tab.getAttribute("data-tint") || "weather";
-        var titleEl = caption.querySelector(".intro-caption-title");
-        var bodyEl = caption.querySelector(".intro-caption-body");
-        if (title && titleEl) titleEl.textContent = title;
-        if (bodyEl) {
-          if (tint === "mix") {
-            bodyEl.innerHTML = '<span class="tint-weather">天氣</span>、<span class="tint-metro">捷運</span>、<span class="tint-school">停班停課</span>。<br />現在，一站看清楚。';
-          } else {
-            bodyEl.innerHTML = '<span class="tint-' + tint + '">' + body + '</span>';
+      (function () {
+        var pin = document.getElementById("heroPin");
+        var wipe = document.getElementById("heroBlackWipe");
+        var intro = document.getElementById("introScene");
+        if (!pin || !wipe) return;
+        var wiped = false;
+        var locking = false;
+        var unlockUndoAt = 0;
+        var explored = false;
+        try { if (history.scrollRestoration) history.scrollRestoration = "manual"; } catch (e) {}
+
+        var isMobile = window.matchMedia("(max-width: 700px)").matches;
+        var WIPE_MS = isMobile ? 560 : 780;
+        var UNDO_MS = isMobile ? 560 : 820;
+
+        function lockScroll(e) {
+          if (locking && e.cancelable) e.preventDefault();
+        }
+
+        function doWipe() {
+          if (wiped || locking) return;
+          wiped = true;
+          locking = true;
+          explored = false;
+          window.scrollTo(0, 0);
+          pin.classList.add("is-wiped");
+          document.body.classList.add("is-dark", "is-wipe-lock");
+          window.addEventListener("wheel", lockScroll, { passive: false });
+          window.addEventListener("touchmove", lockScroll, { passive: false });
+          function finish() {
+            var mark = document.querySelector(".ink-top-mark.after-wipe");
+            var target = mark || intro;
+            var absY = target ? (target.getBoundingClientRect().top + window.scrollY) : 0;
+            var heroH = pin.offsetHeight || window.innerHeight;
+            var dest = Math.max(0, absY - heroH);
+            pin.classList.add("is-done");
+            window.scrollTo(0, dest);
+            document.body.classList.remove("is-wipe-lock");
+            window.removeEventListener("wheel", lockScroll, { passive: false });
+            window.removeEventListener("touchmove", lockScroll, { passive: false });
+            requestAnimationFrame(function () {
+              window.scrollTo(0, dest);
+              requestAnimationFrame(function () {
+                window.scrollTo(0, dest);
+                locking = false;
+                unlockUndoAt = Date.now() + 900;
+                try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
+              });
+            });
+          }
+          setTimeout(finish, WIPE_MS);
+        }
+
+        function canUndo() {
+          return wiped && !locking && explored && Date.now() >= unlockUndoAt;
+        }
+
+        function undoWipe() {
+          if (!canUndo()) return;
+          locking = true;
+          explored = false;
+          pin.classList.remove("is-done");
+          pin.classList.add("is-wiped", "is-returning");
+          document.body.classList.add("is-dark", "is-wipe-lock");
+          window.scrollTo(0, 0);
+          window.addEventListener("wheel", lockScroll, { passive: false });
+          window.addEventListener("touchmove", lockScroll, { passive: false });
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              pin.classList.remove("is-wiped");
+              setTimeout(function () {
+                pin.classList.remove("is-returning");
+                document.body.classList.remove("is-dark", "is-wipe-lock");
+                window.removeEventListener("wheel", lockScroll, { passive: false });
+                window.removeEventListener("touchmove", lockScroll, { passive: false });
+                wiped = false;
+                locking = false;
+                unlockUndoAt = Date.now() + 600;
+              }, UNDO_MS);
+            });
+          });
+        }
+
+        var touchY = 0;
+        window.addEventListener("wheel", function (e) {
+          if (locking) { e.preventDefault(); return; }
+          if (wiped) {
+            if (e.deltaY < -24 && window.scrollY < 16 && canUndo()) {
+              e.preventDefault();
+              undoWipe();
+            }
+            return;
+          }
+          if (e.deltaY > 0 && window.scrollY < 40) {
+            e.preventDefault();
+            doWipe();
+          }
+        }, { passive: false });
+
+        window.addEventListener("touchstart", function (e) {
+          if (e.touches && e.touches[0]) touchY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener("touchmove", function (e) {
+          if (locking) {
+            if (e.cancelable) e.preventDefault();
+            return;
+          }
+          if (!e.touches || !e.touches[0]) return;
+          var dy = touchY - e.touches[0].clientY;
+          if (!wiped) {
+            if (dy > 12 && window.scrollY < 40) {
+              if (e.cancelable) e.preventDefault();
+              doWipe();
+            }
+            return;
+          }
+          if (dy < -28 && window.scrollY < 24 && canUndo()) {
+            if (e.cancelable) e.preventDefault();
+            undoWipe();
+          }
+        }, { passive: false });
+
+        window.addEventListener("scroll", function () {
+          if (!wiped && !locking && window.scrollY > 8) {
+            window.scrollTo(0, 0);
+            doWipe();
+          }
+          if (wiped && !locking && window.scrollY > 160) explored = true;
+        }, { passive: true });
+      })();
+
+      (function () {
+        var scene = document.getElementById("introScene");
+        var caption = document.getElementById("introCaption");
+        if (!scene || !caption) return;
+        window.__playIntroText = function () {
+          caption.classList.add("is-visible");
+        };
+        caption.classList.add("is-visible");
+      })();
+
+      (function () {
+        var tabs = document.querySelectorAll("#introScene .intro-tab");
+        var bgImg = document.getElementById("introBgImg");
+        var caption = document.getElementById("introCaption");
+        if (!tabs.length || !bgImg) return;
+        function setCaption(tab) {
+          if (!caption || !tab) return;
+          var title = tab.getAttribute("data-title");
+          var body = tab.getAttribute("data-body") || "";
+          var tint = tab.getAttribute("data-tint") || "weather";
+          var titleEl = caption.querySelector(".intro-caption-title");
+          var bodyEl = caption.querySelector(".intro-caption-body");
+          if (title && titleEl) titleEl.textContent = title;
+          if (bodyEl) {
+            if (tint === "mix") {
+              bodyEl.innerHTML = '<span class="tint-weather">天氣</span>、<span class="tint-metro">捷運</span>、<span class="tint-school">停班停課</span>。<br />現在，一站看清楚。';
+            } else {
+              bodyEl.innerHTML = '<span class="tint-' + tint + '">' + body + '</span>';
+            }
           }
         }
-      }
-      tabs.forEach(function (tab) {
-        tab.addEventListener("click", function () {
-          var src = tab.getAttribute("data-bg");
-          if (src) {
-            bgImg.style.opacity = "0";
-            setTimeout(function () {
-              if (src.indexOf("mountain") !== -1) bgImg.style.objectPosition = "34% 40%";
-              else if (src.indexOf("mrt") !== -1) bgImg.style.objectPosition = "center 45%";
-              else if (src.indexOf("typhoon") !== -1) bgImg.style.objectPosition = "center 35%";
-              else bgImg.style.objectPosition = "center 42%";
-              bgImg.src = src;
-              bgImg.onload = function () { bgImg.style.opacity = "1"; };
-              if (bgImg.complete) bgImg.style.opacity = "1";
-            }, 180);
-          }
-          setCaption(tab);
-          tabs.forEach(function (t) {
-            t.classList.toggle("is-active", t === tab);
-            t.setAttribute("aria-selected", t === tab ? "true" : "false");
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            var src = tab.getAttribute("data-bg");
+            if (src) {
+              bgImg.style.opacity = "0";
+              setTimeout(function () {
+                if (src.indexOf("mountain") !== -1) bgImg.style.objectPosition = "34% 40%";
+                else if (src.indexOf("mrt") !== -1) bgImg.style.objectPosition = "center 45%";
+                else if (src.indexOf("typhoon") !== -1) bgImg.style.objectPosition = "center 35%";
+                else bgImg.style.objectPosition = "center 42%";
+                bgImg.src = src;
+                bgImg.onload = function () { bgImg.style.opacity = "1"; };
+                if (bgImg.complete) bgImg.style.opacity = "1";
+              }, 180);
+            }
+            setCaption(tab);
+            tabs.forEach(function (t) {
+              t.classList.toggle("is-active", t === tab);
+              t.setAttribute("aria-selected", t === tab ? "true" : "false");
+            });
           });
         });
-      });
+      })();
     })();
   </script>
 </body>
