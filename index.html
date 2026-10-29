@@ -246,7 +246,6 @@
               slide.style.transform = "translateY(" + ((1 - Math.max(0, Math.min(1, t))) * 16) + "px)";
             });
           }
-          /* intro lines driven by autoplay, not scroll */
           pinTicking = false;
         }
         function onPinScroll() {
@@ -262,7 +261,7 @@
         var snapLock = false;
         var snapTimer = null;
         function snapToIntroIfNeeded() {
-          if (snapLock || !heroPin) return;
+          if (snapLock || !heroPin || window.__introScrollLocked) return;
           var rect = heroPin.getBoundingClientRect();
           var pinH = heroPin.offsetHeight;
           var vh = window.innerHeight || 1;
@@ -286,12 +285,16 @@
         }, { passive: true });
       }
 
-      /* Auto-play intro text sequence when intro layer is shown */
+      /* Auto-play intro text: lock scroll until sequence finishes once (faster) */
       (function () {
         var lines = document.querySelectorAll(".intro-line");
         if (!lines.length) return;
         var playing = false;
+        var locked = false;
+        var doneOnce = false;
         var timers = [];
+        var lockY = 0;
+
         function clearTimers() {
           timers.forEach(function (id) { clearTimeout(id); });
           timers = [];
@@ -309,27 +312,54 @@
           line.style.opacity = "1";
           line.style.transform = "translateY(0)";
         }
-        function playSequence() {
-          if (playing) return;
+        function unlockScroll() {
+          if (!locked) return;
+          locked = false;
+          window.__introScrollLocked = false;
+          document.body.style.overflow = "";
+          document.documentElement.style.overflow = "";
+        }
+        function lockScroll() {
+          if (locked) return;
+          locked = true;
+          window.__introScrollLocked = true;
+          lockY = window.scrollY || window.pageYOffset || 0;
+          document.body.style.overflow = "hidden";
+          document.documentElement.style.overflow = "hidden";
+        }
+        function onLockScroll(e) {
+          if (!locked) return;
+          e.preventDefault();
+          window.scrollTo(0, lockY);
+        }
+        window.addEventListener("wheel", onLockScroll, { passive: false });
+        window.addEventListener("touchmove", onLockScroll, { passive: false });
+
+        function playSequenceOnce() {
+          if (playing || doneOnce) return;
           playing = true;
           clearTimers();
           hideAll();
-          var holds = [1800, 1800, 1800, 2400];
-          var delay = 200;
+          lockScroll();
+          var holds = [900, 900, 900, 1200];
+          var delay = 120;
           for (var i = 0; i < lines.length; i++) {
             (function (idx, d) {
               timers.push(setTimeout(function () { showLine(idx); }, d));
             })(i, delay);
-            delay += holds[i] || 1800;
+            delay += holds[i] || 900;
           }
           timers.push(setTimeout(function () {
             playing = false;
-            playSequence();
-          }, delay + 400));
+            doneOnce = true;
+            unlockScroll();
+          }, delay + 200));
         }
         function stopSequence() {
           playing = false;
           clearTimers();
+          unlockScroll();
+          doneOnce = false;
           hideAll();
         }
         var layerIntroEl = document.querySelector(".hero-layer-intro");
@@ -338,7 +368,7 @@
         function check() {
           var op = parseFloat(layerIntroEl.style.opacity || "0");
           var visible = op > 0.6;
-          if (visible && !wasVisible) playSequence();
+          if (visible && !wasVisible) playSequenceOnce();
           if (!visible && wasVisible) stopSequence();
           wasVisible = visible;
         }
