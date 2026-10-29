@@ -63,15 +63,6 @@
             </div>
           </div>
         </div>
-        <div class="hero-layer hero-layer-detail" data-layer="detail" aria-hidden="true" style="opacity:0">
-          <div class="detail-stage">
-            <article class="detail-slide"><p class="detail-kicker">現在天氣</p><h2>前鎮區，29°。</h2><p class="detail-lead">溫度、體感與天氣狀況放在同一張卡片。</p><div class="detail-frame"><img data-asset="detail-now" src="assets/detail-now.jpg" alt="現在天氣" /></div></article>
-            <article class="detail-slide"><p class="detail-kicker">台灣地圖</p><h2>點城市，就換天氣。</h2><p class="detail-lead">西半部直接標出台南、高雄。</p><div class="detail-frame"><img data-asset="detail-map" src="assets/detail-map.jpg" alt="地圖" /></div></article>
-            <article class="detail-slide"><p class="detail-kicker">逐時預報</p><h2>從現在排到深夜。</h2><p class="detail-lead">現在 30°，接著 29°、日落，再一路到 27°。</p><div class="detail-frame"><img data-asset="detail-hour" src="assets/detail-hour.jpg" alt="逐時" /></div></article>
-            <article class="detail-slide"><p class="detail-kicker">未來七天</p><h2>一週高低溫。</h2><p class="detail-lead">今天大陣雨 24° 到 31°。</p><div class="detail-frame"><img data-asset="detail-week" src="assets/detail-week.jpg" alt="七天" /></div></article>
-            <article class="detail-slide"><p class="detail-kicker">風、雨、氣壓</p><h2>體感背後的數字。</h2><p class="detail-lead">風力 2、降雨 0、體感 32°。</p><div class="detail-frame"><img data-asset="detail-stats" src="assets/detail-stats.jpg" alt="統計" /></div></article>
-          </div>
-        </div>
       </section>
     </div>
 
@@ -204,8 +195,6 @@
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       var layerLanding = document.querySelector(".hero-layer-landing");
-      var layerDetail = document.querySelector(".hero-layer-detail");
-      var detailSlides = document.querySelectorAll(".detail-slide");
       if (heroPin && layerLanding && !reduceMotion) {
         var pinTicking = false;
         function updatePin() {
@@ -214,29 +203,11 @@
           var vh = window.innerHeight || 1;
           var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
           var progress = scrolled / Math.max(pinH - vh, 1);
-          var landingEnd = 0.35, detailStart = 0.4;
-          var landingOpacity = progress <= 0 ? 1 : progress >= landingEnd ? 0 : 1 - progress / landingEnd;
+          /* white → black as you scroll into mountain */
+          var landingOpacity = progress <= 0 ? 1 : progress >= 0.9 ? 0 : 1 - progress / 0.9;
           layerLanding.style.opacity = String(Math.max(0, Math.min(1, landingOpacity)));
           layerLanding.style.pointerEvents = landingOpacity > 0.2 ? "auto" : "none";
-          var detailOpacity = progress >= detailStart ? Math.min(1, (progress - detailStart) / 0.12) : 0;
-          if (layerDetail) {
-            layerDetail.style.opacity = String(detailOpacity);
-            layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
-            layerDetail.setAttribute("aria-hidden", detailOpacity < 0.15 ? "true" : "false");
-          }
-          if (detailSlides.length) {
-            var count = detailSlides.length || 1;
-            var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.55);
-            detailSlides.forEach(function (slide, i) {
-              var slot = 1 / count, center = (i + 0.5) * slot, dist = Math.abs(local - center);
-              var half = slot * 0.5, fadeStart = half * 0.42, fadeEnd = half * 1.25, t = 0;
-              if ((i === 0 && local <= center) || (i === count - 1 && local >= center)) t = 1;
-              else if (dist <= fadeStart) t = 1;
-              else if (dist < fadeEnd) t = 1 - (dist - fadeStart) / (fadeEnd - fadeStart);
-              slide.style.opacity = String(Math.max(0, Math.min(1, t)));
-              slide.style.transform = "translateY(" + ((1 - Math.max(0, Math.min(1, t))) * 16) + "px)";
-            });
-          }
+          document.body.classList.toggle("is-dark", progress > 0.4);
           pinTicking = false;
         }
         function onPinScroll() {
