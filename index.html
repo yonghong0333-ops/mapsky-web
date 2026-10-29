@@ -56,21 +56,22 @@
     }
     .footer-logo-lockup {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      gap: 10px;
     }
     .footer-logo-lockup .footer-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 11px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
       display: block;
+      flex-shrink: 0;
     }
     .footer-logo-lockup .footer-word {
-      width: min(160px, 42vw);
+      width: min(140px, 38vw);
       height: auto;
       display: block;
-      margin-top: -4px;
       filter: invert(1);
     }
     .footer-brand-block p {
@@ -152,8 +153,8 @@
     <div class="site-footer-inner">
       <div class="footer-brand-block">
         <div class="footer-logo-lockup">
-          <img class="footer-icon" src="assets/icon.png" width="44" height="44" alt="MapSky" />
-          <img class="footer-word" src="assets/wordmark.png" width="160" height="44" alt="MAPSKY" />
+          <img class="footer-icon" src="assets/icon.png" width="28" height="28" alt="MapSky" />
+          <img class="footer-word" src="assets/wordmark.png" width="140" height="36" alt="MAPSKY" />
         </div>
         <p>天氣、班次、停班停課，一站看清楚。</p>
       </div>
