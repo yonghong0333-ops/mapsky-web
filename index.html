@@ -210,13 +210,15 @@
           locking = true;
           pin.classList.add("is-wiped");
           document.body.classList.add("is-dark");
-          /* after wipe animation, snap to intro */
+          /* jump to intro mid-wipe so no pure-black pause */
           setTimeout(function () {
             if (intro) {
               intro.scrollIntoView({ behavior: "auto", block: "start" });
             }
+            /* fire text sequence right away */
+            try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
             locking = false;
-          }, 340);
+          }, 120);
         }
 
         function undoWipe() {
@@ -258,7 +260,7 @@
         }, { passive: true });
       })();
 
-      /* Auto-play intro text when intro-scene scrolls into view */
+      /* Auto-play intro text — fast, starts immediately on enter */
       (function () {
         var scene = document.getElementById("introScene");
         var lines = document.querySelectorAll(".intro-line");
@@ -273,7 +275,7 @@
         function hideAll() {
           lines.forEach(function (line) {
             line.style.opacity = "0";
-            line.style.transform = "translateY(16px)";
+            line.style.transform = "translateY(12px)";
           });
         }
         function showLine(i) {
@@ -288,25 +290,27 @@
           playing = true;
           clearTimers();
           hideAll();
-          var holds = [900, 900, 900, 1200];
-          var delay = 120;
+          /* faster beats */
+          var holds = [550, 550, 550, 800];
+          var delay = 40;
           for (var i = 0; i < lines.length; i++) {
             (function (idx, d) {
               timers.push(setTimeout(function () { showLine(idx); }, d));
             })(i, delay);
-            delay += holds[i] || 900;
+            delay += holds[i] || 550;
           }
           timers.push(setTimeout(function () {
             playing = false;
             doneOnce = true;
-          }, delay + 200));
+          }, delay + 100));
         }
+        window.__playIntroText = playSequenceOnce;
         if ("IntersectionObserver" in window) {
           var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
               if (e.isIntersecting) playSequenceOnce();
             });
-          }, { threshold: 0.35 });
+          }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
           io.observe(scene);
         } else {
           playSequenceOnce();
