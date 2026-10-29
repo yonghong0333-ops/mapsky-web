@@ -192,10 +192,10 @@ body.is-scrolled .nav {
   border-radius: 980px;
 }
 
-/* White fixed; black slides up over it — short pin = faster cover */
+/* White fixed; black slides up — short pin */
 .hero-pin {
   position: relative;
-  height: 120vh;
+  height: 110vh;
 }
 .hero {
   position: sticky;
@@ -204,6 +204,8 @@ body.is-scrolled .nav {
   min-height: 100vh; min-height: 100dvh;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
+  contain: paint;
+  transform: translateZ(0);
 }
 .hero-layer {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -220,6 +222,7 @@ body.is-scrolled .nav {
   transform: translate3d(0, 100%, 0);
   will-change: transform;
   pointer-events: none;
+  backface-visibility: hidden;
 }
 .hero-layer-landing { z-index: 3; }
 .hero-layer-intro { z-index: 2; background: #000; }
@@ -249,7 +252,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 }
 .float-cards { position: absolute; inset: 0; pointer-events: none; }
 .float-card {
-  position: absolute; background: rgba(28,28,30,0.92); backdrop-filter: blur(12px);
+  position: absolute; background: rgba(28,28,30,0.96);
   border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px;
   font-size: 12px; opacity: 0; transform: translateY(12px); transition: opacity 0.5s, transform 0.5s;
   z-index: 3;
