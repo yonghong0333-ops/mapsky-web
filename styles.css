@@ -127,8 +127,12 @@ body.is-scrolled .nav {
 .wipe-tabs { pointer-events: none; }
 body.is-wipe-lock { overflow: hidden !important; touch-action: none; }
 .hero-pin:not(.is-done) ~ .after-wipe,
-.hero-pin:not(.is-done) ~ .intro-scene.after-wipe { visibility: hidden; pointer-events: none; }
-.hero-pin.is-done ~ .after-wipe { visibility: visible; pointer-events: auto; }
+.hero-pin:not(.is-done) ~ .intro-scene.after-wipe {
+  visibility: hidden; pointer-events: none; opacity: 0;
+}
+.hero-pin.is-done ~ .after-wipe {
+  visibility: visible; pointer-events: auto; opacity: 1;
+}
 .hero-black-wipe::before {
   content: ""; position: absolute; left: -18%; width: 136%; height: 72px; top: -36px;
   background: #0a0a0a; border-radius: 50% 50% 0 0; transform: scaleY(1.15);
@@ -192,6 +196,36 @@ body.is-wipe-lock { overflow: hidden !important; touch-action: none; }
   55%  { transform: translateY(4px) scale(1, 1.05); opacity: 0.6; }
   100% { transform: translateY(12px) scale(0.9, 0.8); opacity: 0; }
 }
+
+/* Mobile: lighter wipe to avoid frame drops */
+@media (max-width: 700px) {
+  .hero-black-wipe {
+    transition-duration: 0.55s;
+    will-change: transform;
+  }
+  .hero-black-wipe::before,
+  .hero-black-wipe::after {
+    display: none !important;
+    animation: none !important;
+  }
+  .hero-pin.is-wiped .hero-black-wipe::before,
+  .hero-pin.is-wiped .hero-black-wipe::after,
+  .hero-pin.is-returning:not(.is-wiped) .hero-black-wipe::before,
+  .hero-pin.is-returning:not(.is-wiped) .hero-black-wipe::after {
+    animation: none !important;
+  }
+  .intro-scene-frame {
+    max-height: min(48vh, 420px);
+    border-radius: 20px;
+  }
+  .intro-scene-img {
+    transform: translateZ(0);
+  }
+  .ink-brand-mark {
+    width: min(200px, 58vw);
+  }
+}
+
 .hero-layer-landing { z-index: 3; }
 .hero-layer-intro { z-index: 2; background: #000; }
 .hero-layer-detail { z-index: 1; background: #000; }
