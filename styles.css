@@ -316,7 +316,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   position: absolute;
   left: max(20px, env(safe-area-inset-left));
   top: calc(var(--nav-h) + var(--safe-top) + 28px);
-  transform: none;
+  transform: translateY(16px);
   font-size: clamp(20px, 5vw, 32px);
   font-weight: 600;
   text-align: left;
@@ -327,6 +327,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   text-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4);
   letter-spacing: -0.02em;
   line-height: 1.35;
+  transition: opacity 0.45s ease, transform 0.45s ease;
 }
 .intro-line-final {
   top: calc(var(--nav-h) + var(--safe-top) + 28px);
