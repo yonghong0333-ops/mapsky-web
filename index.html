@@ -41,7 +41,24 @@
   <main id="top">
     <div class="hero-pin" id="heroPin">
     <section class="hero" id="heroSticky">
-        <div class="hero-black-wipe" id="heroBlackWipe" aria-hidden="true"></div>
+        <div class="hero-black-wipe" id="heroBlackWipe" aria-hidden="true">
+          <div class="wipe-rise" id="wipeRise">
+            <div class="ink-top-mark wipe-mark" aria-label="MapSky">
+              <img class="ink-brand-mark" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
+            </div>
+            <div class="intro-scene wipe-scene" aria-hidden="true">
+              <div class="intro-scene-frame">
+                <img class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" decoding="async" />
+                <div class="intro-scene-overlay" aria-hidden="true"></div>
+                <div class="intro-tabs wipe-tabs" role="presentation">
+                  <span class="intro-tab is-active"><span class="intro-tab-icon">🌤</span><span class="intro-tab-label">天氣</span></span>
+                  <span class="intro-tab"><span class="intro-tab-icon">🚇</span><span class="intro-tab-label">捷運</span></span>
+                  <span class="intro-tab"><span class="intro-tab-icon">🏫</span><span class="intro-tab-label">停班停課</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="hero-layer hero-layer-landing" data-layer="landing">
           <div class="hero-copy">
             <p class="eyebrow">MapSky</p>
@@ -68,11 +85,11 @@
     </section>
     </div>
 
-    <div class="ink-top-mark" aria-label="MapSky">
+    <div class="ink-top-mark after-wipe" aria-label="MapSky">
       <img class="ink-brand-mark" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
     </div>
 
-    <section class="intro-scene" id="introScene" aria-label="出門前最常查什麼">
+    <section class="intro-scene after-wipe" id="introScene" aria-label="出門前最常查什麼">
       <div class="intro-scene-frame">
         <img id="introBgImg" class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" fetchpriority="high" decoding="async" />
         <div class="intro-scene-overlay" aria-hidden="true"></div>
@@ -213,36 +230,39 @@
         var explored = false;
         try { if (history.scrollRestoration) history.scrollRestoration = "manual"; } catch (e) {}
 
+        function lockScroll(e) {
+          if (locking) {
+            if (e.cancelable) e.preventDefault();
+          }
+        }
+
         function doWipe() {
           if (wiped || locking) return;
           wiped = true;
           locking = true;
           explored = false;
+          window.scrollTo(0, 0);
           pin.classList.add("is-wiped");
-          document.body.classList.add("is-dark");
-          var bg = document.getElementById("introBgImg");
+          document.body.classList.add("is-dark", "is-wipe-lock");
+          window.addEventListener("wheel", lockScroll, { passive: false });
+          window.addEventListener("touchmove", lockScroll, { passive: false });
           function finish() {
-            var mark = document.querySelector(".ink-top-mark");
+            var mark = document.querySelector(".ink-top-mark.after-wipe");
             var target = mark || intro;
             var absY = target ? (target.getBoundingClientRect().top + window.scrollY) : 0;
             var heroH = pin.offsetHeight || window.innerHeight;
             pin.classList.add("is-done");
+            document.body.classList.remove("is-wipe-lock");
+            window.removeEventListener("wheel", lockScroll, { passive: false });
+            window.removeEventListener("touchmove", lockScroll, { passive: false });
             requestAnimationFrame(function () {
               window.scrollTo(0, Math.max(0, absY - heroH));
               locking = false;
-              unlockUndoAt = Date.now() + 1200;
+              unlockUndoAt = Date.now() + 1000;
               try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
             });
           }
-          function whenReady(cb) {
-            if (!bg) { cb(); return; }
-            if (bg.complete && bg.naturalWidth > 0) { cb(); return; }
-            var done = false;
-            function once() { if (done) return; done = true; cb(); }
-            bg.addEventListener("load", once, { once: true });
-            setTimeout(once, 600);
-          }
-          setTimeout(function () { whenReady(finish); }, 720);
+          setTimeout(finish, 820);
         }
 
         function canUndo() {

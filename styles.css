@@ -111,17 +111,51 @@ body.is-scrolled .nav {
   position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 5; background: #0a0a0a;
   transform: translate3d(0, 108%, 0);
   transition: transform 0.78s cubic-bezier(0.22, 0.61, 0.2, 1);
-  pointer-events: none; backface-visibility: hidden; overflow: visible; will-change: transform;
+  pointer-events: none; backface-visibility: hidden; overflow: hidden; will-change: transform;
+  display: flex; flex-direction: column; align-items: center;
+}
+.wipe-rise {
+  width: 100%;
+  padding-top: calc(var(--nav-h) + var(--safe-top) + 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+.wipe-mark {
+  padding: 8px 16px 10px !important;
+  background: transparent !important;
+}
+.wipe-scene {
+  width: 100%;
+  padding: 0 16px 20px !important;
+  background: transparent !important;
+}
+.wipe-tabs { pointer-events: none; }
+.wipe-tabs .intro-tab { cursor: default; }
+body.is-wipe-lock {
+  overflow: hidden !important;
+  touch-action: none;
+}
+.hero-pin:not(.is-done) ~ .after-wipe,
+.hero-pin:not(.is-done) ~ .intro-scene.after-wipe {
+  visibility: hidden;
+  pointer-events: none;
+}
+.hero-pin.is-done ~ .after-wipe {
+  visibility: visible;
+  pointer-events: auto;
 }
 .hero-black-wipe::before {
   content: ""; position: absolute; left: -18%; width: 136%; height: 72px; top: -36px;
   background: #0a0a0a; border-radius: 50% 50% 0 0; transform: scaleY(1.15);
-  filter: blur(0.2px); pointer-events: none;
+  filter: blur(0.2px); pointer-events: none; z-index: 1;
 }
 .hero-black-wipe::after {
   content: ""; position: absolute; left: 8%; width: 84%; height: 40px; top: -18px;
-  background: #0a0a0a; border-radius: 50%; opacity: 0.95; filter: blur(6px); pointer-events: none;
+  background: #0a0a0a; border-radius: 50%; opacity: 0.95; filter: blur(6px); pointer-events: none; z-index: 1;
 }
+.wipe-rise { position: relative; z-index: 2; }
 .hero-pin.is-wiped .hero-black-wipe { transform: translate3d(0, 0, 0); }
 .hero-pin.is-wiped .hero-black-wipe::before { animation: liquidEdge 0.78s cubic-bezier(0.22, 0.61, 0.2, 1) both; }
 .hero-pin.is-wiped .hero-black-wipe::after { animation: liquidBlob 0.78s cubic-bezier(0.22, 0.61, 0.2, 1) both; }
