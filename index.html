@@ -202,7 +202,7 @@
         img.src = "assets/mountain.svg";
       })();
 
-      /* Auto black wipe: scroll down → jump cover fast, then go to intro */
+      /* Auto black wipe → hide hero → show mountain + text */
       (function () {
         var pin = document.getElementById("heroPin");
         var wipe = document.getElementById("heroBlackWipe");
@@ -219,34 +219,43 @@
           document.body.classList.add("is-dark");
 
           var bg = document.getElementById("introBgImg");
-          function goIntro() {
-            if (intro) intro.scrollIntoView({ behavior: "auto", block: "start" });
+
+          function finish() {
+            pin.classList.add("is-done");
+            if (intro) {
+              var top = intro.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo(0, Math.max(0, top - 1));
+            }
             try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
             locking = false;
           }
+
           function whenReady(cb) {
             if (!bg) { cb(); return; }
             if (bg.complete && bg.naturalWidth > 0) { cb(); return; }
             var done = false;
-            function finish() {
+            function once() {
               if (done) return;
               done = true;
               cb();
             }
-            bg.addEventListener("load", finish, { once: true });
-            setTimeout(finish, 800);
+            bg.addEventListener("load", once, { once: true });
+            setTimeout(once, 600);
           }
-          setTimeout(function () { whenReady(goIntro); }, 80);
+
+          setTimeout(function () {
+            whenReady(finish);
+          }, 230);
         }
 
         function undoWipe() {
           if (!wiped) return;
           wiped = false;
-          pin.classList.remove("is-wiped");
+          pin.classList.remove("is-wiped", "is-done");
           document.body.classList.remove("is-dark");
+          window.scrollTo(0, 0);
         }
 
-        /* wheel / touch: small down intent triggers auto wipe */
         var touchY = 0;
         window.addEventListener("wheel", function (e) {
           if (wiped) {
@@ -267,14 +276,12 @@
           if (wiped) return;
           if (!e.touches || !e.touches[0]) return;
           var dy = touchY - e.touches[0].clientY;
-          if (dy > 24 && window.scrollY < 40) {
-            doWipe();
-          }
+          if (dy > 20 && window.scrollY < 40) doWipe();
         }, { passive: true });
 
         window.addEventListener("scroll", function () {
-          if (!wiped && window.scrollY > 30) doWipe();
-          if (wiped && window.scrollY < 4) undoWipe();
+          if (!wiped && window.scrollY > 24) doWipe();
+          if (wiped && window.scrollY < 2) undoWipe();
         }, { passive: true });
       })();
 
@@ -308,7 +315,6 @@
           playing = true;
           clearTimers();
           hideAll();
-          /* faster beats */
           var holds = [550, 550, 550, 800];
           var delay = 40;
           for (var i = 0; i < lines.length; i++) {
