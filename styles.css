@@ -219,7 +219,7 @@ body.is-scrolled .nav {
   z-index: 5;
   background: #0a0a0a;
   transform: translate3d(0, 100%, 0);
-  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   backface-visibility: hidden;
 }
@@ -351,7 +351,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   text-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4);
   letter-spacing: -0.02em;
   line-height: 1.35;
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transition: opacity 0.28s ease, transform 0.28s ease;
 }
 .intro-line-final {
   top: max(24px, 4vw);
