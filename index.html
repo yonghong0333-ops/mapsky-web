@@ -196,7 +196,6 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      /* Preload mountain so wipe never lands on empty black */
       (function () {
         var img = new Image();
         img.src = "assets/mountain.svg";
@@ -251,7 +250,7 @@
 
           setTimeout(function () {
             whenReady(finish);
-          }, 230);
+          }, 720);
         }
 
         function canUndo() {
@@ -270,7 +269,6 @@
         var touchY = 0;
         window.addEventListener("wheel", function (e) {
           if (wiped) {
-            /* only undo after user has scrolled into content, then returns to top */
             if (e.deltaY < -48 && canUndo() && window.scrollY < 6) undoWipe();
             return;
           }
@@ -291,7 +289,6 @@
             if (dy > 16 && window.scrollY < 40) doWipe();
             return;
           }
-          /* no undo on touchmove — iOS rubber-band was causing hero/mountain flicker */
         }, { passive: true });
 
         window.addEventListener("scroll", function () {
@@ -300,7 +297,6 @@
         }, { passive: true });
       })();
 
-      /* Auto-play intro text — fast, starts immediately on enter */
       (function () {
         var scene = document.getElementById("introScene");
         var lines = document.querySelectorAll(".intro-line");
@@ -359,7 +355,6 @@
         }
       })();
 
-      /* Intro scene tabs */
       (function () {
         var tabs = document.querySelectorAll(".intro-tab");
         var bgImg = document.getElementById("introBgImg");
@@ -383,11 +378,9 @@
         });
       })();
 
-      /* Finale lock zoom then release */
       (function () {
         var finalePin = document.getElementById("finalePin");
         var finaleMark = document.getElementById("finaleMark");
-        var finaleCta = document.getElementById("finaleCta");
         if (!finalePin || !finaleMark || reduceMotion) return;
         var finalePlayed = false;
         var finalePlaying = false;
@@ -408,12 +401,6 @@
             finalePlaying = false;
             finalePlayed = true;
           }, 1500);
-        }
-
-        function atFinaleGate() {
-          if (finalePlayed) return false;
-          var rect = finaleRect();
-          return rect.top < 72 && rect.bottom > window.innerHeight * 0.4;
         }
 
         window.addEventListener("wheel", function (e) {
@@ -453,7 +440,6 @@
         }, { passive: true });
       })();
 
-      /* Reveal on scroll */
       (function () {
         var els = document.querySelectorAll(".reveal");
         if (!els.length) return;
