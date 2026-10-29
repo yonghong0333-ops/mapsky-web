@@ -192,9 +192,14 @@ body.is-scrolled .nav {
   border-radius: 980px;
 }
 
-/* Hero — normal full-screen block, scrolls away (no sticky = no jank) */
-.hero {
+/* White fixed; black slides up over it */
+.hero-pin {
   position: relative;
+  height: 180vh;
+}
+.hero {
+  position: sticky;
+  top: 0;
   height: 100vh; height: 100dvh;
   min-height: 100vh; min-height: 100dvh;
   overflow: hidden;
