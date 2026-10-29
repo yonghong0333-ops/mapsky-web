@@ -270,6 +270,33 @@
         window.addEventListener("scroll", onPinScroll, { passive: true });
         window.addEventListener("resize", onPinScroll, { passive: true });
         updatePin();
+
+        /* Auto-snap into intro zone when user scrolls near it */
+        var snapLock = false;
+        var snapTimer = null;
+        function snapToIntroIfNeeded() {
+          if (snapLock || !heroPin) return;
+          var rect = heroPin.getBoundingClientRect();
+          var pinH = heroPin.offsetHeight;
+          var vh = window.innerHeight || 1;
+          var range = Math.max(pinH - vh, 1);
+          var scrolled = Math.min(Math.max(-rect.top, 0), range);
+          var progress = scrolled / range;
+          if (progress > 0.04 && progress < 0.13) {
+            snapLock = true;
+            var targetY = window.scrollY + rect.top + range * 0.16;
+            window.scrollTo({ top: targetY, behavior: "smooth" });
+            setTimeout(function () { snapLock = false; }, 700);
+          }
+        }
+        function onScrollEndLikely() {
+          if (snapTimer) clearTimeout(snapTimer);
+          snapTimer = setTimeout(snapToIntroIfNeeded, 120);
+        }
+        window.addEventListener("scroll", onScrollEndLikely, { passive: true });
+        window.addEventListener("touchend", function () {
+          setTimeout(snapToIntroIfNeeded, 80);
+        }, { passive: true });
       }
 
       /* Intro scene tabs */
