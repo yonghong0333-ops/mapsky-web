@@ -209,7 +209,7 @@ body.is-scrolled .nav {
 .hero-layer {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
 }
-/* Black wipe — CSS transition, triggered by .is-wiped */
+/* Black wipe — slower liquid rise from bottom */
 .hero-black-wipe {
   position: absolute;
   left: 0;
@@ -218,17 +218,73 @@ body.is-scrolled .nav {
   bottom: 0;
   z-index: 5;
   background: #0a0a0a;
-  transform: translate3d(0, 100%, 0);
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 108%, 0);
+  transition: transform 0.78s cubic-bezier(0.22, 0.61, 0.2, 1);
   pointer-events: none;
   backface-visibility: hidden;
+  overflow: visible;
+  will-change: transform;
+}
+/* liquid meniscus on the leading edge */
+.hero-black-wipe::before {
+  content: "";
+  position: absolute;
+  left: -18%;
+  width: 136%;
+  height: 72px;
+  top: -36px;
+  background: #0a0a0a;
+  border-radius: 50% 50% 0 0;
+  transform: scaleY(1.15);
+  filter: blur(0.2px);
+  pointer-events: none;
+}
+.hero-black-wipe::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  width: 84%;
+  height: 40px;
+  top: -18px;
+  background: #0a0a0a;
+  border-radius: 50%;
+  opacity: 0.95;
+  filter: blur(6px);
+  pointer-events: none;
 }
 .hero-pin.is-wiped .hero-black-wipe {
   transform: translate3d(0, 0, 0);
 }
+.hero-pin.is-wiped .hero-black-wipe::before {
+  animation: liquidEdge 0.78s cubic-bezier(0.22, 0.61, 0.2, 1) both;
+}
+.hero-pin.is-wiped .hero-black-wipe::after {
+  animation: liquidBlob 0.78s cubic-bezier(0.22, 0.61, 0.2, 1) both;
+}
+@keyframes liquidEdge {
+  0%   { transform: scaleY(1.6) scaleX(1.12); border-radius: 42% 58% 0 0; }
+  35%  { transform: scaleY(1.25) scaleX(0.96); border-radius: 55% 45% 0 0; }
+  65%  { transform: scaleY(1.1) scaleX(1.04); border-radius: 48% 52% 0 0; }
+  100% { transform: scaleY(1) scaleX(1); border-radius: 50% 50% 0 0; }
+}
+@keyframes liquidBlob {
+  0%   { transform: translateY(10px) scale(1.2, 1.4); opacity: 0.7; }
+  50%  { transform: translateY(-2px) scale(0.95, 1.1); opacity: 0.95; }
+  100% { transform: translateY(0) scale(1, 1); opacity: 0; }
+}
 .hero-pin.is-wiped .hero-layer-landing {
   opacity: 0;
+  transition: opacity 0.35s ease 0.2s;
   pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-black-wipe {
+    transition-duration: 0.01ms;
+  }
+  .hero-pin.is-wiped .hero-black-wipe::before,
+  .hero-pin.is-wiped .hero-black-wipe::after {
+    animation: none;
+  }
 }
 .hero-pin.is-done {
   display: none;
