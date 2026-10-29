@@ -65,7 +65,7 @@
         </div>
         <div class="hero-layer hero-layer-intro" data-layer="intro" aria-hidden="true" style="opacity:0">
           <div class="intro-bg" aria-hidden="true">
-            <img src="assets/mountain.svg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
+            <img id="introBgImg" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
           </div>
           <div class="intro-lines">
             <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
@@ -74,6 +74,20 @@
             <div class="intro-line intro-line-final" data-line="3">
               <img class="intro-logo" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
             </div>
+          </div>
+          <div class="intro-tabs" role="tablist" aria-label="場景切換">
+            <button type="button" class="intro-tab" data-bg="assets/Weather1.svg" data-label="天氣" role="tab" aria-selected="false">
+              <span class="intro-tab-icon">🌤</span>
+              <span class="intro-tab-label">天氣</span>
+            </button>
+            <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="捷運" role="tab" aria-selected="false">
+              <span class="intro-tab-icon">🚇</span>
+              <span class="intro-tab-label">捷運</span>
+            </button>
+            <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="停班停課" role="tab" aria-selected="false">
+              <span class="intro-tab-icon">🏫</span>
+              <span class="intro-tab-label">停班停課</span>
+            </button>
           </div>
         </div>
         <div class="hero-layer hero-layer-detail" data-layer="detail" aria-hidden="true" style="opacity:0">
@@ -243,7 +257,7 @@
               if (lineProgress < 0.92) t = 1;
             }
             line.style.opacity = String(Math.max(0, Math.min(1, t)));
-            line.style.transform = "translate(-50%, -50%) translateY(" + ((1 - t) * 28) + "px)";
+            line.style.transform = "translateY(" + ((1 - t) * 20) + "px)";
           });
           pinTicking = false;
         }
@@ -257,6 +271,31 @@
         window.addEventListener("resize", onPinScroll, { passive: true });
         updatePin();
       }
+
+      /* Intro scene tabs */
+      (function () {
+        var tabs = document.querySelectorAll(".intro-tab");
+        var bgImg = document.getElementById("introBgImg");
+        if (!tabs.length || !bgImg) return;
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            var src = tab.getAttribute("data-bg");
+            if (src) {
+              bgImg.style.opacity = "0";
+              setTimeout(function () {
+                bgImg.src = src;
+                bgImg.onload = function () { bgImg.style.opacity = "1"; };
+                if (bgImg.complete) bgImg.style.opacity = "1";
+              }, 180);
+            }
+            tabs.forEach(function (t) {
+              t.classList.toggle("is-active", t === tab);
+              t.setAttribute("aria-selected", t === tab ? "true" : "false");
+            });
+          });
+        });
+      })();
+
       var revealEls = document.querySelectorAll(".reveal");
       if (revealEls.length && "IntersectionObserver" in window) {
         var ro = new IntersectionObserver(function (entries) {
