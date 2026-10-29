@@ -316,11 +316,11 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 .intro-scene-img {
   display: block;
   width: 100%;
-  height: auto;
-  min-height: 70vh;
-  max-height: 92vh;
+  height: 56vh;
+  min-height: 380px;
+  max-height: 620px;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 42%;
   transition: opacity 0.2s ease;
   background: #0a0a0a;
 }
@@ -363,12 +363,18 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   transition: opacity 0.28s ease, transform 0.28s ease;
 }
 .intro-line-final {
-  top: max(24px, 4vw);
+  left: 50%;
+  right: auto;
+  top: calc(var(--nav-h) + var(--safe-top) + 18px);
+  max-width: none;
+  text-align: center;
+  transform: translate(-50%, 14px);
 }
 .intro-logo {
-  width: min(220px, 55vw);
+  width: min(300px, 74vw);
   height: auto;
-  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+  display: block;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.45));
 }
 .intro-tabs {
   position: absolute;

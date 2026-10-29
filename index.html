@@ -221,13 +221,17 @@
           var bg = document.getElementById("introBgImg");
 
           function finish() {
+            var y = 0;
+            if (intro) y = Math.max(0, intro.getBoundingClientRect().top + window.scrollY);
             pin.classList.add("is-done");
-            if (intro) {
-              var top = intro.getBoundingClientRect().top + window.scrollY;
-              window.scrollTo(0, Math.max(0, top - 1));
-            }
-            try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
-            locking = false;
+            requestAnimationFrame(function () {
+              if (intro) {
+                y = Math.max(0, intro.getBoundingClientRect().top + window.scrollY);
+              }
+              window.scrollTo(0, y);
+              locking = false;
+              try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
+            });
           }
 
           function whenReady(cb) {
@@ -257,9 +261,12 @@
         }
 
         var touchY = 0;
+        function atIntroTop() {
+          return intro && intro.getBoundingClientRect().top >= -8 && window.scrollY < 48;
+        }
         window.addEventListener("wheel", function (e) {
           if (wiped) {
-            if (window.scrollY < 8 && e.deltaY < 0) undoWipe();
+            if (e.deltaY < 0 && atIntroTop()) undoWipe();
             return;
           }
           if (e.deltaY > 0 && window.scrollY < 40) {
@@ -273,15 +280,17 @@
         }, { passive: true });
 
         window.addEventListener("touchmove", function (e) {
-          if (wiped) return;
           if (!e.touches || !e.touches[0]) return;
           var dy = touchY - e.touches[0].clientY;
-          if (dy > 20 && window.scrollY < 40) doWipe();
+          if (!wiped) {
+            if (dy > 20 && window.scrollY < 40) doWipe();
+            return;
+          }
+          if (dy < -28 && atIntroTop()) undoWipe();
         }, { passive: true });
 
         window.addEventListener("scroll", function () {
           if (!wiped && window.scrollY > 24) doWipe();
-          if (wiped && window.scrollY < 2) undoWipe();
         }, { passive: true });
       })();
 
@@ -297,18 +306,21 @@
           timers.forEach(function (id) { clearTimeout(id); });
           timers = [];
         }
+        function place(line, shown) {
+          var finalLine = line.classList.contains("intro-line-final");
+          line.style.opacity = shown ? "1" : "0";
+          if (finalLine) {
+            line.style.transform = shown ? "translate(-50%, 0)" : "translate(-50%, 14px)";
+          } else {
+            line.style.transform = shown ? "translateY(0)" : "translateY(12px)";
+          }
+        }
         function hideAll() {
-          lines.forEach(function (line) {
-            line.style.opacity = "0";
-            line.style.transform = "translateY(12px)";
-          });
+          lines.forEach(function (line) { place(line, false); });
         }
         function showLine(i) {
           hideAll();
-          var line = lines[i];
-          if (!line) return;
-          line.style.opacity = "1";
-          line.style.transform = "translateY(0)";
+          if (lines[i]) place(lines[i], true);
         }
         function playSequenceOnce() {
           if (playing || doneOnce) return;
