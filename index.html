@@ -50,6 +50,14 @@
               <div class="intro-scene-frame">
                 <img class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" decoding="async" />
                 <div class="intro-scene-overlay" aria-hidden="true"></div>
+                <div class="intro-caption">
+                  <p class="intro-caption-kicker">MapSky</p>
+                  <p class="intro-caption-title">出門前，你最常查什麼？</p>
+                  <p class="intro-caption-body">
+                    <span class="tint-weather">天氣</span>、<span class="tint-metro">捷運</span>、<span class="tint-school">停班停課</span>。<br />
+                    現在，一站看清楚。
+                  </p>
+                </div>
                 <div class="intro-tabs wipe-tabs" role="presentation">
                   <span class="intro-tab is-active"><span class="intro-tab-icon">🌤</span><span class="intro-tab-label">天氣</span></span>
                   <span class="intro-tab"><span class="intro-tab-icon">🚇</span><span class="intro-tab-label">捷運</span></span>
@@ -93,24 +101,24 @@
       <div class="intro-scene-frame">
         <img id="introBgImg" class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" fetchpriority="high" decoding="async" />
         <div class="intro-scene-overlay" aria-hidden="true"></div>
-        <div class="intro-lines">
-          <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
-          <p class="intro-line" data-line="1">天氣、捷運、停班停課。</p>
-          <p class="intro-line" data-line="2">現在，一站看清楚。</p>
-          <div class="intro-line intro-line-final" data-line="3">
-            <img class="intro-logo" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
-          </div>
+        <div class="intro-caption" id="introCaption">
+          <p class="intro-caption-kicker">MapSky</p>
+          <p class="intro-caption-title">出門前，你最常查什麼？</p>
+          <p class="intro-caption-body">
+            <span class="tint-weather">天氣</span>、<span class="tint-metro">捷運</span>、<span class="tint-school">停班停課</span>。<br />
+            現在，一站看清楚。
+          </p>
         </div>
         <div class="intro-tabs" role="tablist" aria-label="場景切換">
-          <button type="button" class="intro-tab" data-bg="assets/Weather1.svg" data-label="天氣" role="tab" aria-selected="false">
+          <button type="button" class="intro-tab" data-bg="assets/Weather1.svg" data-label="天氣" data-title="即時天氣與動態天空" data-body="<span class="tint-weather">溫度、體感、降雨</span>，一眼看懂今天。" role="tab" aria-selected="false">
             <span class="intro-tab-icon">🌤</span>
             <span class="intro-tab-label">天氣</span>
           </button>
-          <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="捷運" role="tab" aria-selected="false">
+          <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="捷運" data-title="捷運 · 台鐵 · 高鐵" data-body="<span class="tint-metro">下一班幾分</span>，站點與班次一次看。" role="tab" aria-selected="false">
             <span class="intro-tab-icon">🚇</span>
             <span class="intro-tab-label">捷運</span>
           </button>
-          <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="停班停課" role="tab" aria-selected="false">
+          <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="停班停課" data-title="停班停課公告" data-body="<span class="tint-school">縣市地圖著色</span>，出門前先確認。" role="tab" aria-selected="false">
             <span class="intro-tab-icon">🏫</span>
             <span class="intro-tab-label">停班停課</span>
           </button>
@@ -328,55 +336,42 @@
 
       (function () {
         var scene = document.getElementById("introScene");
-        var lines = document.querySelectorAll(".intro-line");
-        if (!scene || !lines.length) return;
-        var playing = false;
-        var doneOnce = false;
-        var timers = [];
-        function clearTimers() { timers.forEach(function (id) { clearTimeout(id); }); timers = []; }
-        function place(line, shown) {
-          var finalLine = line.classList.contains("intro-line-final");
-          line.style.opacity = shown ? "1" : "0";
-          if (finalLine) line.style.transform = shown ? "translate(-50%, 0)" : "translate(-50%, 14px)";
-          else line.style.transform = shown ? "translateY(0)" : "translateY(12px)";
-        }
-        function hideAll() { lines.forEach(function (line) { place(line, false); }); }
-        function showLine(i) { hideAll(); if (lines[i]) place(lines[i], true); }
-        function playSequenceOnce() {
-          if (playing || doneOnce) return;
-          playing = true; clearTimers(); hideAll();
-          var holds = [550, 550, 550, 800];
-          var delay = 40;
-          for (var i = 0; i < lines.length; i++) {
-            (function (idx, d) { timers.push(setTimeout(function () { showLine(idx); }, d)); })(i, delay);
-            delay += holds[i] || 550;
-          }
-          timers.push(setTimeout(function () { playing = false; doneOnce = true; }, delay + 100));
-        }
-        window.__playIntroText = playSequenceOnce;
-        if ("IntersectionObserver" in window) {
-          var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) { if (e.isIntersecting) playSequenceOnce(); });
-          }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
-          io.observe(scene);
-        } else playSequenceOnce();
+        var caption = document.getElementById("introCaption");
+        if (!scene || !caption) return;
+        window.__playIntroText = function () {
+          caption.classList.add("is-visible");
+        };
+        caption.classList.add("is-visible");
       })();
 
       (function () {
-        var tabs = document.querySelectorAll(".intro-tab");
+        var tabs = document.querySelectorAll("#introScene .intro-tab");
         var bgImg = document.getElementById("introBgImg");
+        var caption = document.getElementById("introCaption");
         if (!tabs.length || !bgImg) return;
+        function setCaption(tab) {
+          if (!caption || !tab) return;
+          var title = tab.getAttribute("data-title");
+          var body = tab.getAttribute("data-body");
+          var titleEl = caption.querySelector(".intro-caption-title");
+          var bodyEl = caption.querySelector(".intro-caption-body");
+          if (title && titleEl) titleEl.textContent = title;
+          if (body && bodyEl) bodyEl.innerHTML = body;
+        }
         tabs.forEach(function (tab) {
           tab.addEventListener("click", function () {
             var src = tab.getAttribute("data-bg");
             if (src) {
               bgImg.style.opacity = "0";
               setTimeout(function () {
+                if (src.indexOf("mountain") !== -1) bgImg.style.objectPosition = "34% 40%";
+                else bgImg.style.objectPosition = "center 42%";
                 bgImg.src = src;
                 bgImg.onload = function () { bgImg.style.opacity = "1"; };
                 if (bgImg.complete) bgImg.style.opacity = "1";
               }, 180);
             }
+            setCaption(tab);
             tabs.forEach(function (t) {
               t.classList.toggle("is-active", t === tab);
               t.setAttribute("aria-selected", t === tab ? "true" : "false");
