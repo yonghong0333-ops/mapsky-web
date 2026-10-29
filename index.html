@@ -37,7 +37,7 @@
       color: #6e6e73;
       font-size: 13px;
       line-height: 1.5;
-      padding: 48px 22px 28px;
+      padding: 48px 22px calc(36px + env(safe-area-inset-bottom, 0px));
       margin-top: auto;
       border-top: 1px solid #d2d2d7;
     }
@@ -100,25 +100,29 @@
     .footer-meta {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      gap: 12px;
+      gap: 10px 16px;
       padding-top: 18px;
+      padding-bottom: 8px;
       font-size: 12px;
       color: #6e6e73;
+      text-align: center;
     }
     .footer-meta a {
       color: #6e6e73;
       text-decoration: none;
-      margin-left: 14px;
+      margin: 0 6px;
     }
-    .footer-meta a:first-of-type { margin-left: 0; }
     .footer-meta a:hover { color: #1d1d1f; text-decoration: underline; }
     @media (max-width: 560px) {
       .footer-meta {
         flex-direction: column;
         align-items: center;
-        text-align: center;
+        gap: 8px;
+      }
+      .footer-meta a {
+        margin: 0 8px;
       }
     }
   </style>
