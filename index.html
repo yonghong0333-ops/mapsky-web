@@ -233,7 +233,6 @@
             layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
             layerDetail.setAttribute("aria-hidden", detailOpacity < 0.15 ? "true" : "false");
           }
-          var lineProgress = progress > introStart ? Math.min(1, (progress - introStart) / (introEnd - introStart)) : 0;
           if (detailSlides.length) {
             var count = detailSlides.length || 1;
             var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.58);
@@ -247,18 +246,7 @@
               slide.style.transform = "translateY(" + ((1 - Math.max(0, Math.min(1, t))) * 16) + "px)";
             });
           }
-          introLines.forEach(function (line, i) {
-            var start = i / 4, peak = start + 0.08, end = start + 0.22, t = 0;
-            if (lineProgress >= start && lineProgress < peak) t = (lineProgress - start) / (peak - start);
-            else if (lineProgress >= peak && lineProgress < end) t = 1;
-            else if (lineProgress >= end && lineProgress < end + 0.08) t = 1 - (lineProgress - end) / 0.08;
-            if (i === 3 && lineProgress >= peak) {
-              t = Math.min(1, Math.max(t, 1 - Math.max(0, (lineProgress - 0.92) / 0.08)));
-              if (lineProgress < 0.92) t = 1;
-            }
-            line.style.opacity = String(Math.max(0, Math.min(1, t)));
-            line.style.transform = "translateY(" + ((1 - t) * 20) + "px)";
-          });
+          /* intro lines driven by autoplay, not scroll */
           pinTicking = false;
         }
         function onPinScroll() {
@@ -271,7 +259,6 @@
         window.addEventListener("resize", onPinScroll, { passive: true });
         updatePin();
 
-        /* Auto-snap into intro zone when user scrolls near it */
         var snapLock = false;
         var snapTimer = null;
         function snapToIntroIfNeeded() {
@@ -298,6 +285,68 @@
           setTimeout(snapToIntroIfNeeded, 80);
         }, { passive: true });
       }
+
+      /* Auto-play intro text sequence when intro layer is shown */
+      (function () {
+        var lines = document.querySelectorAll(".intro-line");
+        if (!lines.length) return;
+        var playing = false;
+        var timers = [];
+        function clearTimers() {
+          timers.forEach(function (id) { clearTimeout(id); });
+          timers = [];
+        }
+        function hideAll() {
+          lines.forEach(function (line) {
+            line.style.opacity = "0";
+            line.style.transform = "translateY(16px)";
+          });
+        }
+        function showLine(i) {
+          hideAll();
+          var line = lines[i];
+          if (!line) return;
+          line.style.opacity = "1";
+          line.style.transform = "translateY(0)";
+        }
+        function playSequence() {
+          if (playing) return;
+          playing = true;
+          clearTimers();
+          hideAll();
+          var holds = [1800, 1800, 1800, 2400];
+          var delay = 200;
+          for (var i = 0; i < lines.length; i++) {
+            (function (idx, d) {
+              timers.push(setTimeout(function () { showLine(idx); }, d));
+            })(i, delay);
+            delay += holds[i] || 1800;
+          }
+          timers.push(setTimeout(function () {
+            playing = false;
+            playSequence();
+          }, delay + 400));
+        }
+        function stopSequence() {
+          playing = false;
+          clearTimers();
+          hideAll();
+        }
+        var layerIntroEl = document.querySelector(".hero-layer-intro");
+        if (!layerIntroEl) return;
+        var wasVisible = false;
+        function check() {
+          var op = parseFloat(layerIntroEl.style.opacity || "0");
+          var visible = op > 0.6;
+          if (visible && !wasVisible) playSequence();
+          if (!visible && wasVisible) stopSequence();
+          wasVisible = visible;
+        }
+        window.addEventListener("scroll", function () {
+          requestAnimationFrame(check);
+        }, { passive: true });
+        check();
+      })();
 
       /* Intro scene tabs */
       (function () {
