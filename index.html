@@ -84,19 +84,21 @@
       text-decoration: none;
     }
     .black-band .cta:active { transform: scale(0.97); }
-    .wx {
+    .stage {
+      position: relative;
+      z-index: 2;
+    }
+    .sticker {
       position: absolute;
+      z-index: 8;
       pointer-events: none;
-      z-index: 1;
-      opacity: 0.92;
+      filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35));
     }
-    .wx svg { display: block; width: 100%; height: auto; }
-    .wx-left { left: 4%; bottom: 14%; width: min(220px, 28vw); }
-    .wx-right { right: 5%; bottom: 22%; width: min(200px, 26vw); }
-    @media (max-width: 700px) {
-      .wx-left { left: -2%; bottom: 8%; width: 150px; opacity: 0.75; }
-      .wx-right { right: -4%; bottom: 16%; width: 140px; opacity: 0.75; }
-    }
+    .sticker svg { display: block; width: 100%; height: auto; overflow: visible; }
+    /* loose placement, sitting on the tear — not pinned to corners */
+    .st-sun { left: 6%; bottom: -28px; width: min(148px, 22vw); transform: rotate(-10deg); }
+    .st-rain { right: 9%; bottom: -18px; width: min(156px, 24vw); transform: rotate(7deg); }
+    .st-spark { right: 16%; top: 22%; width: min(72px, 10vw); transform: rotate(14deg); }
 
     .torn-edge {
       position: relative;
@@ -192,6 +194,9 @@
       .black-band { min-height: 46vh; padding-bottom: 64px; }
       .torn-edge, .torn-svg { height: 48px; }
       .white-panel { margin-top: -30px; padding-top: 40px; }
+      .st-sun { left: 2%; bottom: -20px; width: 108px; }
+      .st-rain { right: 2%; bottom: -14px; width: 112px; }
+      .st-spark { right: 18%; top: 18%; width: 48px; }
     }
   </style>
 </head>
@@ -220,40 +225,11 @@
   </header>
 
   <main id="top">
+    <div class="stage">
     <section class="black-band" aria-label="主視覺">
-      <div class="wx wx-left" aria-hidden="true">
-        <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="sunG" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#ffe9a8"/>
-              <stop offset="55%" stop-color="#ffc44d"/>
-              <stop offset="100%" stop-color="#ffc44d" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <circle cx="78" cy="58" r="52" fill="url(#sunG)"/>
-          <circle cx="78" cy="58" r="22" fill="#ffe08a"/>
-          <g fill="#f4f6f8">
-            <ellipse cx="132" cy="92" rx="46" ry="28"/>
-            <ellipse cx="96" cy="100" rx="34" ry="22"/>
-            <ellipse cx="158" cy="104" rx="30" ry="18"/>
-          </g>
-          <ellipse cx="128" cy="112" rx="62" ry="16" fill="#e6e9ee"/>
-        </svg>
-      </div>
-      <div class="wx wx-right" aria-hidden="true">
-        <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg">
-          <g fill="#d7dde6">
-            <ellipse cx="118" cy="62" rx="52" ry="30"/>
-            <ellipse cx="78" cy="74" rx="36" ry="24"/>
-            <ellipse cx="150" cy="78" rx="32" ry="20"/>
-          </g>
-          <ellipse cx="112" cy="88" rx="70" ry="18" fill="#c5ced8"/>
-          <g stroke="#7ec8ff" stroke-width="3" stroke-linecap="round">
-            <line x1="72" y1="108" x2="64" y2="132"/>
-            <line x1="98" y1="112" x2="90" y2="142"/>
-            <line x1="124" y1="110" x2="116" y2="138"/>
-            <line x1="150" y1="108" x2="142" y2="130"/>
-          </g>
+      <div class="sticker st-spark" aria-hidden="true">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 4 L46 30 L72 22 L52 40 L76 52 L48 50 L58 76 L40 54 L22 76 L32 50 L4 52 L28 40 L8 22 L34 30 Z" fill="#ff3ad4" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
         </svg>
       </div>
       <p class="eyebrow">MapSky</p>
@@ -266,6 +242,25 @@
       <svg class="torn-svg" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0,0 L1200,0 L1200,28 L1176,53 L1166,43 L1148,61 L1135,34 L1110,52 L1090,43 L1062,80 L1051,41 L1031,48 L1021,33 L1004,60 L986,41 L972,58 L952,43 L930,72 L917,39 L894,63 L884,44 L858,56 L842,37 L824,55 L811,44 L792,52 L781,38 L766,68 L751,41 L733,48 L716,40 L701,70 L690,40 L672,69 L653,35 L628,50 L618,42 L601,64 L590,35 L563,52 L547,36 L526,69 L514,37 L495,59 L475,36 L450,50 L431,42 L415,80 L402,34 L381,70 L367,42 L342,60 L322,37 L295,49 L282,32 L256,66 L240,36 L225,59 L206,43 L187,59 L167,39 L147,75 L135,36 L119,61 L101,40 L83,73 L64,38 L45,60 L33,40 L12,51 L2,33 L0,56 Z" fill="#0a0a0a"/>
       </svg>
+    </div>
+      <div class="sticker st-sun" aria-hidden="true">
+        <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#111" stroke-width="4" stroke-linejoin="round">
+            <polygon points="70,6 78,42 112,18 88,50 134,50 96,70 134,90 88,90 112,122 78,98 70,134 62,98 28,122 52,90 6,90 44,70 6,50 52,50 28,18 62,42" fill="#ffe14a"/>
+            <circle cx="70" cy="70" r="26" fill="#fff36a"/>
+          </g>
+        </svg>
+      </div>
+      <div class="sticker st-rain" aria-hidden="true">
+        <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#111" stroke-width="4" stroke-linejoin="round">
+            <path d="M48 78c0-22 16-36 36-36 4-16 18-26 34-22 14 3 24 16 24 30 14 2 26 14 26 30 0 18-14 30-32 30H58c-16 0-28-12-28-28 0-2 0-3 0-4z" fill="#f4f7fb"/>
+            <path d="M58 112 L50 132" fill="none" stroke="#2ad4ff" stroke-width="5" stroke-linecap="round"/>
+            <path d="M82 114 L74 136" fill="none" stroke="#2ad4ff" stroke-width="5" stroke-linecap="round"/>
+            <path d="M106 112 L98 130" fill="none" stroke="#2ad4ff" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
     </div>
 
     <section class="white-panel">
