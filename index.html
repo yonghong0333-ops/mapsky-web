@@ -202,7 +202,7 @@
         img.src = "assets/mountain.svg";
       })();
 
-      /* Auto black wipe → hide hero → show mountain + text */
+      /* Auto black wipe → hide hero → show mountain + text (no bounce-back flicker) */
       (function () {
         var pin = document.getElementById("heroPin");
         var wipe = document.getElementById("heroBlackWipe");
@@ -210,26 +210,28 @@
         if (!pin || !wipe) return;
         var wiped = false;
         var locking = false;
+        var unlockUndoAt = 0;
+        var explored = false;
+        try { if (history.scrollRestoration) history.scrollRestoration = "manual"; } catch (e) {}
 
         function doWipe() {
           if (wiped || locking) return;
           wiped = true;
           locking = true;
+          explored = false;
           pin.classList.add("is-wiped");
           document.body.classList.add("is-dark");
 
           var bg = document.getElementById("introBgImg");
 
           function finish() {
-            var y = 0;
-            if (intro) y = Math.max(0, intro.getBoundingClientRect().top + window.scrollY);
             pin.classList.add("is-done");
             requestAnimationFrame(function () {
-              if (intro) {
-                y = Math.max(0, intro.getBoundingClientRect().top + window.scrollY);
-              }
+              var y = 0;
+              if (intro) y = Math.max(0, intro.getBoundingClientRect().top + window.scrollY);
               window.scrollTo(0, y);
               locking = false;
+              unlockUndoAt = Date.now() + 1400;
               try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
             });
           }
@@ -252,21 +254,24 @@
           }, 230);
         }
 
+        function canUndo() {
+          return wiped && !locking && explored && Date.now() >= unlockUndoAt;
+        }
+
         function undoWipe() {
-          if (!wiped) return;
+          if (!canUndo()) return;
           wiped = false;
+          explored = false;
           pin.classList.remove("is-wiped", "is-done");
           document.body.classList.remove("is-dark");
           window.scrollTo(0, 0);
         }
 
         var touchY = 0;
-        function atIntroTop() {
-          return intro && intro.getBoundingClientRect().top >= -8 && window.scrollY < 48;
-        }
         window.addEventListener("wheel", function (e) {
           if (wiped) {
-            if (e.deltaY < 0 && atIntroTop()) undoWipe();
+            /* only undo after user has scrolled into content, then returns to top */
+            if (e.deltaY < -48 && canUndo() && window.scrollY < 6) undoWipe();
             return;
           }
           if (e.deltaY > 0 && window.scrollY < 40) {
@@ -283,14 +288,15 @@
           if (!e.touches || !e.touches[0]) return;
           var dy = touchY - e.touches[0].clientY;
           if (!wiped) {
-            if (dy > 20 && window.scrollY < 40) doWipe();
+            if (dy > 16 && window.scrollY < 40) doWipe();
             return;
           }
-          if (dy < -28 && atIntroTop()) undoWipe();
+          /* no undo on touchmove — iOS rubber-band was causing hero/mountain flicker */
         }, { passive: true });
 
         window.addEventListener("scroll", function () {
           if (!wiped && window.scrollY > 24) doWipe();
+          if (wiped && window.scrollY > 200) explored = true;
         }, { passive: true });
       })();
 
@@ -377,24 +383,12 @@
         });
       })();
 
-      var revealEls = document.querySelectorAll(".reveal");
-      if (revealEls.length && "IntersectionObserver" in window) {
-        var ro = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              e.target.classList.add("is-visible");
-              ro.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-        revealEls.forEach(function (el) { ro.observe(el); });
-      } else {
-        revealEls.forEach(function (el) { el.classList.add("is-visible"); });
-      }
-      var finalePin = document.getElementById("finalePin");
-      var finaleMark = document.getElementById("finaleMark");
-      var finaleCta = document.getElementById("finaleCta");
-      if (finalePin && finaleMark && !reduceMotion) {
+      /* Finale lock zoom then release */
+      (function () {
+        var finalePin = document.getElementById("finalePin");
+        var finaleMark = document.getElementById("finaleMark");
+        var finaleCta = document.getElementById("finaleCta");
+        if (!finalePin || !finaleMark || reduceMotion) return;
         var finalePlayed = false;
         var finalePlaying = false;
         var finaleLockY = 0;
@@ -416,10 +410,16 @@
           }, 1500);
         }
 
+        function atFinaleGate() {
+          if (finalePlayed) return false;
+          var rect = finaleRect();
+          return rect.top < 72 && rect.bottom > window.innerHeight * 0.4;
+        }
+
         window.addEventListener("wheel", function (e) {
           if (finalePlayed) return;
           var rect = finaleRect();
-          var atGate = rect.top < window.innerHeight * 0.42 && rect.bottom > window.innerHeight * 0.55;
+          var atGate = rect.top < 72 && rect.bottom > window.innerHeight * 0.4;
           if (e.deltaY > 0 && (finalePlaying || atGate)) {
             e.preventDefault();
             playFinale();
@@ -434,27 +434,43 @@
           if (finalePlayed || !e.touches || !e.touches[0]) return;
           var dy = finaleTouchY - e.touches[0].clientY;
           var rect = finaleRect();
-          var atGate = rect.top < window.innerHeight * 0.42 && rect.bottom > window.innerHeight * 0.55;
+          var atGate = rect.top < 72 && rect.bottom > window.innerHeight * 0.4;
           if (dy > 10 && (finalePlaying || atGate)) {
-            if (e.cancelable) e.preventDefault();
             playFinale();
           }
-        }, { passive: false });
+        }, { passive: true });
 
         window.addEventListener("scroll", function () {
           var rect = finaleRect();
           if (finalePlayed && rect.top > window.innerHeight * 0.65) {
             finalePlayed = false;
             finalePin.classList.remove("is-playing", "is-done");
-            return;
           }
           if (finalePlaying) {
             if (Math.abs(window.scrollY - finaleLockY) > 2) window.scrollTo(0, finaleLockY);
-            return;
           }
           if (!finalePlayed && rect.top < 72 && rect.bottom > window.innerHeight * 0.4) playFinale();
         }, { passive: true });
-      }
+      })();
+
+      /* Reveal on scroll */
+      (function () {
+        var els = document.querySelectorAll(".reveal");
+        if (!els.length) return;
+        if (!("IntersectionObserver" in window)) {
+          els.forEach(function (el) { el.classList.add("is-visible"); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add("is-visible");
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+        els.forEach(function (el) { io.observe(el); });
+      })();
     })();
   </script>
 </body>
