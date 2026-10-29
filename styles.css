@@ -367,11 +367,10 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   display: block;
   width: 100%;
   max-width: none;
-  height: 56vh;
-  min-height: 400px;
-  max-height: 640px;
+  height: 34vh;
+  min-height: 220px;
+  max-height: 320px;
   object-fit: cover;
-  /* SVG has empty right margin in viewBox — bias left and zoom to crop it */
   object-position: 38% 40%;
   transform: scale(1.14);
   transform-origin: 36% 45%;
@@ -380,19 +379,19 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 }
 @media (min-width: 900px) {
   .intro-scene-img {
-    height: 70vh;
-    min-height: 520px;
-    max-height: 820px;
-    transform: scale(1.18);
+    height: 38vh;
+    min-height: 260px;
+    max-height: 380px;
+    transform: scale(1.16);
     transform-origin: 34% 42%;
     object-position: 36% 40%;
   }
 }
 @media (min-width: 1400px) {
   .intro-scene-img {
-    height: 74vh;
-    max-height: 900px;
-    transform: scale(1.22);
+    height: 40vh;
+    max-height: 420px;
+    transform: scale(1.18);
     transform-origin: 32% 40%;
   }
 }
@@ -432,18 +431,55 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   transition: opacity 0.28s ease, transform 0.28s ease;
 }
 .intro-line-final {
-  left: 50%;
-  right: auto;
-  top: calc(var(--nav-h) + var(--safe-top) + 18px);
-  max-width: none;
-  text-align: center;
-  transform: translate(-50%, 14px);
+  display: none !important;
 }
 .intro-logo {
   width: min(300px, 74vw);
   height: auto;
   display: block;
   filter: drop-shadow(0 6px 18px rgba(0,0,0,0.45));
+}
+
+/* MAPSKY at top of black zone */
+.ink-top-mark {
+  background: #0a0a0a;
+  padding: 36px 16px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ink-top-mark img,
+.ink-brand-mark {
+  width: min(280px, 70vw);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+}
+@media (min-width: 900px) {
+  .ink-top-mark {
+    padding: 48px 24px 12px;
+  }
+  .ink-brand-mark {
+    width: min(320px, 40vw);
+  }
+}
+
+/* details: title first, keep content below the fold */
+.section-details {
+  padding-top: 28px;
+  padding-bottom: 96px;
+}
+.section-details .section-head {
+  margin-bottom: 0;
+  min-height: 42vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+.section-details .shot-hero {
+  margin-top: 24px;
 }
 .intro-tabs {
   position: absolute;
