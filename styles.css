@@ -125,7 +125,6 @@ body.is-scrolled .nav {
 .wipe-mark { padding: 8px 16px 10px !important; background: transparent !important; }
 .wipe-scene { width: 100%; padding: 0 16px 20px !important; background: transparent !important; }
 .wipe-tabs { pointer-events: none; }
-.wipe-tabs .intro-tab { cursor: default; }
 body.is-wipe-lock { overflow: hidden !important; touch-action: none; }
 .hero-pin:not(.is-done) ~ .after-wipe,
 .hero-pin:not(.is-done) ~ .intro-scene.after-wipe { visibility: hidden; pointer-events: none; }
@@ -348,23 +347,40 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 }
 .section-details .shot-hero { margin-top: 24px; }
 .intro-tabs {
-  position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 5;
-  display: flex; gap: 10px; padding: 0 16px; width: 100%; max-width: 420px;
-  justify-content: center; box-sizing: border-box; pointer-events: auto;
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 5;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 8px 12px;
+  width: auto; max-width: none;
+  box-sizing: border-box; pointer-events: auto;
+  background: rgba(28, 28, 30, 0.72);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-radius: 980px;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
-@media (min-width: 900px) { .intro-tabs { bottom: 20px; } }
+@media (min-width: 900px) { .intro-tabs { bottom: 22px; padding: 9px 14px; gap: 8px; } }
 .intro-tab {
-  flex: 1; max-width: 120px; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 0; padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,0.22); border-radius: 16px;
-  background: rgba(0,0,0,0.42); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  flex: 0 0 auto;
+  width: 7px; height: 7px;
+  padding: 0; margin: 0;
+  border: 0;
+  border-radius: 980px;
+  background: rgba(255,255,255,0.35);
+  cursor: pointer;
+  transition: width 0.28s cubic-bezier(0.22, 0.61, 0.2, 1), background 0.2s ease, transform 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
 }
-.intro-tab-icon { display: none !important; }
-.intro-tab:active { transform: scale(0.96); }
-.intro-tab.is-active { background: rgba(255,255,255,0.92); color: #1d1d1f; border-color: transparent; }
-.intro-tab-label { letter-spacing: 0.02em; }
+.intro-tab:active { transform: scale(0.92); }
+.intro-tab.is-active {
+  width: 22px;
+  background: rgba(255,255,255,0.92);
+}
+.intro-tab-icon,
+.intro-tab-label { display: none !important; }
+.wipe-tabs { pointer-events: none; }
+.wipe-tabs .intro-tab { cursor: default; }
 
 .detail-stage { position: relative; width: 100%; height: 100%; }
 .detail-slide {
