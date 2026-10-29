@@ -208,8 +208,10 @@
           var range = Math.max(pinH - vh, 1);
           var scrolled = Math.min(Math.max(-rect.top, 0), range);
           var progress = scrolled / range;
-          wipe.style.transform = "translate3d(0," + ((1 - progress) * 100) + "%,0)";
-          document.body.classList.toggle("is-dark", progress > 0.4);
+          /* accelerate so black covers sooner */
+          var p = Math.min(1, progress * 1.4);
+          wipe.style.transform = "translate3d(0," + ((1 - p) * 100) + "%,0)";
+          document.body.classList.toggle("is-dark", p > 0.35);
           ticking = false;
         }
         function onScroll() {
