@@ -38,8 +38,7 @@
   </header>
 
   <main id="top">
-    <div class="hero-pin" id="heroPin">
-      <section class="hero" id="heroSticky">
+    <section class="hero" id="heroSticky">
         <div class="hero-layer hero-layer-landing" data-layer="landing">
           <div class="hero-copy">
             <p class="eyebrow">MapSky</p>
@@ -63,8 +62,7 @@
             </div>
           </div>
         </div>
-      </section>
-    </div>
+    </section>
 
     <section class="intro-scene" id="introScene" aria-label="出門前最常查什麼">
       <div class="intro-scene-frame">
@@ -166,8 +164,8 @@
     (function () {
       var toggle = document.getElementById("navToggle");
       var panel = document.getElementById("navRight");
-      var heroPin = document.getElementById("heroPin");
-      function scrollThreshold() { if (heroPin) return Math.max(80, heroPin.offsetHeight * 0.72); return Math.max(80, window.innerHeight * 0.55); }
+      var heroPin = document.getElementById("heroSticky");
+      function scrollThreshold() { if (heroPin) return Math.max(80, heroPin.offsetHeight * 0.6); return Math.max(80, window.innerHeight * 0.55); }
       function onScroll() {
         var scrolled = window.scrollY > scrollThreshold();
         document.body.classList.toggle("is-scrolled", scrolled);
@@ -194,32 +192,18 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var layerLanding = document.querySelector(".hero-layer-landing");
-      if (heroPin && layerLanding && !reduceMotion) {
-        var pinTicking = false;
-        function updatePin() {
-          var rect = heroPin.getBoundingClientRect();
-          var pinH = heroPin.offsetHeight;
-          var vh = window.innerHeight || 1;
-          var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
-          var progress = scrolled / Math.max(pinH - vh, 1);
-          /* white → black as you scroll into mountain */
-          var landingOpacity = progress <= 0 ? 1 : progress >= 0.9 ? 0 : 1 - progress / 0.9;
-          layerLanding.style.opacity = String(Math.max(0, Math.min(1, landingOpacity)));
-          layerLanding.style.pointerEvents = landingOpacity > 0.2 ? "auto" : "none";
-          document.body.classList.toggle("is-dark", progress > 0.4);
-          pinTicking = false;
+      /* No sticky pin — landing scrolls away natively; dark nav when past hero */
+      (function () {
+        var hero = document.getElementById("heroSticky");
+        function updateDark() {
+          var y = window.scrollY || 0;
+          var h = hero ? hero.offsetHeight * 0.55 : (window.innerHeight * 0.55);
+          document.body.classList.toggle("is-dark", y > h);
         }
-        function onPinScroll() {
-          if (!pinTicking) {
-            requestAnimationFrame(updatePin);
-            pinTicking = true;
-          }
-        }
-        window.addEventListener("scroll", onPinScroll, { passive: true });
-        window.addEventListener("resize", onPinScroll, { passive: true });
-        updatePin();
-      }
+        window.addEventListener("scroll", updateDark, { passive: true });
+        window.addEventListener("resize", updateDark, { passive: true });
+        updateDark();
+      })();
 
       /* Auto-play intro text when intro-scene scrolls into view */
       (function () {
