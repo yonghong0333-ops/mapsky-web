@@ -19,7 +19,6 @@
       display: flex;
       flex-direction: column;
     }
-    /* Nav sits on black at top; becomes light after scroll past black band */
     body.home .nav {
       background: rgba(10,10,10,0.72);
       color: #f5f5f7;
@@ -35,7 +34,6 @@
       background: #fff;
     }
 
-    /* ===== Black upper band with torn bottom ===== */
     .black-band {
       position: relative;
       background: #0a0a0a;
@@ -48,6 +46,7 @@
       padding: calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px) + 32px) 24px 72px;
       text-align: center;
       z-index: 2;
+      overflow: hidden;
     }
     .black-band .eyebrow {
       font-size: 13px;
@@ -85,8 +84,20 @@
       text-decoration: none;
     }
     .black-band .cta:active { transform: scale(0.97); }
+    .wx {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.92;
+    }
+    .wx svg { display: block; width: 100%; height: auto; }
+    .wx-left { left: 4%; bottom: 14%; width: min(220px, 28vw); }
+    .wx-right { right: 5%; bottom: 22%; width: min(200px, 26vw); }
+    @media (max-width: 700px) {
+      .wx-left { left: -2%; bottom: 8%; width: 150px; opacity: 0.75; }
+      .wx-right { right: -4%; bottom: 16%; width: 140px; opacity: 0.75; }
+    }
 
-    /* Torn edge under black band */
     .torn-edge {
       position: relative;
       z-index: 6;
@@ -106,7 +117,6 @@
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.28));
     }
 
-    /* White content under the teeth */
     .white-panel {
       position: relative;
       z-index: 1;
@@ -211,6 +221,41 @@
 
   <main id="top">
     <section class="black-band" aria-label="主視覺">
+      <div class="wx wx-left" aria-hidden="true">
+        <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="sunG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffe9a8"/>
+              <stop offset="55%" stop-color="#ffc44d"/>
+              <stop offset="100%" stop-color="#ffc44d" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle cx="78" cy="58" r="52" fill="url(#sunG)"/>
+          <circle cx="78" cy="58" r="22" fill="#ffe08a"/>
+          <g fill="#f4f6f8">
+            <ellipse cx="132" cy="92" rx="46" ry="28"/>
+            <ellipse cx="96" cy="100" rx="34" ry="22"/>
+            <ellipse cx="158" cy="104" rx="30" ry="18"/>
+          </g>
+          <ellipse cx="128" cy="112" rx="62" ry="16" fill="#e6e9ee"/>
+        </svg>
+      </div>
+      <div class="wx wx-right" aria-hidden="true">
+        <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#d7dde6">
+            <ellipse cx="118" cy="62" rx="52" ry="30"/>
+            <ellipse cx="78" cy="74" rx="36" ry="24"/>
+            <ellipse cx="150" cy="78" rx="32" ry="20"/>
+          </g>
+          <ellipse cx="112" cy="88" rx="70" ry="18" fill="#c5ced8"/>
+          <g stroke="#7ec8ff" stroke-width="3" stroke-linecap="round">
+            <line x1="72" y1="108" x2="64" y2="132"/>
+            <line x1="98" y1="112" x2="90" y2="142"/>
+            <line x1="124" y1="110" x2="116" y2="138"/>
+            <line x1="150" y1="108" x2="142" y2="130"/>
+          </g>
+        </svg>
+      </div>
       <p class="eyebrow">MapSky</p>
       <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
       <p class="lead">整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，讓出門決策更簡單。</p>
