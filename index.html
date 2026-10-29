@@ -39,6 +39,7 @@
 
   <main id="top">
     <section class="hero" id="heroSticky">
+        <div class="hero-black-wipe" id="heroBlackWipe" aria-hidden="true"></div>
         <div class="hero-layer hero-layer-landing" data-layer="landing">
           <div class="hero-copy">
             <p class="eyebrow">MapSky</p>
@@ -192,17 +193,32 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      /* No sticky pin — landing scrolls away natively; dark nav when past hero */
+      /* Black wipe slides up over white hero as you scroll */
       (function () {
         var hero = document.getElementById("heroSticky");
-        function updateDark() {
-          var y = window.scrollY || 0;
-          var h = hero ? hero.offsetHeight * 0.55 : (window.innerHeight * 0.55);
-          document.body.classList.toggle("is-dark", y > h);
+        var wipe = document.getElementById("heroBlackWipe");
+        if (!hero || !wipe) return;
+        var ticking = false;
+        function update() {
+          var rect = hero.getBoundingClientRect();
+          var h = hero.offsetHeight || 1;
+          /* 0 at top of page → 1 when hero has fully scrolled off */
+          var progress = Math.min(1, Math.max(0, -rect.top / h));
+          /* black panel rises from bottom: translateY 100% → 0% */
+          var y = (1 - progress) * 100;
+          wipe.style.transform = "translate3d(0," + y + "%,0)";
+          document.body.classList.toggle("is-dark", progress > 0.35);
+          ticking = false;
         }
-        window.addEventListener("scroll", updateDark, { passive: true });
-        window.addEventListener("resize", updateDark, { passive: true });
-        updateDark();
+        function onScroll() {
+          if (!ticking) {
+            requestAnimationFrame(update);
+            ticking = true;
+          }
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll, { passive: true });
+        update();
       })();
 
       /* Auto-play intro text when intro-scene scrolls into view */
