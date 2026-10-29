@@ -195,29 +195,28 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      /* White fixed (sticky); only black wipe slides up */
+      /* White fixed; black wipe only — minimal work per frame */
       (function () {
         var pin = document.getElementById("heroPin");
         var wipe = document.getElementById("heroBlackWipe");
         if (!pin || !wipe) return;
         var ticking = false;
+        var lastP = -1;
         function update() {
-          var rect = pin.getBoundingClientRect();
-          var pinH = pin.offsetHeight || 1;
-          var vh = window.innerHeight || 1;
-          var range = Math.max(pinH - vh, 1);
-          var scrolled = Math.min(Math.max(-rect.top, 0), range);
-          var progress = scrolled / range;
-          /* accelerate so black covers sooner */
-          var p = Math.min(1, progress * 1.4);
+          var top = pin.getBoundingClientRect().top;
+          var range = Math.max(pin.offsetHeight - window.innerHeight, 1);
+          var p = Math.min(1, Math.max(0, -top / range) * 1.6);
+          if (Math.abs(p - lastP) < 0.008) { ticking = false; return; }
+          lastP = p;
           wipe.style.transform = "translate3d(0," + ((1 - p) * 100) + "%,0)";
-          document.body.classList.toggle("is-dark", p > 0.35);
+          document.body.classList.toggle("is-dark", p > 0.3);
+          if (p >= 1) wipe.style.willChange = "auto";
           ticking = false;
         }
         function onScroll() {
           if (!ticking) {
-            requestAnimationFrame(update);
             ticking = true;
+            requestAnimationFrame(update);
           }
         }
         window.addEventListener("scroll", onScroll, { passive: true });
