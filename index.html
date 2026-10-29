@@ -231,10 +231,12 @@
         var explored = false;
         try { if (history.scrollRestoration) history.scrollRestoration = "manual"; } catch (e) {}
 
+        var isMobile = window.matchMedia("(max-width: 700px)").matches;
+        var WIPE_MS = isMobile ? 560 : 780;
+        var UNDO_MS = isMobile ? 560 : 820;
+
         function lockScroll(e) {
-          if (locking) {
-            if (e.cancelable) e.preventDefault();
-          }
+          if (locking && e.cancelable) e.preventDefault();
         }
 
         function doWipe() {
@@ -268,7 +270,7 @@
               });
             });
           }
-          setTimeout(finish, 780);
+          setTimeout(finish, WIPE_MS);
         }
 
         function canUndo() {
@@ -281,24 +283,29 @@
           explored = false;
           pin.classList.remove("is-done");
           pin.classList.add("is-wiped", "is-returning");
-          document.body.classList.add("is-dark");
+          document.body.classList.add("is-dark", "is-wipe-lock");
           window.scrollTo(0, 0);
+          window.addEventListener("wheel", lockScroll, { passive: false });
+          window.addEventListener("touchmove", lockScroll, { passive: false });
           requestAnimationFrame(function () {
             requestAnimationFrame(function () {
               pin.classList.remove("is-wiped");
               setTimeout(function () {
                 pin.classList.remove("is-returning");
-                document.body.classList.remove("is-dark");
+                document.body.classList.remove("is-dark", "is-wipe-lock");
+                window.removeEventListener("wheel", lockScroll, { passive: false });
+                window.removeEventListener("touchmove", lockScroll, { passive: false });
                 wiped = false;
                 locking = false;
                 unlockUndoAt = Date.now() + 600;
-              }, 820);
+              }, UNDO_MS);
             });
           });
         }
 
         var touchY = 0;
         window.addEventListener("wheel", function (e) {
+          if (locking) { e.preventDefault(); return; }
           if (wiped) {
             if (e.deltaY < -24 && window.scrollY < 16 && canUndo()) {
               e.preventDefault();
@@ -317,18 +324,31 @@
         }, { passive: true });
 
         window.addEventListener("touchmove", function (e) {
+          if (locking) {
+            if (e.cancelable) e.preventDefault();
+            return;
+          }
           if (!e.touches || !e.touches[0]) return;
           var dy = touchY - e.touches[0].clientY;
           if (!wiped) {
-            if (dy > 16 && window.scrollY < 40) doWipe();
+            if (dy > 12 && window.scrollY < 40) {
+              if (e.cancelable) e.preventDefault();
+              doWipe();
+            }
             return;
           }
-          if (dy < -28 && window.scrollY < 24 && canUndo()) undoWipe();
-        }, { passive: true });
+          if (dy < -28 && window.scrollY < 24 && canUndo()) {
+            if (e.cancelable) e.preventDefault();
+            undoWipe();
+          }
+        }, { passive: false });
 
         window.addEventListener("scroll", function () {
-          if (!wiped && window.scrollY > 24) doWipe();
-          if (wiped && window.scrollY > 160) explored = true;
+          if (!wiped && !locking && window.scrollY > 8) {
+            window.scrollTo(0, 0);
+            doWipe();
+          }
+          if (wiped && !locking && window.scrollY > 160) explored = true;
         }, { passive: true });
       })();
 
