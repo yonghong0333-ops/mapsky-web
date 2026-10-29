@@ -62,6 +62,7 @@
                   <span class="intro-tab is-active"></span>
                   <span class="intro-tab"></span>
                   <span class="intro-tab"></span>
+                  <span class="intro-tab"></span>
                 </div>
               </div>
             </div>
@@ -110,7 +111,8 @@
           </p>
         </div>
         <div class="intro-tabs" role="tablist" aria-label="場景切換">
-          <button type="button" class="intro-tab is-active" data-bg="assets/Weather1.svg" data-label="天氣" data-title="即時天氣與動態天空" data-tint="weather" data-body="溫度、體感、降雨，一眼看懂今天。" role="tab" aria-selected="true" aria-label="天氣"></button>
+          <button type="button" class="intro-tab is-active" data-bg="assets/mountain.svg" data-label="總覽" data-title="出門前，你最常查什麼？" data-tint="mix" data-body="天氣、捷運、停班停課。現在，一站看清楚。" role="tab" aria-selected="true" aria-label="總覽"></button>
+          <button type="button" class="intro-tab" data-bg="assets/Weather1.svg" data-label="天氣" data-title="即時天氣與動態天空" data-tint="weather" data-body="溫度、體感、降雨，一眼看懂今天。" role="tab" aria-selected="false" aria-label="天氣"></button>
           <button type="button" class="intro-tab" data-bg="assets/mrt.svg" data-label="捷運" data-title="捷運 · 台鐵 · 高鐵" data-tint="metro" data-body="下一班幾分，站點與班次一次看。" role="tab" aria-selected="false" aria-label="捷運"></button>
           <button type="button" class="intro-tab" data-bg="assets/typhoon1.svg" data-label="停班停課" data-title="停班停課公告" data-tint="school" data-body="縣市地圖著色，出門前先確認。" role="tab" aria-selected="false" aria-label="停班停課"></button>
         </div>
@@ -349,8 +351,11 @@
           var bodyEl = caption.querySelector(".intro-caption-body");
           if (title && titleEl) titleEl.textContent = title;
           if (bodyEl) {
-            var cls = "tint-" + tint;
-            bodyEl.innerHTML = '<span class="' + cls + '">' + body + '</span>';
+            if (tint === "mix") {
+              bodyEl.innerHTML = '<span class="tint-weather">天氣</span>、<span class="tint-metro">捷運</span>、<span class="tint-school">停班停課</span>。<br />現在，一站看清楚。';
+            } else {
+              bodyEl.innerHTML = '<span class="tint-' + tint + '">' + body + '</span>';
+            }
           }
         }
         tabs.forEach(function (tab) {
