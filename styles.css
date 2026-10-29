@@ -192,8 +192,8 @@ body.is-scrolled .nav {
   border-radius: 980px;
 }
 
-/* Hero pin */
-.hero-pin { position: relative; height: 180vh; }
+/* Hero pin — short so white fades into mountain on scroll */
+.hero-pin { position: relative; height: 130vh; }
 .hero {
   position: sticky; top: 0;
   height: 100vh; height: 100dvh;
