@@ -287,6 +287,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   object-position: center 40%;
   opacity: 1;
   transform: scale(1.02);
+  transition: opacity 0.2s ease;
 }
 .intro-bg::after {
   content: "";
@@ -301,26 +302,84 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   pointer-events: none;
 }
 
-/* Intro lines */
+/* Intro lines — top-left */
 .intro-lines {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   z-index: 1;
+  pointer-events: none;
 }
 .intro-line {
-  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  font-size: clamp(22px, 5vw, 36px); font-weight: 600; text-align: center;
-  opacity: 0; white-space: nowrap;
+  position: absolute;
+  left: max(20px, env(safe-area-inset-left));
+  top: calc(var(--nav-h) + var(--safe-top) + 28px);
+  transform: none;
+  font-size: clamp(20px, 5vw, 32px);
+  font-weight: 600;
+  text-align: left;
+  opacity: 0;
+  white-space: normal;
+  max-width: min(320px, 78vw);
   color: #fff;
   text-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4);
   letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+.intro-line-final {
+  top: calc(var(--nav-h) + var(--safe-top) + 28px);
 }
 .intro-logo {
-  width: min(280px, 70vw);
+  width: min(220px, 55vw);
   height: auto;
   filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
 }
+
+/* Intro tabs at bottom of image */
+.intro-tabs {
+  position: absolute;
+  left: 50%;
+  bottom: max(28px, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  padding: 0 16px;
+  width: 100%;
+  max-width: 420px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.intro-tab {
+  flex: 1;
+  max-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 10px;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 16px;
+  background: rgba(0,0,0,0.42);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.intro-tab:active { transform: scale(0.96); }
+.intro-tab.is-active {
+  background: rgba(255,255,255,0.92);
+  color: #1d1d1f;
+  border-color: transparent;
+}
+.intro-tab-icon { font-size: 18px; line-height: 1; }
+.intro-tab-label { letter-spacing: 0.02em; }
 
 /* Detail slides in hero */
 .detail-stage { position: relative; width: 100%; height: 100%; }
