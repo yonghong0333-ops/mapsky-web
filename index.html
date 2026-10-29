@@ -261,7 +261,7 @@
         var snapLock = false;
         var snapTimer = null;
         function snapToIntroIfNeeded() {
-          if (snapLock || !heroPin || window.__introScrollLocked) return;
+          if (snapLock || !heroPin) return;
           var rect = heroPin.getBoundingClientRect();
           var pinH = heroPin.offsetHeight;
           var vh = window.innerHeight || 1;
@@ -285,15 +285,13 @@
         }, { passive: true });
       }
 
-      /* Auto-play intro text: lock scroll until sequence finishes once (faster) */
+      /* Auto-play intro text once when intro is shown (no scroll lock) */
       (function () {
         var lines = document.querySelectorAll(".intro-line");
         if (!lines.length) return;
         var playing = false;
-        var locked = false;
         var doneOnce = false;
         var timers = [];
-        var lockY = 0;
 
         function clearTimers() {
           timers.forEach(function (id) { clearTimeout(id); });
@@ -312,40 +310,11 @@
           line.style.opacity = "1";
           line.style.transform = "translateY(0)";
         }
-        function unlockScroll() {
-          if (!locked) return;
-          locked = false;
-          window.__introScrollLocked = false;
-          document.body.classList.remove("intro-locked");
-        }
-        function lockScroll() {
-          if (locked) return;
-          locked = true;
-          window.__introScrollLocked = true;
-          lockY = window.scrollY || window.pageYOffset || 0;
-          document.body.classList.add("intro-locked");
-        }
-        function onLockScroll(e) {
-          if (!locked) return;
-          e.preventDefault();
-          if (Math.abs((window.scrollY || 0) - lockY) > 1) {
-            window.scrollTo(0, lockY);
-          }
-        }
-        window.addEventListener("wheel", onLockScroll, { passive: false });
-        window.addEventListener("touchmove", onLockScroll, { passive: false });
-        window.addEventListener("scroll", function () {
-          if (locked && Math.abs((window.scrollY || 0) - lockY) > 1) {
-            window.scrollTo(0, lockY);
-          }
-        }, { passive: true });
-
         function playSequenceOnce() {
           if (playing || doneOnce) return;
           playing = true;
           clearTimers();
           hideAll();
-          lockScroll();
           var holds = [900, 900, 900, 1200];
           var delay = 120;
           for (var i = 0; i < lines.length; i++) {
@@ -357,13 +326,11 @@
           timers.push(setTimeout(function () {
             playing = false;
             doneOnce = true;
-            unlockScroll();
           }, delay + 200));
         }
         function stopSequence() {
           playing = false;
           clearTimers();
-          unlockScroll();
           doneOnce = false;
           hideAll();
         }
