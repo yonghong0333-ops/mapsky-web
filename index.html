@@ -108,7 +108,7 @@
       <div class="shot-list">
         <article class="shot-row reveal"><div class="shot-frame"><img data-asset="detail-now" src="assets/detail-now.jpg" alt="現在" /></div><div class="shot-copy"><p class="tag">現在天氣</p><h3>前鎮區，29°。</h3><p>溫度、體感與天氣狀況放在同一張卡片。</p></div></article>
         <article class="shot-row reverse reveal"><div class="shot-frame"><img data-asset="detail-map" src="assets/detail-map.jpg" alt="地圖" /></div><div class="shot-copy"><p class="tag">台灣地圖</p><h3>點一個城市就換。</h3><p>地圖上直接標出台南、高雄。</p></div></article>
-        <article class="shot-row reverse reveal"><div class="shot-frame"><img data-asset="detail-hour" src="assets/detail-hour.jpg" alt="逐時" /></div><div class="shot-copy"><p class="tag">逐時預報</p><h3>從現在排到深夜。</h3><p>現在 30°，下一格 29°，中間標出日落。</p></div></article>
+        <article class="shot-row reveal"><div class="shot-frame"><img data-asset="detail-hour" src="assets/detail-hour.jpg" alt="逐時" /></div><div class="shot-copy"><p class="tag">逐時預報</p><h3>從現在排到深夜。</h3><p>現在 30°，下一格 29°，中間標出日落。</p></div></article>
         <article class="shot-row reverse reveal"><div class="shot-frame"><img data-asset="detail-week" src="assets/detail-week.jpg" alt="七天" /></div><div class="shot-copy"><p class="tag">未來七天</p><h3>一週的高低溫。</h3><p>今天大陣雨，24° 到 31°。</p></div></article>
         <article class="shot-row reveal"><div class="shot-frame"><img data-asset="detail-stats" src="assets/detail-stats.jpg" alt="統計" /></div><div class="shot-copy"><p class="tag">風、雨、氣壓</p><h3>體感背後的數字。</h3><p>風力 2、降雨 0、體感 32°。</p></div></article>
       </div>
@@ -200,10 +200,7 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      (function () {
-        var img = new Image();
-        img.src = "assets/mountain.svg";
-      })();
+      (function () { var img = new Image(); img.src = "assets/mountain.svg"; })();
 
       (function () {
         var pin = document.getElementById("heroPin");
@@ -225,15 +222,15 @@
           document.body.classList.add("is-dark");
           var bg = document.getElementById("introBgImg");
           function finish() {
+            var mark = document.querySelector(".ink-top-mark");
+            var target = mark || intro;
+            var absY = target ? (target.getBoundingClientRect().top + window.scrollY) : 0;
+            var heroH = pin.offsetHeight || window.innerHeight;
             pin.classList.add("is-done");
             requestAnimationFrame(function () {
-              var mark = document.querySelector(".ink-top-mark");
-              var target = mark || intro;
-              var y = 0;
-              if (target) y = Math.max(0, target.getBoundingClientRect().top + window.scrollY);
-              window.scrollTo(0, y);
+              window.scrollTo(0, Math.max(0, absY - heroH));
               locking = false;
-              unlockUndoAt = Date.now() + 1400;
+              unlockUndoAt = Date.now() + 1200;
               try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
             });
           }
