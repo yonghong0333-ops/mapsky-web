@@ -50,6 +50,7 @@ body.is-scrolled .nav {
 
 .nav-toggle {
   display: none; width: 40px; height: 40px; border: 0; border-radius: 50%;
+  touch-action: manipulation; -webkit-user-select: none; user-select: none;
   background: rgba(255,255,255,0.12); cursor: pointer; z-index: 1002;
   position: relative; align-items: center; justify-content: center;
   flex-direction: column; gap: 5px; padding: 0; transition: background 0.2s; flex-shrink: 0;
@@ -65,7 +66,7 @@ body.is-scrolled .nav {
 
 .nav-right { display: flex; align-items: center; gap: 20px; }
 .nav-links { display: flex; align-items: center; gap: 18px; font-size: 14px; font-weight: 500; }
-.nav-links a { opacity: 0.85; transition: opacity 0.2s; }
+.nav-links a { opacity: 0.85; transition: opacity 0.2s; touch-action: manipulation; }
 .nav-links a:hover { opacity: 1; }
 .nav-actions { display: flex; align-items: center; gap: 10px; }
 
