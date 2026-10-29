@@ -29,95 +29,87 @@
     body.home .nav .btn-primary { background: #1d1d1f; color: #fff; }
     main#top {
       flex: 1;
-      min-height: 40vh;
+      min-height: 36vh;
       background: #fff;
     }
     .site-footer {
-      background: #f5f5f7;
-      color: #6e6e73;
-      font-size: 12px;
-      line-height: 1.4;
-      padding: 0 0 24px;
-      border-top: 1px solid #d2d2d7;
+      background: #0a0a0a;
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 48px 22px 28px;
+      margin-top: auto;
     }
     .site-footer-inner {
-      max-width: 980px;
+      max-width: 920px;
       margin: 0 auto;
-      padding: 0 22px;
     }
-    .footer-notes {
-      padding: 18px 0 16px;
-      border-bottom: 1px solid #d2d2d7;
-      font-size: 12px;
-      color: #6e6e73;
-      line-height: 1.5;
-    }
-    .footer-notes p { margin: 0 0 10px; }
-    .footer-notes p:last-child { margin-bottom: 0; }
-    .footer-notes a { color: #0066cc; text-decoration: none; }
-    .footer-notes a:hover { text-decoration: underline; }
-    .footer-columns {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 24px 16px;
-      padding: 20px 0 24px;
-      border-bottom: 1px solid #d2d2d7;
-    }
-    .footer-col h3 {
-      margin: 0 0 10px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #1d1d1f;
-    }
-    .footer-col ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .footer-col li { margin: 0 0 8px; }
-    .footer-col a {
-      color: #6e6e73;
-      text-decoration: none;
-      font-size: 12px;
-    }
-    .footer-col a:hover { text-decoration: underline; color: #1d1d1f; }
-    .footer-col + .footer-col-group h3 { margin-top: 18px; }
-    .footer-bottom {
+    .footer-brand-block {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 0 0;
-      font-size: 12px;
-      color: #6e6e73;
+      text-align: center;
+      gap: 14px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    .footer-bottom-links {
+    .footer-brand-block .footer-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: block;
+    }
+    .footer-brand-block .footer-word {
+      width: min(220px, 55vw);
+      height: auto;
+      display: block;
+      filter: none;
+    }
+    .footer-brand-block p {
+      margin: 0;
+      max-width: 420px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-link-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0;
+      justify-content: center;
+      gap: 8px 20px;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    .footer-bottom-links a {
-      color: #6e6e73;
+    .footer-link-row a {
+      color: rgba(255,255,255,0.7);
       text-decoration: none;
-      padding: 0 10px;
-      border-left: 1px solid #d2d2d7;
+      font-size: 13px;
+      font-weight: 500;
     }
-    .footer-bottom-links a:first-child { border-left: 0; padding-left: 0; }
-    .footer-bottom-links a:hover { text-decoration: underline; color: #1d1d1f; }
-    .footer-locale { color: #6e6e73; }
-    @media (max-width: 800px) {
-      .footer-columns {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .footer-link-row a:hover {
+      color: #fff;
     }
-    @media (max-width: 480px) {
-      .footer-columns {
-        grid-template-columns: 1fr;
-      }
-      .footer-bottom {
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-top: 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+    .footer-meta a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      margin-left: 14px;
+    }
+    .footer-meta a:first-of-type { margin-left: 0; }
+    .footer-meta a:hover { color: rgba(255,255,255,0.85); }
+    @media (max-width: 560px) {
+      .footer-meta {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
       }
     }
   </style>
@@ -150,73 +142,28 @@
 
   <footer class="site-footer" role="contentinfo">
     <div class="site-footer-inner">
-      <div class="footer-notes">
-        <p>MapSky 整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課資訊，方便出門前一次查看。資料來源包含中央氣象署、TDX 運輸資料流通服務與人事行政總處等公開資訊，實際狀況請以各單位最新公告為準。</p>
-        <p>部分功能與畫面可能因地區、裝置或系統版本而有所不同。iOS App 即將上架；登入後可與官網使用同一套帳號。</p>
+      <div class="footer-brand-block">
+        <img class="footer-icon" src="assets/icon.png" width="56" height="56" alt="MapSky" />
+        <img class="footer-word" src="assets/wordmark.png" width="220" height="60" alt="MAPSKY" />
+        <p>天氣、班次、停班停課，一站看清楚。</p>
       </div>
 
-      <div class="footer-columns">
-        <div class="footer-col">
-          <h3>探索 MapSky</h3>
-          <ul>
-            <li><a href="/features">功能介紹</a></li>
-            <li><a href="/features">畫面預覽</a></li>
-            <li><a href="/features">最新消息</a></li>
-            <li><a href="/login">登入</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h3>帳號</h3>
-          <ul>
-            <li><a href="/login">管理你的帳號</a></li>
-            <li><a href="/login">登入</a></li>
-            <li><a href="/privacy">隱私與條款</a></li>
-          </ul>
-          <h3 style="margin-top:18px">服務</h3>
-          <ul>
-            <li><a href="/features">天氣與動態天空</a></li>
-            <li><a href="/features">捷運 · 台鐵 · 高鐵</a></li>
-            <li><a href="/features">停班停課</a></li>
-            <li><a href="/features">YouBike</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h3>關於</h3>
-          <ul>
-            <li><a href="/features">關於 MapSky</a></li>
-            <li><a href="mailto:mapskyapp@gmail.com">聯絡我們</a></li>
-            <li><a href="/privacy">隱私權政策</a></li>
-            <li><a href="/privacy">使用條款</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h3>支援</h3>
-          <ul>
-            <li><a href="mailto:mapskyapp@gmail.com">尋求協助</a></li>
-            <li><a href="/privacy">常見問題</a></li>
-            <li><a href="/features">如何使用</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h3>價值理念</h3>
-          <ul>
-            <li><a href="/privacy">隱私權</a></li>
-            <li><a href="/privacy">資料來源說明</a></li>
-            <li><a href="mailto:mapskyapp@gmail.com">回報問題</a></li>
-          </ul>
-        </div>
-      </div>
+      <nav class="footer-link-row" aria-label="頁尾連結">
+        <a href="/features">功能</a>
+        <a href="/features">畫面</a>
+        <a href="/features">最新消息</a>
+        <a href="/login">登入</a>
+        <a href="/privacy">隱私與條款</a>
+        <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
+      </nav>
 
-      <div class="footer-bottom">
-        <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;">
-          <span>Copyright © MapSky. 保留一切權利。</span>
-          <div class="footer-bottom-links">
-            <a href="/privacy">隱私權政策</a>
-            <a href="/privacy">使用條款</a>
-            <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
-          </div>
-        </div>
-        <span class="footer-locale">台灣</span>
+      <div class="footer-meta">
+        <span>Copyright © MapSky</span>
+        <span>
+          <a href="/privacy">隱私權政策</a>
+          <a href="/privacy">使用條款</a>
+          <a href="mailto:mapskyapp@gmail.com">mapskyapp@gmail.com</a>
+        </span>
       </div>
     </div>
   </footer>
