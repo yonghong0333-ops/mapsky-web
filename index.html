@@ -214,7 +214,7 @@
           var vh = window.innerHeight || 1;
           var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
           var progress = scrolled / Math.max(pinH - vh, 1);
-          var landingEnd = 0.12, introStart = 0.08, introFull = 0.14, introEnd = 0.42, detailStart = 0.4;
+          var landingEnd = 0.12, introStart = 0.08, introFull = 0.14, introEnd = 0.58, detailStart = 0.55;
           var landingOpacity = progress <= 0 ? 1 : progress >= landingEnd ? 0 : 1 - progress / landingEnd;
           layerLanding.style.opacity = String(Math.max(0, Math.min(1, landingOpacity)));
           layerLanding.style.pointerEvents = landingOpacity > 0.2 ? "auto" : "none";
@@ -316,24 +316,29 @@
           if (!locked) return;
           locked = false;
           window.__introScrollLocked = false;
-          document.body.style.overflow = "";
-          document.documentElement.style.overflow = "";
+          document.body.classList.remove("intro-locked");
         }
         function lockScroll() {
           if (locked) return;
           locked = true;
           window.__introScrollLocked = true;
           lockY = window.scrollY || window.pageYOffset || 0;
-          document.body.style.overflow = "hidden";
-          document.documentElement.style.overflow = "hidden";
+          document.body.classList.add("intro-locked");
         }
         function onLockScroll(e) {
           if (!locked) return;
           e.preventDefault();
-          window.scrollTo(0, lockY);
+          if (Math.abs((window.scrollY || 0) - lockY) > 1) {
+            window.scrollTo(0, lockY);
+          }
         }
         window.addEventListener("wheel", onLockScroll, { passive: false });
         window.addEventListener("touchmove", onLockScroll, { passive: false });
+        window.addEventListener("scroll", function () {
+          if (locked && Math.abs((window.scrollY || 0) - lockY) > 1) {
+            window.scrollTo(0, lockY);
+          }
+        }, { passive: true });
 
         function playSequenceOnce() {
           if (playing || doneOnce) return;
