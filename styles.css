@@ -203,6 +203,19 @@ body.is-scrolled .nav {
 .hero-layer {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
 }
+/* Black slide-up wipe over white hero */
+.hero-black-wipe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  background: #0a0a0a;
+  transform: translate3d(0, 100%, 0);
+  will-change: transform;
+  pointer-events: none;
+}
 .hero-layer-landing { z-index: 3; }
 .hero-layer-intro { z-index: 2; background: #000; }
 .hero-layer-detail { z-index: 1; background: #000; }
