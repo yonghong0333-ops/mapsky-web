@@ -192,10 +192,10 @@ body.is-scrolled .nav {
   border-radius: 980px;
 }
 
-/* White fixed; black slides up over it */
+/* White fixed; black slides up over it — short pin = faster cover */
 .hero-pin {
   position: relative;
-  height: 180vh;
+  height: 120vh;
 }
 .hero {
   position: sticky;
