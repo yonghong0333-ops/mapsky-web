@@ -245,22 +245,22 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 }
 
 .intro-scene {
-  position: relative; background: #0a0a0a; padding: 8px 16px 28px; margin: 0;
+  position: relative; background: #0a0a0a; padding: 8px 10px 28px; margin: 0;
   width: 100%; box-sizing: border-box; display: flex; justify-content: center;
 }
 .intro-scene-frame {
-  position: relative; width: 100%; max-width: 980px; overflow: hidden; margin: 0 auto; padding: 0;
+  position: relative; width: 100%; max-width: 1080px; overflow: hidden; margin: 0 auto; padding: 0;
   border-radius: 24px;
   box-shadow: 0 24px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08);
-  background: #111; aspect-ratio: 16 / 10; max-height: min(52vh, 560px);
+  background: #111; aspect-ratio: 16 / 10; max-height: min(58vh, 620px);
   contain: layout paint; transform: translateZ(0);
 }
 @media (min-width: 900px) {
-  .intro-scene { padding: 12px 28px 36px; }
-  .intro-scene-frame { border-radius: 28px; max-height: min(56vh, 600px); }
+  .intro-scene { padding: 12px 20px 36px; }
+  .intro-scene-frame { border-radius: 28px; max-height: min(62vh, 680px); max-width: 1180px; }
 }
 @media (min-width: 1400px) {
-  .intro-scene-frame { max-width: 1100px; max-height: min(56vh, 620px); }
+  .intro-scene-frame { max-width: 1280px; max-height: min(64vh, 720px); }
 }
 .intro-scene-img {
   display: block; width: 100%; height: 100%; max-width: none;
@@ -355,15 +355,15 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 @media (min-width: 900px) { .intro-tabs { bottom: 20px; } }
 .intro-tab {
   flex: 1; max-width: 120px; display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 4px; padding: 12px 10px;
+  justify-content: center; gap: 0; padding: 12px 14px;
   border: 1px solid rgba(255,255,255,0.22); border-radius: 16px;
   background: rgba(0,0,0,0.42); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  color: #fff; font-size: 12px; font-weight: 600; cursor: pointer;
+  color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
+.intro-tab-icon { display: none !important; }
 .intro-tab:active { transform: scale(0.96); }
 .intro-tab.is-active { background: rgba(255,255,255,0.92); color: #1d1d1f; border-color: transparent; }
-.intro-tab-icon { font-size: 18px; line-height: 1; }
 .intro-tab-label { letter-spacing: 0.02em; }
 
 .detail-stage { position: relative; width: 100%; height: 100%; }
