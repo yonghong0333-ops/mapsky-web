@@ -195,33 +195,67 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      /* White fixed; black wipe only — minimal work per frame */
+      /* Auto black wipe: scroll down → jump cover fast, then go to intro */
       (function () {
         var pin = document.getElementById("heroPin");
         var wipe = document.getElementById("heroBlackWipe");
+        var intro = document.getElementById("introScene");
         if (!pin || !wipe) return;
-        var ticking = false;
-        var lastP = -1;
-        function update() {
-          var top = pin.getBoundingClientRect().top;
-          var range = Math.max(pin.offsetHeight - window.innerHeight, 1);
-          var p = Math.min(1, Math.max(0, -top / range) * 1.6);
-          if (Math.abs(p - lastP) < 0.008) { ticking = false; return; }
-          lastP = p;
-          wipe.style.transform = "translate3d(0," + ((1 - p) * 100) + "%,0)";
-          document.body.classList.toggle("is-dark", p > 0.3);
-          if (p >= 1) wipe.style.willChange = "auto";
-          ticking = false;
+        var wiped = false;
+        var locking = false;
+
+        function doWipe() {
+          if (wiped || locking) return;
+          wiped = true;
+          locking = true;
+          pin.classList.add("is-wiped");
+          document.body.classList.add("is-dark");
+          /* after wipe animation, snap to intro */
+          setTimeout(function () {
+            if (intro) {
+              intro.scrollIntoView({ behavior: "auto", block: "start" });
+            }
+            locking = false;
+          }, 340);
         }
-        function onScroll() {
-          if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(update);
+
+        function undoWipe() {
+          if (!wiped) return;
+          wiped = false;
+          pin.classList.remove("is-wiped");
+          document.body.classList.remove("is-dark");
+        }
+
+        /* wheel / touch: small down intent triggers auto wipe */
+        var touchY = 0;
+        window.addEventListener("wheel", function (e) {
+          if (wiped) {
+            if (window.scrollY < 8 && e.deltaY < 0) undoWipe();
+            return;
           }
-        }
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll, { passive: true });
-        update();
+          if (e.deltaY > 0 && window.scrollY < 40) {
+            e.preventDefault();
+            doWipe();
+          }
+        }, { passive: false });
+
+        window.addEventListener("touchstart", function (e) {
+          if (e.touches && e.touches[0]) touchY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener("touchmove", function (e) {
+          if (wiped) return;
+          if (!e.touches || !e.touches[0]) return;
+          var dy = touchY - e.touches[0].clientY;
+          if (dy > 24 && window.scrollY < 40) {
+            doWipe();
+          }
+        }, { passive: true });
+
+        window.addEventListener("scroll", function () {
+          if (!wiped && window.scrollY > 30) doWipe();
+          if (wiped && window.scrollY < 4) undoWipe();
+        }, { passive: true });
       })();
 
       /* Auto-play intro text when intro-scene scrolls into view */
