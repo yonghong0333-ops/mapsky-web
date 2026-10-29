@@ -11,6 +11,116 @@
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.home {
+      background: #f5f5f7;
+      color: #1d1d1f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    body.home .nav {
+      background: rgba(255,255,255,0.86);
+      color: #1d1d1f;
+    }
+    body.home .wordmark { filter: brightness(0); }
+    body.home .nav-toggle { background: rgba(0,0,0,0.06); }
+    body.home .nav-toggle span { background: currentColor; }
+    body.home .nav .btn-primary { background: #1d1d1f; color: #fff; }
+    main#top {
+      flex: 1;
+      min-height: 40vh;
+      background: #fff;
+    }
+    .site-footer {
+      background: #f5f5f7;
+      color: #6e6e73;
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 0 0 24px;
+      border-top: 1px solid #d2d2d7;
+    }
+    .site-footer-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+    .footer-notes {
+      padding: 18px 0 16px;
+      border-bottom: 1px solid #d2d2d7;
+      font-size: 12px;
+      color: #6e6e73;
+      line-height: 1.5;
+    }
+    .footer-notes p { margin: 0 0 10px; }
+    .footer-notes p:last-child { margin-bottom: 0; }
+    .footer-notes a { color: #0066cc; text-decoration: none; }
+    .footer-notes a:hover { text-decoration: underline; }
+    .footer-columns {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px 16px;
+      padding: 20px 0 24px;
+      border-bottom: 1px solid #d2d2d7;
+    }
+    .footer-col h3 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+    .footer-col ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .footer-col li { margin: 0 0 8px; }
+    .footer-col a {
+      color: #6e6e73;
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .footer-col a:hover { text-decoration: underline; color: #1d1d1f; }
+    .footer-col + .footer-col-group h3 { margin-top: 18px; }
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 0 0;
+      font-size: 12px;
+      color: #6e6e73;
+    }
+    .footer-bottom-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .footer-bottom-links a {
+      color: #6e6e73;
+      text-decoration: none;
+      padding: 0 10px;
+      border-left: 1px solid #d2d2d7;
+    }
+    .footer-bottom-links a:first-child { border-left: 0; padding-left: 0; }
+    .footer-bottom-links a:hover { text-decoration: underline; color: #1d1d1f; }
+    .footer-locale { color: #6e6e73; }
+    @media (max-width: 800px) {
+      .footer-columns {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 480px) {
+      .footer-columns {
+        grid-template-columns: 1fr;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body class="home">
   <header class="nav" id="topNav">
@@ -36,7 +146,80 @@
     </div>
   </header>
 
-  <main id="top" style="min-height: 100vh; min-height: 100dvh; background: #fff;"></main>
+  <main id="top"></main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer-inner">
+      <div class="footer-notes">
+        <p>MapSky 整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課資訊，方便出門前一次查看。資料來源包含中央氣象署、TDX 運輸資料流通服務與人事行政總處等公開資訊，實際狀況請以各單位最新公告為準。</p>
+        <p>部分功能與畫面可能因地區、裝置或系統版本而有所不同。iOS App 即將上架；登入後可與官網使用同一套帳號。</p>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h3>探索 MapSky</h3>
+          <ul>
+            <li><a href="/features">功能介紹</a></li>
+            <li><a href="/features">畫面預覽</a></li>
+            <li><a href="/features">最新消息</a></li>
+            <li><a href="/login">登入</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>帳號</h3>
+          <ul>
+            <li><a href="/login">管理你的帳號</a></li>
+            <li><a href="/login">登入</a></li>
+            <li><a href="/privacy">隱私與條款</a></li>
+          </ul>
+          <h3 style="margin-top:18px">服務</h3>
+          <ul>
+            <li><a href="/features">天氣與動態天空</a></li>
+            <li><a href="/features">捷運 · 台鐵 · 高鐵</a></li>
+            <li><a href="/features">停班停課</a></li>
+            <li><a href="/features">YouBike</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>關於</h3>
+          <ul>
+            <li><a href="/features">關於 MapSky</a></li>
+            <li><a href="mailto:mapskyapp@gmail.com">聯絡我們</a></li>
+            <li><a href="/privacy">隱私權政策</a></li>
+            <li><a href="/privacy">使用條款</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>支援</h3>
+          <ul>
+            <li><a href="mailto:mapskyapp@gmail.com">尋求協助</a></li>
+            <li><a href="/privacy">常見問題</a></li>
+            <li><a href="/features">如何使用</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>價值理念</h3>
+          <ul>
+            <li><a href="/privacy">隱私權</a></li>
+            <li><a href="/privacy">資料來源說明</a></li>
+            <li><a href="mailto:mapskyapp@gmail.com">回報問題</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;">
+          <span>Copyright © MapSky. 保留一切權利。</span>
+          <div class="footer-bottom-links">
+            <a href="/privacy">隱私權政策</a>
+            <a href="/privacy">使用條款</a>
+            <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
+          </div>
+        </div>
+        <span class="footer-locale">台灣</span>
+      </div>
+    </div>
+  </footer>
 
   <script src="logo-icon.js"></script>
   <script src="logo-wordmark.js"></script>
