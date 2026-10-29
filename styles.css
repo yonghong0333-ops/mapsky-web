@@ -367,9 +367,9 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   display: block;
   width: 100%;
   max-width: none;
-  height: 34vh;
-  min-height: 220px;
-  max-height: 320px;
+  height: 42vh;
+  min-height: 260px;
+  max-height: 420px;
   object-fit: cover;
   object-position: 38% 40%;
   transform: scale(1.14);
@@ -379,9 +379,9 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 }
 @media (min-width: 900px) {
   .intro-scene-img {
-    height: 38vh;
-    min-height: 260px;
-    max-height: 380px;
+    height: 48vh;
+    min-height: 320px;
+    max-height: 480px;
     transform: scale(1.16);
     transform-origin: 34% 42%;
     object-position: 36% 40%;
@@ -389,8 +389,8 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 }
 @media (min-width: 1400px) {
   .intro-scene-img {
-    height: 40vh;
-    max-height: 420px;
+    height: 52vh;
+    max-height: 560px;
     transform: scale(1.18);
     transform-origin: 32% 40%;
   }
@@ -440,27 +440,27 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   filter: drop-shadow(0 6px 18px rgba(0,0,0,0.45));
 }
 
-/* MAPSKY at top of black zone */
+/* MAPSKY above mountain (swapped) */
 .ink-top-mark {
   background: #0a0a0a;
-  padding: 36px 16px 8px;
+  padding: calc(var(--nav-h) + var(--safe-top) + 28px) 16px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .ink-top-mark img,
 .ink-brand-mark {
-  width: min(280px, 70vw);
+  width: min(300px, 72vw);
   height: auto;
   display: block;
   filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
 }
 @media (min-width: 900px) {
   .ink-top-mark {
-    padding: 48px 24px 12px;
+    padding: calc(var(--nav-h) + var(--safe-top) + 36px) 24px 28px;
   }
   .ink-brand-mark {
-    width: min(320px, 40vw);
+    width: min(360px, 42vw);
   }
 }
 
