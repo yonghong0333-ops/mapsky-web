@@ -192,10 +192,9 @@ body.is-scrolled .nav {
   border-radius: 980px;
 }
 
-/* Hero pin — short so white fades into mountain on scroll */
-.hero-pin { position: relative; height: 130vh; }
+/* Hero — normal full-screen block, scrolls away (no sticky = no jank) */
 .hero {
-  position: sticky; top: 0;
+  position: relative;
   height: 100vh; height: 100dvh;
   min-height: 100vh; min-height: 100dvh;
   overflow: hidden;
@@ -203,7 +202,6 @@ body.is-scrolled .nav {
 }
 .hero-layer {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  transition: opacity 0.1s linear;
 }
 .hero-layer-landing { z-index: 3; }
 .hero-layer-intro { z-index: 2; background: #000; }
@@ -484,7 +482,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 #news .card p { color: #6e6e73; }
 
 /* Home opens white, then turns black as the hero scrolls away */
-body.home .hero { background: #000; }
+body.home .hero { background: #ffffff; }
 body.home .hero-layer-landing {
   background: #ffffff;
   color: #1d1d1f;
