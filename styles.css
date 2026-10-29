@@ -226,6 +226,13 @@ body.is-scrolled .nav {
 .hero-pin.is-wiped .hero-black-wipe {
   transform: translate3d(0, 0, 0);
 }
+.hero-pin.is-wiped .hero-layer-landing {
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-pin.is-done {
+  display: none;
+}
 .hero-layer-landing { z-index: 3; }
 .hero-layer-intro { z-index: 2; background: #000; }
 .hero-layer-detail { z-index: 1; background: #000; }
@@ -315,6 +322,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   object-fit: cover;
   object-position: center center;
   transition: opacity 0.2s ease;
+  background: #0a0a0a;
 }
 .intro-scene-overlay {
   position: absolute;
@@ -333,7 +341,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 4;
   pointer-events: none;
 }
 .intro-line {
@@ -348,7 +356,8 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
   white-space: normal;
   max-width: min(320px, 78vw);
   color: #fff;
-  text-shadow: 0 2px 24px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.85), 0 0 28px rgba(0,0,0,0.7);
+  z-index: 4;
   letter-spacing: -0.02em;
   line-height: 1.35;
   transition: opacity 0.28s ease, transform 0.28s ease;
