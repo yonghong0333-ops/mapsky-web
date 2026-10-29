@@ -383,34 +383,65 @@
       var finaleMark = document.getElementById("finaleMark");
       var finaleCta = document.getElementById("finaleCta");
       if (finalePin && finaleMark && !reduceMotion) {
-        var finaleTicking = false;
-        function updateFinale() {
-          var rect = finalePin.getBoundingClientRect();
-          var pinH = finalePin.offsetHeight;
-          var vh = window.innerHeight || 1;
-          var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
-          var progress = scrolled / Math.max(pinH - vh, 1);
-          var t = 0;
-          if (progress > 0.15 && progress < 0.35) t = (progress - 0.15) / 0.2;
-          else if (progress >= 0.35 && progress < 0.7) t = 1;
-          else if (progress >= 0.7 && progress < 0.85) t = 1 - (progress - 0.7) / 0.15;
-          finaleMark.style.opacity = String(Math.max(0, Math.min(1, t)));
-          finaleMark.style.transform = "scale(" + (0.92 + t * 0.08) + ")";
-          if (finaleCta) {
-            finaleCta.style.opacity = String(Math.max(0, Math.min(1, t)));
-            finaleCta.style.transform = "translateY(" + ((1 - t) * 12) + "px)";
-          }
-          finaleTicking = false;
+        var finalePlayed = false;
+        var finalePlaying = false;
+        var finaleLockY = 0;
+
+        function finaleRect() {
+          return finalePin.getBoundingClientRect();
         }
-        function onFinaleScroll() {
-          if (!finaleTicking) {
-            requestAnimationFrame(updateFinale);
-            finaleTicking = true;
-          }
+
+        function playFinale() {
+          if (finalePlaying || finalePlayed) return;
+          finalePlaying = true;
+          finaleLockY = Math.max(0, finaleRect().top + window.scrollY);
+          window.scrollTo(0, finaleLockY);
+          finalePin.classList.add("is-playing");
+          setTimeout(function () {
+            finalePin.classList.add("is-done");
+            finalePlaying = false;
+            finalePlayed = true;
+          }, 1500);
         }
-        window.addEventListener("scroll", onFinaleScroll, { passive: true });
-        window.addEventListener("resize", onFinaleScroll, { passive: true });
-        updateFinale();
+
+        window.addEventListener("wheel", function (e) {
+          if (finalePlayed) return;
+          var rect = finaleRect();
+          var atGate = rect.top < window.innerHeight * 0.42 && rect.bottom > window.innerHeight * 0.55;
+          if (e.deltaY > 0 && (finalePlaying || atGate)) {
+            e.preventDefault();
+            playFinale();
+          }
+        }, { passive: false });
+
+        var finaleTouchY = 0;
+        window.addEventListener("touchstart", function (e) {
+          if (e.touches && e.touches[0]) finaleTouchY = e.touches[0].clientY;
+        }, { passive: true });
+        window.addEventListener("touchmove", function (e) {
+          if (finalePlayed || !e.touches || !e.touches[0]) return;
+          var dy = finaleTouchY - e.touches[0].clientY;
+          var rect = finaleRect();
+          var atGate = rect.top < window.innerHeight * 0.42 && rect.bottom > window.innerHeight * 0.55;
+          if (dy > 10 && (finalePlaying || atGate)) {
+            if (e.cancelable) e.preventDefault();
+            playFinale();
+          }
+        }, { passive: false });
+
+        window.addEventListener("scroll", function () {
+          var rect = finaleRect();
+          if (finalePlayed && rect.top > window.innerHeight * 0.65) {
+            finalePlayed = false;
+            finalePin.classList.remove("is-playing", "is-done");
+            return;
+          }
+          if (finalePlaying) {
+            if (Math.abs(window.scrollY - finaleLockY) > 2) window.scrollTo(0, finaleLockY);
+            return;
+          }
+          if (!finalePlayed && rect.top < 72 && rect.bottom > window.innerHeight * 0.4) playFinale();
+        }, { passive: true });
       }
     })();
   </script>

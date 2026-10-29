@@ -57,9 +57,9 @@
 .footer { background: #ffffff; }
 #closures.section { background: #f5f5f7; }
 
-.hero-pin { height: 560vh; }
+.hero-pin { height: 100dvh; }
 @media (max-width: 900px) {
-  .hero-pin { height: 500vh; }
+  .hero-pin { height: 100dvh; }
 }
 
 .hero-layer-detail {
@@ -230,13 +230,12 @@
 
 .finale-pin {
   position: relative;
-  height: 220vh;
+  height: auto;
   background: #0a0a0a;
   overflow: visible;
 }
 .ink-finale {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100vh;
   height: 100dvh;
   background: #0a0a0a;
@@ -264,7 +263,7 @@
   height: auto;
   margin: 0 auto;
   opacity: 0;
-  transform: translateY(36px) scale(0.9);
+  transform: translateY(90px) scale(0.62);
   will-change: opacity, transform;
 }
 .ink-finale .finale-cta,
@@ -272,12 +271,34 @@
   margin-top: 8px;
   min-height: 44px;
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(28px);
   will-change: opacity, transform;
   pointer-events: none;
 }
+.finale-pin.is-playing .ink-finale-mark {
+  animation: finaleZoom 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.finale-pin.is-playing .finale-cta {
+  animation: finaleRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.62s forwards;
+}
+.finale-pin.is-done .ink-finale-mark {
+  opacity: 1;
+  transform: none;
+}
+.finale-pin.is-done .finale-cta {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+@keyframes finaleZoom {
+  0% { opacity: 0; transform: translateY(90px) scale(0.62); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes finaleRise {
+  0% { opacity: 0; transform: translateY(28px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
 @media (max-width: 800px) {
-  .finale-pin { height: 200vh; }
   .ink-finale { padding: 16px 12px 32px; }
   .ink-finale-mark { width: min(560px, 100%); }
 }
@@ -295,6 +316,7 @@
     opacity: 1 !important;
     transform: none !important;
     pointer-events: auto !important;
+    animation: none !important;
   }
 }
 
