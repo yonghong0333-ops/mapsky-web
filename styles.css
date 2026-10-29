@@ -437,8 +437,45 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 .section-head { text-align: center; margin-bottom: 48px; }
 .section-head h2 { font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
 .section-head p { color: var(--muted); font-size: 17px; }
-.section-alt { background: #111; }
-.section-cta { text-align: center; }
+.section-alt {
+  background: #0a0a0a;
+  width: 100%;
+  max-width: none;
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+}
+.section-alt .section-head,
+.section-alt .grid-3 {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.section-alt .card {
+  background: #141414;
+  border-color: rgba(255,255,255,0.08);
+}
+.section-cta {
+  text-align: center;
+  background: #0a0a0a;
+  width: 100%;
+  max-width: none;
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+}
+.section-cta .cta-box {
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#features,
+#download {
+  background: #0a0a0a;
+  color: #f5f5f7;
+}
+#features .section-head h2,
+#download .cta-box h2 { color: #f5f5f7; }
+#features .section-head p,
+#download .cta-box p { color: #a1a1a6; }
 .cta-box { max-width: 480px; margin: 0 auto; }
 .cta-box h2 { font-size: 32px; margin-bottom: 12px; }
 .cta-box p { color: var(--muted); margin-bottom: 24px; }
@@ -489,6 +526,7 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 .footer {
   padding: 48px 24px 32px; border-top: 1px solid var(--border);
   text-align: center; color: var(--muted); font-size: 13px;
+  background: #0a0a0a;
 }
 .footer-brand { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; color: var(--fg); font-weight: 600; }
 .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 16px; }
@@ -497,6 +535,12 @@ h1 { font-size: clamp(28px, 6vw, 48px); font-weight: 700; letter-spacing: -0.03e
 .footer-note { opacity: 0.5; }
 
 .ink-sheet { background: #0a0a0a; }
+.ink-cover {
+  background: #0a0a0a;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 #news { background: #ffffff; color: #1d1d1f; }
 #news .section-head h2 { color: #1d1d1f; }
 #news .section-head p { color: #6e6e73; }
