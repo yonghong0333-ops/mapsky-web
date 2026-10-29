@@ -63,9 +63,9 @@
             </div>
           </div>
         </div>
-        <div class="hero-layer hero-layer-intro" data-layer="intro" aria-hidden="true">
+        <div class="hero-layer hero-layer-intro" data-layer="intro" aria-hidden="true" style="opacity:0">
           <div class="intro-bg" aria-hidden="true">
-            <img src="assets/hero-sky.jpg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
+            <img src="assets/mountain.svg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
           </div>
           <div class="intro-lines">
             <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
@@ -76,7 +76,7 @@
             </div>
           </div>
         </div>
-        <div class="hero-layer hero-layer-detail" data-layer="detail" aria-hidden="true">
+        <div class="hero-layer hero-layer-detail" data-layer="detail" aria-hidden="true" style="opacity:0">
           <div class="detail-stage">
             <article class="detail-slide"><p class="detail-kicker">現在天氣</p><h2>前鎮區，29°。</h2><p class="detail-lead">溫度、體感與天氣狀況放在同一張卡片。</p><div class="detail-frame"><img data-asset="detail-now" src="assets/detail-now.jpg" alt="現在天氣" /></div></article>
             <article class="detail-slide"><p class="detail-kicker">台灣地圖</p><h2>點城市，就換天氣。</h2><p class="detail-lead">西半部直接標出台南、高雄。</p><div class="detail-frame"><img data-asset="detail-map" src="assets/detail-map.jpg" alt="地圖" /></div></article>
@@ -218,6 +218,7 @@
             layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
             layerDetail.setAttribute("aria-hidden", detailOpacity < 0.15 ? "true" : "false");
           }
+          var lineProgress = progress > landingEnd * 0.5 ? Math.min(1, (progress - landingEnd * 0.5) / (introEnd - landingEnd * 0.5)) : 0;
           if (detailSlides.length) {
             var count = detailSlides.length || 1;
             var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.58);
@@ -236,63 +237,15 @@
             if (lineProgress >= start && lineProgress < peak) t = (lineProgress - start) / (peak - start);
             else if (lineProgress >= peak && lineProgress < end) t = 1;
             else if (lineProgress >= end && lineProgress < end + 0.08) t = 1 - (lineProgress - end) / 0.08;
-            if (i === 3 && lineProgress >= peak) { t = Math.min(1, Math.max(t, 1 - Math.max(0, (lineProgress - 0.92) / 0.08))); if (lineProgress < 0.92) t = 1; }
+            if (i === 3 && lineProgress >= peak) {
+              t = Math.min(1, Math.max(t, 1 - Math.max(0, (lineProgress - 0.92) / 0.08)));
+              if (lineProgress < 0.92) t = 1;
+            }
             line.style.opacity = String(Math.max(0, Math.min(1, t)));
             line.style.transform = "translate(-50%, -50%) translateY(" + ((1 - t) * 28) + "px)";
           });
           pinTicking = false;
         }
-        // FIX: lineProgress was missing definition - compute it
-        var _origUpdate = updatePin;
-        updatePin = function() {
-          var rect = heroPin.getBoundingClientRect();
-          var pinH = heroPin.offsetHeight;
-          var vh = window.innerHeight || 1;
-          var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
-          var progress = scrolled / Math.max(pinH - vh, 1);
-          var landingEnd = 0.18, introEnd = 0.42, detailStart = 0.4;
-          var landingOpacity = progress <= 0 ? 1 : progress >= landingEnd ? 0 : 1 - progress / landingEnd;
-          layerLanding.style.opacity = String(Math.max(0, Math.min(1, landingOpacity)));
-          layerLanding.style.pointerEvents = landingOpacity > 0.2 ? "auto" : "none";
-          var introOpacity = 0;
-          if (progress > landingEnd * 0.6 && progress < introEnd) {
-            if (progress < landingEnd + 0.06) introOpacity = (progress - landingEnd * 0.6) / (landingEnd * 0.4 + 0.06);
-            else if (progress < introEnd - 0.06) introOpacity = 1;
-            else introOpacity = Math.max(0, (introEnd - progress) / 0.06);
-          }
-          layerIntro.style.opacity = String(Math.max(0, Math.min(1, introOpacity)));
-          layerIntro.setAttribute("aria-hidden", introOpacity < 0.15 ? "true" : "false");
-          var detailOpacity = progress >= detailStart ? Math.min(1, (progress - detailStart) / 0.08) : 0;
-          if (layerDetail) {
-            layerDetail.style.opacity = String(detailOpacity);
-            layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
-            layerDetail.setAttribute("aria-hidden", detailOpacity < 0.15 ? "true" : "false");
-          }
-          var lineProgress = progress > landingEnd * 0.5 ? Math.min(1, (progress - landingEnd * 0.5) / (introEnd - landingEnd * 0.5)) : 0;
-          if (detailSlides.length) {
-            var count = detailSlides.length || 1;
-            var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.58);
-            detailSlides.forEach(function (slide, i) {
-              var slot = 1 / count, center = (i + 0.5) * slot, dist = Math.abs(local - center);
-              var half = slot * 0.5, fadeStart = half * 0.42, fadeEnd = half * 1.25, t = 0;
-              if ((i === 0 && local <= center) || (i === count - 1 && local >= center)) t = 1;
-              else if (dist <= fadeStart) t = 1;
-              else if (dist < fadeEnd) t = 1 - (dist - fadeStart) / (fadeEnd - fadeStart);
-              slide.style.opacity = String(Math.max(0, Math.min(1, t)));
-              slide.style.transform = "translateY(" + ((1 - Math.max(0, Math.min(1, t))) * 16) + "px");
-            });
-          }
-          introLines.forEach(function (line, i) {
-            var start = i / 4, peak = start + 0.08, end = start + 0.22, t = 0;
-            if (lineProgress >= start && lineProgress < peak) t = (lineProgress - start) / (peak - start);
-            else if (lineProgress >= peak && lineProgress < end) t = 1;
-            else if (lineProgress >= end && lineProgress < end + 0.08) t = 1 - (lineProgress - end) / 0.08;
-            if (i === 3 && lineProgress >= peak) { t = Math.min(1, Math.max(t, 1 - Math.max(0, (lineProgress - 0.92) / 0.08))); if (lineProgress < 0.92) t = 1; }
-            line.style.opacity = String(Math.max(0, Math.min(1, t)));
-            line.style.transform = "translate(-50%, -50%) translateY(" + ((1 - t) * 28) + "px");
-          });
-          pinTicking = false;
-        };
         function onPinScroll() {
           if (!pinTicking) {
             requestAnimationFrame(updatePin);
