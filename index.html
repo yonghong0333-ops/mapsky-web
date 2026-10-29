@@ -63,33 +63,6 @@
             </div>
           </div>
         </div>
-        <div class="hero-layer hero-layer-intro" data-layer="intro" aria-hidden="true" style="opacity:0">
-          <div class="intro-bg" aria-hidden="true">
-            <img id="introBgImg" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
-          </div>
-          <div class="intro-lines">
-            <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
-            <p class="intro-line" data-line="1">天氣、捷運、停班停課。</p>
-            <p class="intro-line" data-line="2">現在，一站看清楚。</p>
-            <div class="intro-line intro-line-final" data-line="3">
-              <img class="intro-logo" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
-            </div>
-          </div>
-          <div class="intro-tabs" role="tablist" aria-label="場景切換">
-            <button type="button" class="intro-tab" data-bg="assets/Weather1.svg" data-label="天氣" role="tab" aria-selected="false">
-              <span class="intro-tab-icon">🌤</span>
-              <span class="intro-tab-label">天氣</span>
-            </button>
-            <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="捷運" role="tab" aria-selected="false">
-              <span class="intro-tab-icon">🚇</span>
-              <span class="intro-tab-label">捷運</span>
-            </button>
-            <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="停班停課" role="tab" aria-selected="false">
-              <span class="intro-tab-icon">🏫</span>
-              <span class="intro-tab-label">停班停課</span>
-            </button>
-          </div>
-        </div>
         <div class="hero-layer hero-layer-detail" data-layer="detail" aria-hidden="true" style="opacity:0">
           <div class="detail-stage">
             <article class="detail-slide"><p class="detail-kicker">現在天氣</p><h2>前鎮區，29°。</h2><p class="detail-lead">溫度、體感與天氣狀況放在同一張卡片。</p><div class="detail-frame"><img data-asset="detail-now" src="assets/detail-now.jpg" alt="現在天氣" /></div></article>
@@ -101,6 +74,35 @@
         </div>
       </section>
     </div>
+
+    <section class="intro-scene" id="introScene" aria-label="出門前最常查什麼">
+      <div class="intro-scene-frame">
+        <img id="introBgImg" class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
+        <div class="intro-scene-overlay" aria-hidden="true"></div>
+        <div class="intro-lines">
+          <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
+          <p class="intro-line" data-line="1">天氣、捷運、停班停課。</p>
+          <p class="intro-line" data-line="2">現在，一站看清楚。</p>
+          <div class="intro-line intro-line-final" data-line="3">
+            <img class="intro-logo" src="assets/hero-word.jpg" width="900" height="242" alt="MAPSKY" />
+          </div>
+        </div>
+        <div class="intro-tabs" role="tablist" aria-label="場景切換">
+          <button type="button" class="intro-tab" data-bg="assets/Weather1.svg" data-label="天氣" role="tab" aria-selected="false">
+            <span class="intro-tab-icon">🌤</span>
+            <span class="intro-tab-label">天氣</span>
+          </button>
+          <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="捷運" role="tab" aria-selected="false">
+            <span class="intro-tab-icon">🚇</span>
+            <span class="intro-tab-label">捷運</span>
+          </button>
+          <button type="button" class="intro-tab" data-bg="assets/mountain.svg" data-label="停班停課" role="tab" aria-selected="false">
+            <span class="intro-tab-icon">🏫</span>
+            <span class="intro-tab-label">停班停課</span>
+          </button>
+        </div>
+      </div>
+    </section>
 
     <div class="ink-sheet">
     <section id="details" class="section section-details">
@@ -202,11 +204,9 @@
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       var layerLanding = document.querySelector(".hero-layer-landing");
-      var layerIntro = document.querySelector(".hero-layer-intro");
       var layerDetail = document.querySelector(".hero-layer-detail");
       var detailSlides = document.querySelectorAll(".detail-slide");
-      var introLines = document.querySelectorAll(".intro-line");
-      if (heroPin && layerLanding && layerIntro && !reduceMotion) {
+      if (heroPin && layerLanding && !reduceMotion) {
         var pinTicking = false;
         function updatePin() {
           var rect = heroPin.getBoundingClientRect();
@@ -214,20 +214,11 @@
           var vh = window.innerHeight || 1;
           var scrolled = Math.min(Math.max(-rect.top, 0), pinH - vh);
           var progress = scrolled / Math.max(pinH - vh, 1);
-          var landingEnd = 0.12, introStart = 0.08, introFull = 0.14, introEnd = 0.58, detailStart = 0.55;
+          var landingEnd = 0.35, detailStart = 0.4;
           var landingOpacity = progress <= 0 ? 1 : progress >= landingEnd ? 0 : 1 - progress / landingEnd;
           layerLanding.style.opacity = String(Math.max(0, Math.min(1, landingOpacity)));
           layerLanding.style.pointerEvents = landingOpacity > 0.2 ? "auto" : "none";
-          var introOpacity = 0;
-          if (progress >= introStart && progress < introEnd) {
-            if (progress < introFull) introOpacity = (progress - introStart) / (introFull - introStart);
-            else if (progress < introEnd - 0.05) introOpacity = 1;
-            else introOpacity = Math.max(0, (introEnd - progress) / 0.05);
-          }
-          layerIntro.style.opacity = String(Math.max(0, Math.min(1, introOpacity)));
-          layerIntro.style.zIndex = introOpacity > 0.35 ? "4" : "2";
-          layerIntro.setAttribute("aria-hidden", introOpacity < 0.15 ? "true" : "false");
-          var detailOpacity = progress >= detailStart ? Math.min(1, (progress - detailStart) / 0.08) : 0;
+          var detailOpacity = progress >= detailStart ? Math.min(1, (progress - detailStart) / 0.12) : 0;
           if (layerDetail) {
             layerDetail.style.opacity = String(detailOpacity);
             layerDetail.style.pointerEvents = detailOpacity > 0.3 ? "auto" : "none";
@@ -235,7 +226,7 @@
           }
           if (detailSlides.length) {
             var count = detailSlides.length || 1;
-            var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.58);
+            var local = progress <= detailStart ? 0 : Math.min(1, (progress - detailStart) / 0.55);
             detailSlides.forEach(function (slide, i) {
               var slot = 1 / count, center = (i + 0.5) * slot, dist = Math.abs(local - center);
               var half = slot * 0.5, fadeStart = half * 0.42, fadeEnd = half * 1.25, t = 0;
@@ -257,42 +248,16 @@
         window.addEventListener("scroll", onPinScroll, { passive: true });
         window.addEventListener("resize", onPinScroll, { passive: true });
         updatePin();
-
-        var snapLock = false;
-        var snapTimer = null;
-        function snapToIntroIfNeeded() {
-          if (snapLock || !heroPin) return;
-          var rect = heroPin.getBoundingClientRect();
-          var pinH = heroPin.offsetHeight;
-          var vh = window.innerHeight || 1;
-          var range = Math.max(pinH - vh, 1);
-          var scrolled = Math.min(Math.max(-rect.top, 0), range);
-          var progress = scrolled / range;
-          if (progress > 0.04 && progress < 0.13) {
-            snapLock = true;
-            var targetY = window.scrollY + rect.top + range * 0.16;
-            window.scrollTo({ top: targetY, behavior: "smooth" });
-            setTimeout(function () { snapLock = false; }, 700);
-          }
-        }
-        function onScrollEndLikely() {
-          if (snapTimer) clearTimeout(snapTimer);
-          snapTimer = setTimeout(snapToIntroIfNeeded, 120);
-        }
-        window.addEventListener("scroll", onScrollEndLikely, { passive: true });
-        window.addEventListener("touchend", function () {
-          setTimeout(snapToIntroIfNeeded, 80);
-        }, { passive: true });
       }
 
-      /* Auto-play intro text once when intro is shown (no scroll lock) */
+      /* Auto-play intro text when intro-scene scrolls into view */
       (function () {
+        var scene = document.getElementById("introScene");
         var lines = document.querySelectorAll(".intro-line");
-        if (!lines.length) return;
+        if (!scene || !lines.length) return;
         var playing = false;
         var doneOnce = false;
         var timers = [];
-
         function clearTimers() {
           timers.forEach(function (id) { clearTimeout(id); });
           timers = [];
@@ -328,26 +293,16 @@
             doneOnce = true;
           }, delay + 200));
         }
-        function stopSequence() {
-          playing = false;
-          clearTimers();
-          doneOnce = false;
-          hideAll();
+        if ("IntersectionObserver" in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) playSequenceOnce();
+            });
+          }, { threshold: 0.35 });
+          io.observe(scene);
+        } else {
+          playSequenceOnce();
         }
-        var layerIntroEl = document.querySelector(".hero-layer-intro");
-        if (!layerIntroEl) return;
-        var wasVisible = false;
-        function check() {
-          var op = parseFloat(layerIntroEl.style.opacity || "0");
-          var visible = op > 0.6;
-          if (visible && !wasVisible) playSequenceOnce();
-          if (!visible && wasVisible) stopSequence();
-          wasVisible = visible;
-        }
-        window.addEventListener("scroll", function () {
-          requestAnimationFrame(check);
-        }, { passive: true });
-        check();
       })();
 
       /* Intro scene tabs */
