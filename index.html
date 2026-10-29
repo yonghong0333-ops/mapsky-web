@@ -10,6 +10,7 @@
   <meta property="og:type" content="website" />
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="preload" as="image" href="assets/mountain.svg" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="torn.css" />
 </head>
@@ -69,7 +70,7 @@
 
     <section class="intro-scene" id="introScene" aria-label="出門前最常查什麼">
       <div class="intro-scene-frame">
-        <img id="introBgImg" class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="lazy" decoding="async" />
+        <img id="introBgImg" class="intro-scene-img" src="assets/mountain.svg" alt="" width="1748" height="1240" loading="eager" fetchpriority="high" decoding="async" />
         <div class="intro-scene-overlay" aria-hidden="true"></div>
         <div class="intro-lines">
           <p class="intro-line" data-line="0">出門前，你最常查什麼？</p>
@@ -195,6 +196,12 @@
       var floatCards = document.querySelectorAll(".float-card");
       if (floatCards.length) requestAnimationFrame(function () { floatCards.forEach(function (c) { c.classList.add("is-visible"); }); });
       var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      /* Preload mountain so wipe never lands on empty black */
+      (function () {
+        var img = new Image();
+        img.src = "assets/mountain.svg";
+      })();
+
       /* Auto black wipe: scroll down → jump cover fast, then go to intro */
       (function () {
         var pin = document.getElementById("heroPin");
@@ -210,15 +217,26 @@
           locking = true;
           pin.classList.add("is-wiped");
           document.body.classList.add("is-dark");
-          /* jump to intro mid-wipe so no pure-black pause */
-          setTimeout(function () {
-            if (intro) {
-              intro.scrollIntoView({ behavior: "auto", block: "start" });
-            }
-            /* fire text sequence right away */
+
+          var bg = document.getElementById("introBgImg");
+          function goIntro() {
+            if (intro) intro.scrollIntoView({ behavior: "auto", block: "start" });
             try { window.__playIntroText && window.__playIntroText(); } catch (e) {}
             locking = false;
-          }, 120);
+          }
+          function whenReady(cb) {
+            if (!bg) { cb(); return; }
+            if (bg.complete && bg.naturalWidth > 0) { cb(); return; }
+            var done = false;
+            function finish() {
+              if (done) return;
+              done = true;
+              cb();
+            }
+            bg.addEventListener("load", finish, { once: true });
+            setTimeout(finish, 800);
+          }
+          setTimeout(function () { whenReady(goIntro); }, 80);
         }
 
         function undoWipe() {
