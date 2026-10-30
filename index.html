@@ -91,11 +91,12 @@
         '.iphone-modal .seg button.on{background:#f5f5f7!important;color:#1d1d1f!important;}',
         '.iphone-modal .seg button:active{transform:scale(0.96)!important;}',
         '.iphone-modal .series-tabs{display:flex!important;flex-wrap:wrap!important;gap:6px 4px!important;margin:0 0 16px!important;padding:0 0 12px!important;border-bottom:1px solid rgba(255,255,255,.12)!important;}',
-        '.iphone-modal .series-tabs button{border:0!important;background:transparent!important;color:#6e6e73!important;font-size:13px!important;font-weight:500!important;padding:6px 10px!important;cursor:pointer!important;font-family:inherit!important;position:relative!important;border-radius:8px!important;transition:color .15s,transform .2s cubic-bezier(0.34,1.56,0.64,1)!important;}',
+        '.iphone-modal .series-tabs button{border:0!important;background:transparent!important;color:#6e6e73!important;font-size:13px!important;font-weight:500!important;padding:6px 10px!important;cursor:pointer!important;font-family:inherit!important;position:relative!important;border-radius:8px!important;transition:color .2s ease,transform .22s cubic-bezier(0.34,1.56,0.64,1)!important;}',
         '.iphone-modal .series-tabs button.on{color:#f5f5f7!important;font-weight:600!important;}',
         '.iphone-modal .series-tabs button.on::after{content:""!important;position:absolute!important;left:10px!important;right:10px!important;bottom:0!important;height:2px!important;background:#2997ff!important;border-radius:2px!important;}',
         '.iphone-modal .series-tabs button:active{transform:scale(0.96)!important;}',
-        '.iphone-modal .model-panel{min-height:120px!important;}',
+        '.iphone-modal .model-panel{min-height:120px!important;transition:opacity .22s ease,transform .28s cubic-bezier(0.22,1,0.36,1)!important;will-change:opacity,transform!important;}',
+        '.iphone-modal .model-panel.is-swap{opacity:0!important;transform:translateY(8px)!important;}',
         '.iphone-modal .model-panel ul{list-style:none!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:10px!important;}',
         '.iphone-modal .model-panel li{background:#141414!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:14px!important;padding:14px 16px!important;font-size:15px!important;font-weight:600!important;color:#f5f5f7!important;line-height:1.35!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)!important;}',
         '.iphone-modal .model-panel li span{display:block!important;margin-top:3px!important;font-size:12px!important;font-weight:400!important;color:#a1a1a6!important;}',
@@ -205,19 +206,31 @@
         var seriesEl = document.getElementById('iphoneSeries');
         var modelsEl = document.getElementById('iphoneModels');
         var noteEl = document.getElementById('iphoneNote');
+        var swapTimer = null;
         function renderSeriesTabs() {
-          seriesEl.innerHTML = SERIES.map(function (s) {
-            return '<button type="button" data-series="' + s.id + '" class="' + (s.id === seriesId ? 'on' : '') + '" role="tab">' + s.label.replace('iPhone ', '') + '</button>';
-          }).join('');
-          seriesEl.querySelectorAll('button').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-              seriesId = btn.getAttribute('data-series');
-              renderSeriesTabs();
-              renderModels();
+          if (!seriesEl.dataset.built) {
+            seriesEl.innerHTML = SERIES.map(function (s) {
+              return '<button type="button" data-series="' + s.id + '" class="' + (s.id === seriesId ? 'on' : '') + '" role="tab">' + s.label.replace('iPhone ', '') + '</button>';
+            }).join('');
+            seriesEl.dataset.built = '1';
+            seriesEl.querySelectorAll('button').forEach(function (btn) {
+              btn.addEventListener('click', function () {
+                var next = btn.getAttribute('data-series');
+                if (next === seriesId) return;
+                seriesId = next;
+                seriesEl.querySelectorAll('button').forEach(function (b) {
+                  b.classList.toggle('on', b.getAttribute('data-series') === seriesId);
+                });
+                renderModels(true);
+              });
             });
-          });
+          } else {
+            seriesEl.querySelectorAll('button').forEach(function (b) {
+              b.classList.toggle('on', b.getAttribute('data-series') === seriesId);
+            });
+          }
         }
-        function renderModels() {
+        function fillModels() {
           var s = SERIES.filter(function (x) { return x.id === seriesId; })[0];
           if (!s) return;
           var list = s.models.filter(function (m) { return mode === 'all' || m.adventure; });
@@ -233,6 +246,21 @@
             ? '動態冒險效果需 iPhone 14 Pro 以上機型。'
             : '完整功能需升級至 iOS 26。動態冒險效果需 iPhone 14 Pro 以上。';
         }
+        function renderModels(animate) {
+          if (swapTimer) { clearTimeout(swapTimer); swapTimer = null; }
+          if (animate) {
+            modelsEl.classList.add('is-swap');
+            swapTimer = setTimeout(function () {
+              fillModels();
+              requestAnimationFrame(function () {
+                modelsEl.classList.remove('is-swap');
+              });
+            }, 160);
+          } else {
+            modelsEl.classList.remove('is-swap');
+            fillModels();
+          }
+        }
         document.getElementById('iphoneSeg').querySelectorAll('button').forEach(function (btn) {
           btn.addEventListener('click', function () {
             mode = btn.getAttribute('data-mode');
@@ -241,11 +269,11 @@
               b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
             });
             renderSeriesTabs();
-            renderModels();
+            renderModels(true);
           });
         });
         renderSeriesTabs();
-        renderModels();
+        renderModels(false);
         function closeIphoneModal() {
           ov.classList.remove('open');
           document.documentElement.classList.remove('iphone-modal-open');
