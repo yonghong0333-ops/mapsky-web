@@ -3,32 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="MapSky — 台灣天氣、停班停課、捷運台鐵高鐵與動態天空，一站掌握。" />
   <meta name="theme-color" content="#0a0a0a" />
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
-  <style>
-    #menuCloseBtn {
-      display: none;
-      position: fixed;
-      top: max(12px, env(safe-area-inset-top));
-      right: max(12px, env(safe-area-inset-right));
-      z-index: 99999;
-      width: 44px;
-      height: 44px;
-      border: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      font-size: 28px;
-      line-height: 44px;
-      text-align: center;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-    body.nav-open #menuCloseBtn { display: block; }
-  </style>
   <script>
   (async function () {
     try {
@@ -37,6 +14,45 @@
       document.open();
       document.write(html);
       document.close();
+
+      function ensureCloseBtn() {
+        var btn = document.getElementById('menuCloseBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'menuCloseBtn';
+          btn.type = 'button';
+          btn.setAttribute('aria-label', '關閉選單');
+          btn.textContent = '\u00D7';
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            setMenu(false);
+          });
+          document.body.appendChild(btn);
+        }
+        // Inline styles so they survive document.write wipe
+        btn.style.cssText = [
+          'position:fixed',
+          'top:max(12px, env(safe-area-inset-top, 12px))',
+          'right:max(12px, env(safe-area-inset-right, 12px))',
+          'z-index:2147483647',
+          'width:48px',
+          'height:48px',
+          'border:0',
+          'border-radius:50%',
+          'background:rgba(255,255,255,0.25)',
+          'color:#fff',
+          'font-size:32px',
+          'line-height:48px',
+          'text-align:center',
+          'padding:0',
+          'cursor:pointer',
+          'touch-action:manipulation',
+          '-webkit-tap-highlight-color:transparent',
+          'display:none'
+        ].join(';');
+        return btn;
+      }
 
       function setMenu(open) {
         var toggle = document.getElementById('navToggle');
@@ -49,8 +65,8 @@
           toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
         }
         if (navRight) navRight.classList.toggle('open', open);
-        var closeBtn = document.getElementById('menuCloseBtn');
-        if (closeBtn) closeBtn.style.display = open ? 'block' : 'none';
+        var btn = ensureCloseBtn();
+        btn.style.display = open ? 'block' : 'none';
       }
 
       function wireUp() {
@@ -58,31 +74,16 @@
           if (!img.getAttribute('src')) img.src = 'assets/icon.png';
         });
 
-        // Dedicated close button always on top
-        if (!document.getElementById('menuCloseBtn')) {
-          var closeBtn = document.createElement('button');
-          closeBtn.id = 'menuCloseBtn';
-          closeBtn.type = 'button';
-          closeBtn.setAttribute('aria-label', '關閉選單');
-          closeBtn.innerHTML = '&times;';
-          closeBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            setMenu(false);
-          });
-          document.body.appendChild(closeBtn);
-        }
+        ensureCloseBtn();
 
         var toggle = document.getElementById('navToggle');
-        var nav = document.getElementById('topNav');
         var navRight = document.getElementById('navRight');
         if (toggle && !toggle.getAttribute('data-wired')) {
           toggle.setAttribute('data-wired', '1');
           toggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var open = !document.body.classList.contains('nav-open');
-            setMenu(open);
+            setMenu(!document.body.classList.contains('nav-open'));
           }, { passive: false });
         }
         if (navRight && !navRight.getAttribute('data-wired')) {
@@ -120,7 +121,7 @@
       setTimeout(wireUp, 200);
       setTimeout(wireUp, 600);
     } catch (e) {
-      document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入失敗，請重新整理。</p>';
+      document.body.innerHTML = '<p style="padding:24px">載入失敗，請重新整理。</p>';
       console.error(e);
     }
   })();
