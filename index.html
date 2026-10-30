@@ -18,14 +18,27 @@
       document.open();
       document.write(html);
       document.close();
-      requestAnimationFrame(function injectTorn() {
+
+      function fixLogoAndTorn() {
+        // Logo: set src directly (logo-apply.js may not run after document.write)
+        document.querySelectorAll('img[data-logo="icon"]').forEach(function (img) {
+          if (!img.getAttribute('src') || img.getAttribute('src') === '') {
+            img.src = 'assets/icon.png';
+          }
+        });
+        var word = document.querySelector('.wordmark');
+        if (word && (!word.getAttribute('src') || word.getAttribute('src') === '')) {
+          word.src = 'assets/hero-mapsky-white.png';
+        }
+
         var news = document.getElementById('news');
         var features = document.getElementById('features');
         if (!news || !features) {
-          setTimeout(injectTorn, 50);
+          setTimeout(fixLogoAndTorn, 50);
           return;
         }
         if (document.querySelector('.torn-mid')) return;
+
         var style = document.createElement('style');
         style.textContent = [
           '.torn-mid{position:relative;z-index:2;display:block;width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;height:40px;margin-top:24px;margin-bottom:4px;padding:0;line-height:0;pointer-events:none;background:transparent;overflow:visible}',
@@ -33,12 +46,27 @@
           '.block-news{margin-top:8px;padding-top:8px;border-top:none!important}'
         ].join('');
         document.head.appendChild(style);
+
         var div = document.createElement('div');
         div.className = 'torn-mid';
         div.setAttribute('aria-hidden', 'true');
         div.innerHTML = '<svg class="torn-mid-svg" viewBox="0 0 1200 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L1200,0 L1200,18 L1176,38 L1166,28 L1148,42 L1135,22 L1110,36 L1090,28 L1062,48 L1051,26 L1031,34 L1021,20 L1004,40 L986,26 L972,38 L952,28 L930,46 L917,24 L894,42 L884,28 L858,38 L842,22 L824,36 L811,28 L792,34 L781,22 L766,44 L751,26 L733,32 L716,24 L701,46 L690,24 L672,44 L653,20 L628,34 L618,26 L601,42 L590,20 L563,34 L547,22 L526,44 L514,22 L495,38 L475,22 L450,34 L431,26 L415,48 L402,20 L381,44 L367,26 L342,40 L322,22 L295,32 L282,18 L256,42 L240,22 L225,38 L206,28 L187,38 L167,24 L147,46 L135,22 L119,40 L101,24 L83,44 L64,22 L45,40 L33,24 L12,34 L2,18 L0,36 Z" fill="#ffffff"/></svg>';
         features.parentNode.insertBefore(div, features);
-      });
+
+        // Re-run logo-apply if available
+        var s1 = document.createElement('script');
+        s1.src = 'logo-icon.js';
+        s1.onload = function () {
+          var s2 = document.createElement('script');
+          s2.src = 'logo-apply.js';
+          document.body.appendChild(s2);
+        };
+        document.body.appendChild(s1);
+      }
+
+      requestAnimationFrame(fixLogoAndTorn);
+      setTimeout(fixLogoAndTorn, 100);
+      setTimeout(fixLogoAndTorn, 400);
     } catch (e) {
       document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入中… 若持續空白請重新整理。</p>';
       console.error(e);
