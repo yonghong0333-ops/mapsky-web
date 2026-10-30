@@ -296,20 +296,37 @@
         renderSeriesTabs();
         renderModels(false);
         function closeIphoneModal() {
+          if (!ov.classList.contains('open')) return;
+          var y = scrollY || 0;
           ov.classList.remove('open');
-          document.documentElement.classList.remove('iphone-modal-open');
-          document.body.classList.remove('iphone-modal-open');
           document.body.style.position = '';
           document.body.style.top = '';
+          document.body.style.left = '';
+          document.body.style.right = '';
           document.body.style.width = '';
-          window.scrollTo(0, scrollY);
+          document.body.style.overflow = '';
+          document.documentElement.style.overflow = '';
+          document.documentElement.classList.remove('iphone-modal-open');
+          document.body.classList.remove('iphone-modal-open');
+          document.documentElement.scrollTop = y;
+          document.body.scrollTop = y;
+          window.scrollTo(0, y);
+          requestAnimationFrame(function () {
+            window.scrollTo(0, y);
+            requestAnimationFrame(function () { window.scrollTo(0, y); });
+          });
         }
         function openIphoneModal() {
-          scrollY = window.scrollY || window.pageYOffset || 0;
+          if (ov.classList.contains('open')) return;
+          scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
           document.documentElement.classList.add('iphone-modal-open');
           document.body.classList.add('iphone-modal-open');
+          document.documentElement.style.overflow = 'hidden';
+          document.body.style.overflow = 'hidden';
           document.body.style.position = 'fixed';
           document.body.style.top = '-' + scrollY + 'px';
+          document.body.style.left = '0';
+          document.body.style.right = '0';
           document.body.style.width = '100%';
           ov.classList.add('open');
         }
