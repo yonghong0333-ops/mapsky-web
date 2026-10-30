@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0a0a0a" />
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
@@ -70,6 +70,24 @@
         document.body.appendChild(s);
       });
 
+      // Full-bleed torn edges + full-screen black band
+      var full = document.createElement('style');
+      full.textContent = [
+        '.black-band{min-height:100vh!important;min-height:100dvh!important;width:100%!important;max-width:none!important;box-sizing:border-box;}',
+        '.stage{width:100%!important;max-width:none!important;overflow:visible!important;}',
+        '.torn-edge{position:relative!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;margin:0!important;height:64px!important;overflow:visible!important;z-index:6!important;}',
+        '.torn-svg{width:100%!important;height:64px!important;display:block!important;}',
+        '.sticker{z-index:8!important;}',
+        '.st-sun{left:4%!important;bottom:-24px!important;}',
+        '.st-rain{right:5%!important;bottom:-16px!important;}',
+        '.sheet{margin-top:-40px!important;position:relative!important;z-index:1!important;width:100%!important;}',
+        '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;margin:28px 0 8px!important;height:48px!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:visible!important;z-index:3!important;}',
+        '.torn-mid-svg{display:block!important;width:100%!important;height:48px!important;filter:drop-shadow(0 5px 8px rgba(0,0,0,.14));}',
+        '.block-news{margin-top:8px;padding-top:8px;border-top:none!important;}',
+        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid,.torn-mid-svg{height:40px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}}'
+      ].join('');
+      document.head.appendChild(full);
+
       // Features → 適用裝置
       var features = document.getElementById('features');
       if (features) {
@@ -105,11 +123,8 @@
         ].join('');
       }
 
-      // Torn separator between news and features
+      // Torn separator between news and features — full screen width
       if (features && !document.querySelector('.torn-mid')) {
-        var st = document.createElement('style');
-        st.textContent = '.torn-mid{position:relative;z-index:2;display:block;width:calc(100% + 40px);margin-left:-20px;margin-right:-20px;height:40px;margin-top:24px;margin-bottom:4px;padding:0;line-height:0;pointer-events:none;background:transparent;overflow:visible}.torn-mid-svg{display:block;width:100%;height:40px;filter:drop-shadow(0 5px 8px rgba(0,0,0,.14))}.block-news{margin-top:8px;padding-top:8px;border-top:none!important}';
-        document.head.appendChild(st);
         var div = document.createElement('div');
         div.className = 'torn-mid';
         div.setAttribute('aria-hidden', 'true');
@@ -117,7 +132,6 @@
         features.parentNode.insertBefore(div, features);
       }
 
-      // Footer link text: 功能 → 適用裝置 (optional)
       document.querySelectorAll('a[href="#features"]').forEach(function (a) {
         if (a.textContent.trim() === '功能') a.textContent = '適用裝置';
       });
