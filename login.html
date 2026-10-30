@@ -56,11 +56,19 @@
     .art-cloud { right: -12px; top: 18%; width: min(140px, 32vw); transform: rotate(8deg); opacity: 0.9; }
     .art-rain { right: 6%; bottom: 12%; width: min(100px, 24vw); transform: rotate(-6deg); opacity: 0.85; }
     .art-spark { left: 10%; bottom: 18%; width: min(56px, 14vw); transform: rotate(18deg); opacity: 0.9; }
+    .art-clip {
+      left: 50%; top: 8%; width: min(72px, 18vw);
+      transform: translateX(-50%) rotate(-28deg);
+      opacity: 0.95;
+      filter: drop-shadow(4px 5px 0 rgba(0,0,0,0.12));
+      z-index: 1;
+    }
     @media (min-width: 700px) {
       .art-sun { left: 6%; top: 16%; width: 140px; }
       .art-cloud { right: 8%; top: 14%; width: 160px; }
       .art-rain { right: 12%; bottom: 14%; width: 120px; }
       .art-spark { left: 14%; bottom: 16%; width: 64px; }
+      .art-clip { top: 10%; width: 88px; }
     }
 
     .login-hero-logo { margin-bottom: 12px; position: relative; z-index: 2; }
@@ -149,6 +157,40 @@
 
   <div class="login-stage">
     <!-- weather illustrations -->
+    <div class="login-art art-clip" aria-hidden="true">
+      <svg viewBox="0 0 64 96" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 12
+          C24 6 30 2 36 2
+          C44 2 50 8 50 16
+          L50 64
+          C50 78 38 88 26 88
+          C14 88 6 78 6 64
+          L6 28
+          C6 20 12 16 18 16
+          C24 16 28 20 28 28
+          L28 60
+          C28 66 22 70 18 70
+          C14 70 12 66 12 60
+          L12 34"
+          fill="none" stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M24 12
+          C24 6 30 2 36 2
+          C44 2 50 8 50 16
+          L50 64
+          C50 78 38 88 26 88
+          C14 88 6 78 6 64
+          L6 28
+          C6 20 12 16 18 16
+          C24 16 28 20 28 28
+          L28 60
+          C28 66 22 70 18 70
+          C14 70 12 66 12 60
+          L12 34"
+          fill="none" stroke="#d1d5db" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M36 8 C40 8 44 11 44 16 L44 40"
+          fill="none" stroke="#f3f4f6" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+      </svg>
+    </div>
     <div class="login-art art-sun" aria-hidden="true">
       <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
         <g stroke="#111" stroke-width="3.5" stroke-linejoin="round">
