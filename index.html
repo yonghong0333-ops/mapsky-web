@@ -127,30 +127,115 @@
       filter: drop-shadow(0 6px 10px rgba(0,0,0,0.28));
     }
 
-    .white-panel {
+    .sheet {
       position: relative;
       z-index: 1;
       background: #ffffff;
       margin-top: -36px;
-      padding: 48px 24px 64px;
+      padding: 72px 20px 48px;
       flex: 1;
     }
-    .white-panel-inner {
-      max-width: 720px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .white-panel h2 {
+    .sheet-inner { max-width: 880px; margin: 0 auto; }
+    .block { scroll-margin-top: 88px; }
+    .block h2 {
       font-size: clamp(22px, 4vw, 28px);
       font-weight: 700;
       letter-spacing: -0.02em;
       color: #1d1d1f;
-      margin: 0 0 8px;
+      margin: 0;
+      text-align: center;
     }
-    .white-panel p {
+    .block-lead {
       color: #6e6e73;
       font-size: 15px;
-      margin: 0;
+      line-height: 1.5;
+      text-align: center;
+      margin: 8px auto 22px;
+      max-width: 360px;
+    }
+    .card-grid, .news-list { list-style: none; margin: 0; padding: 0; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-bottom: 8px;
+    }
+    .fcard {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      background: #fff;
+      border: 3px solid #111;
+      border-radius: 22px;
+      box-shadow: 4px 6px 0 #111;
+      padding: 14px 16px;
+      min-height: 96px;
+    }
+    .fcard-ico { width: 58px; height: 58px; flex: 0 0 58px; }
+    .fcard-ico svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .fcard h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #1d1d1f;
+    }
+    .fcard p { margin: 0; font-size: 14px; line-height: 1.45; color: #6e6e73; }
+    .block-news {
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid #e5e5ea;
+    }
+    .news-list { display: grid; gap: 10px; }
+    .ncard {
+      text-align: left;
+      background: #f5f5f7;
+      border-radius: 18px;
+      padding: 16px 16px 18px;
+    }
+    .ncard-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6e6e73;
+    }
+    .ncard-meta time {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 0 8px;
+      border-radius: 980px;
+      background: #111;
+      color: #f5f5f7;
+      font-weight: 700;
+    }
+    .ncard h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #1d1d1f;
+    }
+    .ncard p { margin: 0; font-size: 14px; line-height: 1.5; color: #6e6e73; }
+    @media (min-width: 720px) {
+      .sheet { padding-left: 28px; padding-right: 28px; }
+      .card-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .fcard {
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 188px;
+        padding: 18px 18px 20px;
+      }
+    }
+    @media (min-width: 980px) {
+      .card-grid { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
     }
 
     .site-footer {
@@ -201,7 +286,7 @@
       .footer-meta a { margin: 0 8px; }
       .black-band { min-height: 46vh; padding-bottom: 64px; }
       .torn-edge, .torn-svg { height: 48px; }
-      .white-panel { margin-top: -30px; padding-top: 40px; }
+      .sheet { margin-top: -30px; padding-top: 56px; }
       .st-sun { left: 2%; bottom: -20px; width: 108px; }
       .st-rain { right: 2%; bottom: -14px; width: 112px; }
       .st-spark { right: 18%; top: 18%; width: 48px; }
@@ -262,8 +347,8 @@
     </button>
     <div class="nav-right" id="navRight">
       <nav class="nav-links" aria-label="主選單">
-        <a href="/features">最新消息</a>
-        <a href="/features">功能</a>
+        <a href="#news">最新消息</a>
+        <a href="#features">功能</a>
         <a href="/privacy">隱私與條款</a>
       </nav>
       <div class="nav-actions">
@@ -285,7 +370,7 @@
       <p class="eyebrow">MapSky</p>
       <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
       <p class="lead">整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，讓出門決策更簡單。</p>
-      <a class="cta" href="/features">進一步了解 ›</a>
+      <a class="cta" href="#features">進一步了解 ›</a>
     </section>
 
     <div class="torn-edge" aria-hidden="true">
@@ -313,12 +398,75 @@
       </div>
     </div>
 
-    <section class="white-panel">
-      <div class="white-panel-inner">
-        <h2>最新消息</h2>
-        <p>產品更新與公告將在此公布。</p>
+    <section class="sheet" aria-label="功能與最新消息">
+      <div class="sheet-inner">
+        <section class="block" id="features" aria-labelledby="features-title">
+          <h2 id="features-title">功能卡牌</h2>
+          <p class="block-lead">出門前常查的四件事。</p>
+          <ul class="card-grid">
+            <li class="fcard">
+              <div class="fcard-ico" aria-hidden="true">
+                <svg viewBox="0 0 64 64"><g stroke="#111" stroke-width="2.5" stroke-linejoin="round"><polygon points="32,2 35.5,18 52,7 41,22 62,23 44,32 62,41 41,42 52,57 35.5,46 32,62 28.5,46 12,57 23,42 2,41 20,32 2,23 23,22 12,7 28.5,18" fill="#ffe14a"/><circle cx="32" cy="32" r="11" fill="#fff36a"/></g></svg>
+              </div>
+              <div>
+                <h3>天氣</h3>
+                <p>溫度、降雨、警特報，今天先看天。</p>
+              </div>
+            </li>
+            <li class="fcard">
+              <div class="fcard-ico" aria-hidden="true">
+                <svg viewBox="0 0 64 64"><g stroke="#111" stroke-width="2.5" stroke-linejoin="round"><rect x="12" y="14" width="40" height="30" rx="12" fill="#f4f7fb"/><rect x="19" y="20" width="11" height="9" rx="2" fill="#2ad4ff"/><rect x="34" y="20" width="11" height="9" rx="2" fill="#2ad4ff"/><path d="M20 36 H44" fill="none" stroke-width="3"/><circle cx="24" cy="50" r="5.5" fill="#ffe14a"/><circle cx="40" cy="50" r="5.5" fill="#ffe14a"/><path d="M16 50 H48" fill="none"/></g></svg>
+              </div>
+              <div>
+                <h3>班次</h3>
+                <p>捷運、台鐵、高鐵，下一班還有幾分鐘。</p>
+              </div>
+            </li>
+            <li class="fcard">
+              <div class="fcard-ico" aria-hidden="true">
+                <svg viewBox="0 0 64 64"><g fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="44" r="11" fill="#fff"/><circle cx="48" cy="44" r="11" fill="#fff"/><path d="M18 44 L32 44 L40 24 H30"/><path d="M32 44 L40 24 L52 24"/><circle cx="40" cy="20" r="3.2" fill="#ff3ad4" stroke="#111"/></g></svg>
+              </div>
+              <div>
+                <h3>YouBike</h3>
+                <p>附近站點可借、可還，不用另外查。</p>
+              </div>
+            </li>
+            <li class="fcard">
+              <div class="fcard-ico" aria-hidden="true">
+                <svg viewBox="0 0 64 64"><g stroke="#111" stroke-width="2.5" stroke-linejoin="round"><path d="M6 30 L32 10 L58 30 V54 H6 Z" fill="#fff"/><rect x="27" y="36" width="10" height="18" fill="#ffe14a"/><rect x="14" y="32" width="9" height="8" fill="#2ad4ff"/><rect x="41" y="32" width="9" height="8" fill="#2ad4ff"/><path d="M32 10 V4 H42 V14" fill="#ff3ad4"/></g></svg>
+              </div>
+              <div>
+                <h3>停班停課</h3>
+                <p>縣市公告整理好，上不上班一眼知道。</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section class="block block-news" id="news" aria-labelledby="news-title">
+          <h2 id="news-title">最新消息</h2>
+          <p class="block-lead">產品更新與公告。</p>
+          <ul class="news-list">
+            <li class="ncard">
+              <p class="ncard-meta"><time datetime="2026-10">2026.10</time><span>公告</span></p>
+              <h3>官網主視覺更新</h3>
+              <p>黑白天空上線，功能與消息集中在首頁。</p>
+            </li>
+            <li class="ncard">
+              <p class="ncard-meta"><time datetime="2026-10">2026.10</time><span>更新</span></p>
+              <h3>交通跟天氣放一起</h3>
+              <p>捷運、台鐵、高鐵、YouBike，跟氣象同一頁查看。</p>
+            </li>
+            <li class="ncard">
+              <p class="ncard-meta"><time datetime="2026-09">2026.09</time><span>公告</span></p>
+              <h3>停班停課放進首頁</h3>
+              <p>縣市是否停班停課，出門前跟天氣一起確認。</p>
+            </li>
+          </ul>
+        </section>
       </div>
     </section>
+
   </main>
 
   <footer class="site-footer" role="contentinfo">
@@ -332,8 +480,8 @@
       </div>
 
       <nav class="footer-link-row" aria-label="頁尾連結">
-        <a href="/features">功能</a>
-        <a href="/features">最新消息</a>
+        <a href="#features">功能</a>
+        <a href="#news">最新消息</a>
         <a href="/login">登入</a>
         <a href="/privacy">隱私與條款</a>
         <a href="mailto:mapskyapp@gmail.com">聯絡我們</a>
