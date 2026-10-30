@@ -31,21 +31,16 @@
     }
     body.login-page .nav .btn-primary:hover { opacity: 0.88; }
     @media (max-width: 900px) {
-      body.login-page .nav-right.open {
-        background: #ffffff;
-      }
+      body.login-page .nav-right.open { background: #ffffff; }
       body.login-page .nav-right.open .nav-links a { color: #1d1d1f !important; }
     }
-
     .login-stage {
       position: relative;
       min-height: calc(100vh - var(--nav-h, 52px));
       min-height: calc(100dvh - var(--nav-h, 52px));
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 48px 24px 72px; text-align: center;
-      z-index: 1;
+      padding: 48px 24px 72px; text-align: center; z-index: 1;
     }
-
     .login-art {
       position: absolute; pointer-events: none; z-index: 0;
       filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.06));
@@ -57,10 +52,8 @@
     .art-spark { left: 10%; bottom: 18%; width: min(56px, 14vw); transform: rotate(18deg); opacity: 0.9; }
     .art-clip {
       left: 50%; top: 8%; width: min(72px, 18vw);
-      transform: translateX(-50%) rotate(-28deg);
-      opacity: 0.95;
-      filter: drop-shadow(4px 5px 0 rgba(0,0,0,0.12));
-      z-index: 1;
+      transform: translateX(-50%) rotate(-28deg); opacity: 0.95;
+      filter: drop-shadow(4px 5px 0 rgba(0,0,0,0.12)); z-index: 1;
     }
     @media (min-width: 700px) {
       .art-sun { left: 6%; top: 16%; width: 140px; }
@@ -69,11 +62,9 @@
       .art-spark { left: 14%; bottom: 16%; width: 64px; }
       .art-clip { top: 10%; width: 88px; }
     }
-
     .login-hero-logo { margin-bottom: 12px; position: relative; z-index: 2; }
     .login-hero-logo .wordmark-lg {
-      height: 44px; width: auto; max-width: 240px; margin: 0 auto;
-      filter: none; opacity: 1;
+      height: 44px; width: auto; max-width: 240px; margin: 0 auto; filter: none; opacity: 1;
     }
     .login-tagline {
       margin: 0 0 40px; color: #6e6e73; font-size: 16px; font-weight: 500;
@@ -122,8 +113,7 @@
     .account-panel-sky {
       display: none; width: min(100%, 380px); padding: 28px 24px;
       border-radius: 24px; background: #f5f5f7;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      position: relative; z-index: 2;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06); position: relative; z-index: 2;
     }
     .account-panel-sky p { margin: 0 0 18px; color: #1d1d1f; font-size: 16px; }
     .account-panel-sky .account-actions {
@@ -269,12 +259,17 @@
       var guestPanel = document.getElementById("guestPanel");
       var accountPanel = document.getElementById("accountPanel");
       var pendingEmail = "";
+      var redirected = false;
       function showMsg(t, ok) {
         if (!msg) return;
         msg.textContent = t || "";
         msg.style.color = ok ? "#0a7a3e" : "#c0392b";
       }
-      function goHome() { location.replace("/"); }
+      function goHome() {
+        if (redirected) return;
+        redirected = true;
+        location.replace("/");
+      }
       function renderGuest() {
         if (guestPanel) guestPanel.style.display = "";
         if (accountPanel) accountPanel.style.display = "none";
@@ -286,19 +281,48 @@
         var el = document.getElementById("accountText");
         if (el) el.textContent = "目前登入：" + name;
       }
-      MapSkyAuth.session().then(function (res) {
-        if (res.body && res.body.loggedIn) {
-          MapSkyAuth.updateNav(res.body);
-          // 已登入：自動回首頁（Google / Email 登入成功後都會走到這裡）
-          location.replace("/");
-          return;
+      function afterLogin(s) {
+        if (s && s.loggedIn) {
+          MapSkyAuth.updateNav(s);
+          goHome();
+          return true;
         }
-        MapSkyAuth.updateNav({ loggedIn: false });
-        renderGuest();
-      }).catch(function () {
-        MapSkyAuth.updateNav({ loggedIn: false });
-        renderGuest();
-      });
+        return false;
+      }
+      window.MapSkyAuthOnSession = function (s) {
+        afterLogin(s);
+      };
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var xchg = params.get("xchg");
+        if (xchg) {
+          MapSkyAuth.claimXchg(xchg).then(function () {
+            return MapSkyAuth.session();
+          }).then(function (res) {
+            if (res && res.body && afterLogin(res.body)) return;
+            renderGuest();
+          }).catch(function () {
+            MapSkyAuth.session().then(function (res) {
+              if (res && res.body && afterLogin(res.body)) return;
+              renderGuest();
+            }).catch(function () { renderGuest(); });
+          });
+        } else {
+          MapSkyAuth.session().then(function (res) {
+            if (res && res.body && afterLogin(res.body)) return;
+            MapSkyAuth.updateNav({ loggedIn: false });
+            renderGuest();
+          }).catch(function () {
+            MapSkyAuth.updateNav({ loggedIn: false });
+            renderGuest();
+          });
+        }
+      } catch (e) {
+        MapSkyAuth.session().then(function (res) {
+          if (res && res.body && afterLogin(res.body)) return;
+          renderGuest();
+        }).catch(function () { renderGuest(); });
+      }
       document.getElementById("toggleEmail").addEventListener("click", function () {
         document.getElementById("emailBox").classList.toggle("open");
       });
@@ -330,7 +354,7 @@
           document.getElementById("verifyBtn").disabled = false;
           if (res.body && res.body.ok) {
             showMsg("登入成功，正在返回首頁…", true);
-            setTimeout(function () { location.replace("/"); }, 300);
+            setTimeout(goHome, 300);
             return;
           }
           showMsg("驗證失敗", false);
