@@ -281,17 +281,7 @@
         var el = document.getElementById("accountText");
         if (el) el.textContent = "目前登入：" + name;
       }
-      function afterLogin(s) {
-        if (s && s.loggedIn) {
-          MapSkyAuth.updateNav(s);
-          goHome();
-          return true;
-        }
-        return false;
-      }
-      window.MapSkyAuthOnSession = function (s) {
-        afterLogin(s);
-      };
+      window.MapSkyAuthOnSession = function (s) {};
       try {
         var params = new URLSearchParams(window.location.search);
         var xchg = params.get("xchg");
@@ -299,17 +289,29 @@
           MapSkyAuth.claimXchg(xchg).then(function () {
             return MapSkyAuth.session();
           }).then(function (res) {
-            if (res && res.body && afterLogin(res.body)) return;
+            if (res && res.body && res.body.loggedIn) {
+              MapSkyAuth.updateNav(res.body);
+              goHome();
+              return;
+            }
             renderGuest();
           }).catch(function () {
             MapSkyAuth.session().then(function (res) {
-              if (res && res.body && afterLogin(res.body)) return;
+              if (res && res.body && res.body.loggedIn) {
+                MapSkyAuth.updateNav(res.body);
+                goHome();
+                return;
+              }
               renderGuest();
             }).catch(function () { renderGuest(); });
           });
         } else {
           MapSkyAuth.session().then(function (res) {
-            if (res && res.body && afterLogin(res.body)) return;
+            if (res && res.body && res.body.loggedIn) {
+              MapSkyAuth.updateNav(res.body);
+              renderAccount(res.body);
+              return;
+            }
             MapSkyAuth.updateNav({ loggedIn: false });
             renderGuest();
           }).catch(function () {
@@ -319,7 +321,10 @@
         }
       } catch (e) {
         MapSkyAuth.session().then(function (res) {
-          if (res && res.body && afterLogin(res.body)) return;
+          if (res && res.body && res.body.loggedIn) {
+            renderAccount(res.body);
+            return;
+          }
           renderGuest();
         }).catch(function () { renderGuest(); });
       }
