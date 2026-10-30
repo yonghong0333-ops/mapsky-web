@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0a0a0a" />
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
+  <script src="https://cdn.jsdelivr.net/gh/yonghong0333-ops/mapsky-web@c28210ebaf1361aa0dcac6e53c03ee92f5592589/index.html" type="text/plain" id="skip"></script>
   <script>
   (async function () {
     try {
@@ -15,42 +16,30 @@
       );
       var html = await res.text();
       var doc = new DOMParser().parseFromString(html, 'text/html');
-
       Array.from(doc.head.children).forEach(function (node) {
         if (node.tagName === 'SCRIPT') return;
-        if (node.tagName === 'TITLE') {
-          document.title = node.textContent;
-          return;
-        }
+        if (node.tagName === 'TITLE') { document.title = node.textContent; return; }
         document.head.appendChild(document.importNode(node, true));
       });
-
       document.body.className = doc.body.className;
       document.body.innerHTML = doc.body.innerHTML;
-
       document.querySelectorAll('img[data-logo="icon"]').forEach(function (img) {
         if (!img.getAttribute('src')) img.src = 'assets/icon.png';
       });
-
       function setMenu(open) {
         var toggle = document.getElementById('navToggle');
         var nav = document.getElementById('topNav');
         var navRight = document.getElementById('navRight');
         document.body.classList.toggle('nav-open', !!open);
         if (nav) nav.classList.toggle('nav-open', !!open);
-        if (toggle) {
-          toggle.classList.toggle('open', !!open);
-          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        }
+        if (toggle) { toggle.classList.toggle('open', !!open); toggle.setAttribute('aria-expanded', open ? 'true' : 'false'); }
         if (navRight) navRight.classList.toggle('open', !!open);
       }
-
       var toggle = document.getElementById('navToggle');
       var navRight = document.getElementById('navRight');
       if (toggle) {
         toggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
+          e.preventDefault(); e.stopPropagation();
           setMenu(!document.body.classList.contains('nav-open'));
         });
       }
@@ -59,15 +48,11 @@
           a.addEventListener('click', function () { setMenu(false); });
         });
       }
-
       window.addEventListener('scroll', function () {
         document.body.classList.toggle('is-scrolled', window.scrollY > 8);
       }, { passive: true });
-
       ['logo-icon.js', 'logo-apply.js', 'auth.js'].forEach(function (src) {
-        var s = document.createElement('script');
-        s.src = src;
-        document.body.appendChild(s);
+        var s = document.createElement('script'); s.src = src; document.body.appendChild(s);
       });
 
       var full = document.createElement('style');
@@ -88,37 +73,37 @@
         '.fcard-iphone:active{transform:scale(0.96)!important;}',
         '.fcard-iphone:hover{transform:scale(1.02)!important;}',
         '.iphone-modal-open{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important;}',
-        '.iphone-modal-overlay{touch-action:none!important;overscroll-behavior:none!important;}',
-        '.iphone-modal{touch-action:pan-y!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;}',
-        '.iphone-modal-overlay{position:fixed!important;inset:0!important;z-index:9999!important;background:rgba(0,0,0,.65)!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:20px!important;opacity:0!important;pointer-events:none!important;transition:opacity .28s ease!important;}',
+        '.iphone-modal-overlay{touch-action:none!important;overscroll-behavior:none!important;position:fixed!important;inset:0!important;z-index:9999!important;background:rgba(0,0,0,.65)!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:16px!important;opacity:0!important;pointer-events:none!important;transition:opacity .28s ease!important;}',
         '.iphone-modal-overlay.open{opacity:1!important;pointer-events:auto!important;}',
-        '.iphone-modal{position:relative!important;background:#000!important;color:#f5f5f7!important;border-radius:22px!important;border:1px solid rgba(10,132,255,.45)!important;padding:40px 36px 36px!important;width:min(100%,780px)!important;max-height:min(90vh,900px)!important;overflow:auto!important;box-shadow:0 24px 80px rgba(0,0,0,.55)!important;transform:scale(.88) translateY(24px)!important;transition:transform .45s cubic-bezier(0.34,1.56,0.64,1)!important;}',
+        '.iphone-modal{position:relative!important;background:#000!important;color:#f5f5f7!important;border-radius:24px!important;border:1px solid rgba(10,132,255,.55)!important;box-shadow:0 28px 90px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.05)!important;padding:28px 24px 24px!important;width:min(100%,920px)!important;max-height:min(92vh,960px)!important;overflow:auto!important;transform:scale(.88) translateY(24px)!important;transition:transform .45s cubic-bezier(0.34,1.56,0.64,1)!important;touch-action:pan-y!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;}',
         '.iphone-modal-overlay.open .iphone-modal{transform:scale(1) translateY(0)!important;}',
-        '.iphone-modal .modal-x{position:absolute!important;top:16px!important;right:16px!important;width:32px!important;height:32px!important;border-radius:50%!important;border:0!important;background:#2c2c2e!important;color:#f5f5f7!important;font-size:18px!important;line-height:32px!important;cursor:pointer!important;padding:0!important;transition:transform .22s cubic-bezier(0.34,1.56,0.64,1),background .15s!important;}',
+        '.iphone-modal .modal-x{position:absolute!important;top:14px!important;right:14px!important;width:32px!important;height:32px!important;border-radius:50%!important;border:0!important;background:#2c2c2e!important;color:#f5f5f7!important;font-size:18px!important;line-height:32px!important;cursor:pointer!important;padding:0!important;transition:transform .22s cubic-bezier(0.34,1.56,0.64,1),background .15s!important;z-index:2!important;}',
         '.iphone-modal .modal-x:active{transform:scale(0.85)!important;}',
         '.iphone-modal .modal-x:hover{background:#3a3a3c!important;transform:scale(1.08)!important;}',
-        '.iphone-modal .modal-eyebrow{margin:0 0 10px!important;font-size:13px!important;font-weight:600!important;color:#a1a1a6!important;letter-spacing:.02em!important;}',
+        '.iphone-modal .modal-eyebrow{margin:0 0 10px!important;font-size:13px!important;font-weight:600!important;color:#a1a1a6!important;}',
         '.iphone-modal h3{margin:0 0 16px!important;font-size:clamp(24px,4vw,32px)!important;font-weight:700!important;color:#f5f5f7!important;line-height:1.2!important;letter-spacing:-.02em!important;}',
-        '.iphone-modal .modal-desc{margin:0 0 16px!important;font-size:15px!important;line-height:1.6!important;color:#a1a1a6!important;max-width:42em!important;}',
-        '.iphone-modal .modal-section{margin:20px 0 8px!important;font-size:20px!important;font-weight:700!important;color:#f5f5f7!important;}',
-        '.iphone-modal .modal-section-desc{margin:0 0 16px!important;font-size:14px!important;line-height:1.55!important;color:#a1a1a6!important;}',
-        '.iphone-modal .seg{display:inline-flex!important;background:#1c1c1e!important;border-radius:980px!important;padding:3px!important;margin:4px 0 20px!important;gap:2px!important;}',
+        '.iphone-modal .modal-desc{margin:0 0 14px!important;font-size:15px!important;line-height:1.6!important;color:#a1a1a6!important;max-width:48em!important;}',
+        '.iphone-modal .modal-section{margin:0 0 8px!important;font-size:20px!important;font-weight:700!important;color:#f5f5f7!important;}',
+        '.iphone-modal .modal-section-desc{margin:0 0 14px!important;font-size:14px!important;line-height:1.55!important;color:#a1a1a6!important;}',
+        '.iphone-modal .frame{border:1px solid rgba(255,255,255,.12)!important;border-radius:20px!important;padding:18px 16px!important;margin:8px 0 0!important;background:rgba(255,255,255,.03)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)!important;}',
+        '.iphone-modal .frame-inner{border:1px solid rgba(255,255,255,.1)!important;border-radius:16px!important;padding:16px 14px!important;background:rgba(0,0,0,.4)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)!important;}',
+        '.iphone-modal .seg{display:inline-flex!important;background:#1c1c1e!important;border-radius:980px!important;padding:3px!important;margin:0 0 16px!important;gap:2px!important;border:1px solid rgba(255,255,255,.08)!important;}',
         '.iphone-modal .seg button{border:0!important;background:transparent!important;color:#a1a1a6!important;font-size:13px!important;font-weight:600!important;padding:8px 16px!important;border-radius:980px!important;cursor:pointer!important;font-family:inherit!important;transition:background .2s,color .2s,transform .2s cubic-bezier(0.34,1.56,0.64,1)!important;}',
         '.iphone-modal .seg button.on{background:#f5f5f7!important;color:#1d1d1f!important;}',
         '.iphone-modal .seg button:active{transform:scale(0.96)!important;}',
-        '.iphone-modal .series-tabs{display:flex!important;flex-wrap:wrap!important;gap:6px 4px!important;margin:0 0 18px!important;padding:0 0 12px!important;border-bottom:1px solid rgba(255,255,255,.1)!important;}',
+        '.iphone-modal .series-tabs{display:flex!important;flex-wrap:wrap!important;gap:6px 4px!important;margin:0 0 16px!important;padding:0 0 12px!important;border-bottom:1px solid rgba(255,255,255,.12)!important;}',
         '.iphone-modal .series-tabs button{border:0!important;background:transparent!important;color:#6e6e73!important;font-size:13px!important;font-weight:500!important;padding:6px 10px!important;cursor:pointer!important;font-family:inherit!important;position:relative!important;border-radius:8px!important;transition:color .15s,transform .2s cubic-bezier(0.34,1.56,0.64,1)!important;}',
         '.iphone-modal .series-tabs button.on{color:#f5f5f7!important;font-weight:600!important;}',
         '.iphone-modal .series-tabs button.on::after{content:""!important;position:absolute!important;left:10px!important;right:10px!important;bottom:0!important;height:2px!important;background:#2997ff!important;border-radius:2px!important;}',
         '.iphone-modal .series-tabs button:active{transform:scale(0.96)!important;}',
         '.iphone-modal .model-panel{min-height:120px!important;}',
-        '.iphone-modal .model-panel ul{list-style:none!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:8px!important;}',
-        '.iphone-modal .model-panel li{background:#1c1c1e!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:12px!important;padding:12px 14px!important;font-size:15px!important;font-weight:600!important;color:#f5f5f7!important;line-height:1.35!important;}',
+        '.iphone-modal .model-panel ul{list-style:none!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:10px!important;}',
+        '.iphone-modal .model-panel li{background:#141414!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:14px!important;padding:14px 16px!important;font-size:15px!important;font-weight:600!important;color:#f5f5f7!important;line-height:1.35!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)!important;}',
         '.iphone-modal .model-panel li span{display:block!important;margin-top:3px!important;font-size:12px!important;font-weight:400!important;color:#a1a1a6!important;}',
         '.iphone-modal .model-note{margin:12px 0 0!important;font-size:12px!important;color:#6e6e73!important;line-height:1.45!important;}',
         '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;height:64px!important;margin:20px 0 12px!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:hidden!important;z-index:3!important;border:0!important;}',
         '.torn-mid-svg{display:block!important;width:100%!important;height:80px!important;margin-top:-10px!important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 2px rgba(0,0,0,.12));}',
-        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:56px!important;}.torn-mid-svg{height:72px!important;margin-top:-10px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}.iphone-modal{padding:28px 20px 24px!important;border-radius:18px!important;}}'
+        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:56px!important;}.torn-mid-svg{height:72px!important;margin-top:-10px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}.iphone-modal{padding:22px 14px 18px!important;border-radius:18px!important;}}'
       ].join('');
       document.head.appendChild(full);
 
@@ -129,21 +114,15 @@
           '<p class="block-lead">在常用裝置上都能用 MapSky。</p>',
           '<ul class="card-grid">',
           '<li class="fcard fcard-iphone" role="button" tabindex="0" aria-label="查看 iPhone 適用機型">',
-          '  <div class="fcard-ico" aria-hidden="true">',
-          '    <img src="assets/iphone.png" alt="" width="56" height="56" loading="lazy" />',
-          '  </div>',
+          '  <div class="fcard-ico" aria-hidden="true"><img src="assets/iphone.png" alt="" width="56" height="56" loading="lazy" /></div>',
           '  <div><h3>iPhone</h3><p>iOS App，完整天氣、班次與停班停課。</p></div>',
           '</li>',
           '<li class="fcard">',
-          '  <div class="fcard-ico" aria-hidden="true">',
-          '    <img src="assets/ipad.png" alt="" width="56" height="56" loading="lazy" />',
-          '  </div>',
+          '  <div class="fcard-ico" aria-hidden="true"><img src="assets/ipad.png" alt="" width="56" height="56" loading="lazy" /></div>',
           '  <div><h3>iPad</h3><p>大螢幕瀏覽，適合在家一次看清。</p></div>',
           '</li>',
           '<li class="fcard">',
-          '  <div class="fcard-ico" aria-hidden="true">',
-          '    <img src="assets/mac.png" alt="" width="56" height="56" loading="lazy" />',
-          '  </div>',
+          '  <div class="fcard-ico" aria-hidden="true"><img src="assets/mac.png" alt="" width="56" height="56" loading="lazy" /></div>',
           '  <div><h3>Mac</h3><p>在 Mac 瀏覽器開啟，大畫面一次掌握。</p></div>',
           '</li>',
           '</ul>'
@@ -172,15 +151,19 @@
           '  <h3 id="iphoneModalTitle">適用機型與系統相容性</h3>',
           '  <p class="modal-desc">MapSky 專為 iOS 26 系統生態與現代 iPhone 螢幕架構深度打造。只要你的裝置支援並已升級至 iOS 26，即可完美解鎖一站式氣象預報、大眾運輸即時班次、YouBike 2.0 車輛統計，以及停班停課動態警報。</p>',
           '  <p class="modal-desc">本應用完整支援動態島（Dynamic Island）、鎖定畫面即時動態（Live Activities）與背景快取同步，確保你在任何氣候條件與網路狀態下，都能獲得最流暢的出門決策體驗。</p>',
-          '  <p class="modal-section">支援機型</p>',
-          '  <p class="modal-section-desc">切換系列查看各機型；動態冒險效果需 iPhone 14 Pro 以上。</p>',
-          '  <div class="seg" id="iphoneSeg" role="tablist">',
-          '    <button type="button" class="on" data-mode="all" role="tab" aria-selected="true">全部機型</button>',
-          '    <button type="button" data-mode="adventure" role="tab" aria-selected="false">MapSky 動態冒險效果</button>',
+          '  <div class="frame">',
+          '    <p class="modal-section">支援機型</p>',
+          '    <p class="modal-section-desc">切換系列查看各機型；動態冒險效果需 iPhone 14 Pro 以上。</p>',
+          '    <div class="frame-inner">',
+          '      <div class="seg" id="iphoneSeg" role="tablist">',
+          '        <button type="button" class="on" data-mode="all" role="tab" aria-selected="true">全部機型</button>',
+          '        <button type="button" data-mode="adventure" role="tab" aria-selected="false">MapSky 動態冒險效果</button>',
+          '      </div>',
+          '      <div class="series-tabs" id="iphoneSeries" role="tablist"></div>',
+          '      <div class="model-panel" id="iphoneModels"></div>',
+          '      <p class="model-note" id="iphoneNote"></p>',
+          '    </div>',
           '  </div>',
-          '  <div class="series-tabs" id="iphoneSeries" role="tablist"></div>',
-          '  <div class="model-panel" id="iphoneModels"></div>',
-          '  <p class="model-note" id="iphoneNote"></p>',
           '</div>'
         ].join('');
         document.body.appendChild(ov);
@@ -258,9 +241,7 @@
         function renderModels() {
           var s = SERIES.filter(function (x) { return x.id === seriesId; })[0];
           if (!s) return;
-          var list = s.models.filter(function (m) {
-            return mode === 'all' || m.adventure;
-          });
+          var list = s.models.filter(function (m) { return mode === 'all' || m.adventure; });
           if (!list.length) {
             modelsEl.innerHTML = '<p class="modal-section-desc" style="margin:0">此系列在「動態冒險效果」模式下無可支援機型。請改選 iPhone 14 Pro 以上系列。</p>';
           } else {
@@ -280,9 +261,7 @@
               b.classList.toggle('on', b === btn);
               b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
             });
-            if (mode === 'adventure' && ['13','12','11','se'].indexOf(seriesId) >= 0) {
-              seriesId = '14';
-            }
+            if (mode === 'adventure' && ['13','12','11','se'].indexOf(seriesId) >= 0) seriesId = '14';
             renderSeriesTabs();
             renderModels();
           });
@@ -307,26 +286,15 @@
           document.body.style.width = '100%';
           ov.classList.add('open');
         }
-        ov.addEventListener('click', function (e) {
-          if (e.target === ov) closeIphoneModal();
-        });
-        ov.addEventListener('wheel', function (e) {
-          if (!e.target.closest('.iphone-modal')) e.preventDefault();
-        }, { passive: false });
-        ov.addEventListener('touchmove', function (e) {
-          if (!e.target.closest('.iphone-modal')) e.preventDefault();
-        }, { passive: false });
+        ov.addEventListener('click', function (e) { if (e.target === ov) closeIphoneModal(); });
+        ov.addEventListener('wheel', function (e) { if (!e.target.closest('.iphone-modal')) e.preventDefault(); }, { passive: false });
+        ov.addEventListener('touchmove', function (e) { if (!e.target.closest('.iphone-modal')) e.preventDefault(); }, { passive: false });
         document.getElementById('iphoneModalClose').addEventListener('click', closeIphoneModal);
-        document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape') closeIphoneModal();
-        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeIphoneModal(); });
         document.querySelectorAll('.fcard-iphone').forEach(function (card) {
           card.addEventListener('click', openIphoneModal);
           card.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              openIphoneModal();
-            }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIphoneModal(); }
           });
         });
       }
