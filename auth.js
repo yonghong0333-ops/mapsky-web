@@ -101,6 +101,12 @@
           if (!res) return;
           updateNav(res.body);
           if (window.MapSkyAuthOnSession) window.MapSkyAuthOnSession(res.body);
+          try {
+            var path = (window.location.pathname || "").replace(/\/$/, "") || "/";
+            if (res.body && res.body.loggedIn && (path === "/login" || path.endsWith("/login"))) {
+              window.location.replace("/");
+            }
+          } catch (e2) {}
         }).catch(function () {
           session().then(function (res) { updateNav(res.body); });
         });
