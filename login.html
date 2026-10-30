@@ -1,1 +1,461 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>登入 — MapSky</title>
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.login-page {
+      min-height: 100vh; min-height: 100dvh;
+      background: #ffffff;
+      color: #1d1d1f;
+      overflow-x: hidden;
+    }
+    body.login-page .nav {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    body.login-page .brand { color: #1d1d1f; }
+    body.login-page .nav-links a { color: #1d1d1f !important; }
+    body.login-page .nav-links a:hover { background: rgba(0,0,0,0.05); color: #1d1d1f !important; }
+    body.login-page .nav-toggle span { background: #1d1d1f; }
+    body.login-page .nav .btn-ghost,
+    body.login-page .nav .btn-primary {
+      color: #fff !important; background: #1d1d1f;
+      border-radius: 980px; padding: 8px 16px; text-decoration: none !important;
+    }
+    body.login-page .nav .btn-primary:hover { opacity: 0.88; }
+    @media (max-width: 900px) {
+      body.login-page .nav-right.open { background: #ffffff; }
+      body.login-page .nav-right.open .nav-links a { color: #1d1d1f !important; }
+    }
+    .login-stage {
+      position: relative;
+      min-height: calc(100vh - var(--nav-h, 52px));
+      min-height: calc(100dvh - var(--nav-h, 52px));
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 48px 24px 72px; text-align: center; z-index: 1;
+    }
+    .login-art {
+      position: absolute; pointer-events: none; z-index: 0;
+      filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.06));
+    }
+    .login-art svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .art-sun { left: -8px; top: 12%; width: min(120px, 28vw); transform: rotate(-12deg); opacity: 0.95; }
+    .art-cloud { right: -12px; top: 18%; width: min(140px, 32vw); transform: rotate(8deg); opacity: 0.9; }
+    .art-rain { right: 6%; bottom: 12%; width: min(100px, 24vw); transform: rotate(-6deg); opacity: 0.85; }
+    .art-spark { left: 10%; bottom: 18%; width: min(56px, 14vw); transform: rotate(18deg); opacity: 0.9; }
+    .art-clip {
+      left: 50%; top: 8%; width: min(72px, 18vw);
+      transform: translateX(-50%) rotate(-28deg); opacity: 0.95;
+      filter: drop-shadow(4px 5px 0 rgba(0,0,0,0.12)); z-index: 1;
+    }
+    @media (min-width: 700px) {
+      .art-sun { left: 6%; top: 16%; width: 140px; }
+      .art-cloud { right: 8%; top: 14%; width: 160px; }
+      .art-rain { right: 12%; bottom: 14%; width: 120px; }
+      .art-spark { left: 14%; bottom: 16%; width: 64px; }
+      .art-clip { top: 10%; width: 88px; }
+    }
+    .login-hero-logo { margin-bottom: 12px; position: relative; z-index: 2; }
+    .login-hero-logo .wordmark-lg {
+      height: 44px; width: auto; max-width: 240px; margin: 0 auto; filter: none; opacity: 1;
+    }
+    .login-tagline {
+      margin: 0 0 40px; color: #6e6e73; font-size: 16px; font-weight: 500;
+      letter-spacing: 0.02em; position: relative; z-index: 2;
+    }
+    .login-panel {
+      width: min(100%, 380px); display: flex; flex-direction: column; gap: 14px;
+      position: relative; z-index: 2;
+    }
+    #providerList { display: flex; flex-direction: column; gap: 14px; }
+    .login-panel .provider-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%;
+      padding: 16px 22px; border-radius: 980px; border: 1px solid rgba(0,0,0,0.1);
+      background: #fff; color: #1d1d1f !important;
+      font-weight: 600; font-size: 16px; cursor: pointer; text-decoration: none !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .login-panel .provider-btn:hover {
+      background: #f5f5f7; transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .provider-icon { width: 22px; height: 22px; border-radius: 4px; flex-shrink: 0; }
+    .login-more {
+      background: none; border: 0; color: #6e6e73; font-size: 14px;
+      cursor: pointer; padding: 8px; font-family: inherit;
+    }
+    .login-email { display: none; text-align: left; }
+    .login-email.open { display: block; }
+    .magic-row { display: flex; gap: 8px; }
+    .magic-row input {
+      flex: 1; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.12); background: #fff;
+      font-size: 15px; font-family: inherit; color: #1d1d1f;
+    }
+    .magic-row button {
+      padding: 12px 16px; border-radius: 12px; border: 0; background: #1d1d1f; color: #fff;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .hint { margin: 8px 0 0; font-size: 13px; color: #6e6e73; }
+    .msg { margin-top: 10px; font-size: 14px; min-height: 1.2em; }
+    .login-agree {
+      display: flex; align-items: flex-start; gap: 8px; margin-top: 8px;
+      font-size: 13px; color: #6e6e73; text-align: left;
+    }
+    .login-agree a { color: #0066cc; text-decoration: underline; }
+    .account-panel-sky {
+      display: none; width: min(100%, 380px); padding: 28px 24px;
+      border-radius: 24px; background: #f5f5f7;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06); position: relative; z-index: 2;
+    }
+    .account-panel-sky p { margin: 0 0 18px; color: #1d1d1f; font-size: 16px; }
+    .account-panel-sky .account-actions {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    }
+    .login-success {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .login-success.show { opacity: 1; pointer-events: auto; }
+    .login-success-circle {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: #34c759;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 28px rgba(52,199,89,0.35);
+      transform: scale(0.4); opacity: 0;
+    }
+    .login-success.show .login-success-circle {
+      animation: successPop 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) 0.1s forwards;
+    }
+    .login-success-check {
+      width: 36px; height: 36px;
+      stroke: #fff; stroke-width: 3.5; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 48; stroke-dashoffset: 48;
+    }
+    .login-success.show .login-success-check {
+      animation: successDraw 0.4s ease 0.35s forwards;
+    }
+    .login-success-text {
+      margin-top: 20px; font-size: 20px; font-weight: 700; color: #1d1d1f;
+      opacity: 0; transform: translateY(8px);
+    }
+    .login-success.show .login-success-text {
+      animation: successFadeUp 0.4s ease 0.45s forwards;
+    }
+    .login-success-sub {
+      margin-top: 6px; font-size: 14px; color: #6e6e73; opacity: 0;
+    }
+    .login-success.show .login-success-sub {
+      animation: successFadeUp 0.4s ease 0.55s forwards;
+    }
+    @keyframes successPop {
+      0% { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes successDraw { to { stroke-dashoffset: 0; } }
+    @keyframes successFadeUp { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="login-page">
+  <header class="nav" id="topNav">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-right" id="navRight">
+      <nav class="nav-links" aria-label="主選單">
+        <a href="/features">最新消息</a>
+        <a href="/features">功能</a>
+        <a href="/privacy">隱私與條款</a>
+      </nav>
+      <div class="nav-actions">
+        <span data-auth-slot>
+          <a class="btn btn-sm btn-primary" href="/login">登入</a>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="login-stage">
+    <div class="login-art art-clip" aria-hidden="true">
+      <svg viewBox="0 0 64 96" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 12 C24 6 30 2 36 2 C44 2 50 8 50 16 L50 64 C50 78 38 88 26 88 C14 88 6 78 6 64 L6 28 C6 20 12 16 18 16 C24 16 28 20 28 28 L28 60 C28 66 22 70 18 70 C14 70 12 66 12 60 L12 34" fill="none" stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M24 12 C24 6 30 2 36 2 C44 2 50 8 50 16 L50 64 C50 78 38 88 26 88 C14 88 6 78 6 64 L6 28 C6 20 12 16 18 16 C24 16 28 20 28 28 L28 60 C28 66 22 70 18 70 C14 70 12 66 12 60 L12 34" fill="none" stroke="#d1d5db" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M36 8 C40 8 44 11 44 16 L44 40" fill="none" stroke="#f3f4f6" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+      </svg>
+    </div>
+    <div class="login-art art-sun" aria-hidden="true">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#111" stroke-width="3.5" stroke-linejoin="round">
+          <polygon points="70,6 78,42 112,18 88,50 134,50 96,70 134,90 88,90 112,122 78,98 70,134 62,98 28,122 52,90 6,90 44,70 6,50 52,50 28,18 62,42" fill="#ffe14a"/>
+          <circle cx="70" cy="70" r="26" fill="#fff36a"/>
+        </g>
+      </svg>
+    </div>
+    <div class="login-art art-cloud" aria-hidden="true">
+      <svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48 72c0-20 14-32 32-32 4-14 16-24 30-20 12 3 22 14 22 28 12 2 24 12 24 28 0 16-12 28-28 28H56c-14 0-24-10-24-24 0-2 0-3 0-4z" fill="#e8f0fe" stroke="#111" stroke-width="3.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="login-art art-rain" aria-hidden="true">
+      <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#111" stroke-width="3.5" stroke-linejoin="round">
+          <path d="M48 78c0-22 16-36 36-36 4-16 18-26 34-22 14 3 24 16 24 30 14 2 26 14 26 30 0 18-14 30-32 30H58c-16 0-28-12-28-28 0-2 0-3 0-4z" fill="#f4f7fb"/>
+          <path d="M58 112 L50 132" fill="none" stroke="#2ad4ff" stroke-width="5" stroke-linecap="round"/>
+          <path d="M82 114 L74 136" fill="none" stroke="#2ad4ff" stroke-width="5" stroke-linecap="round"/>
+          <path d="M106 112 L98 130" fill="none" stroke="#2ad4ff" stroke-width="5" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+    <div class="login-art art-spark" aria-hidden="true">
+      <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 4 L46 30 L72 22 L52 40 L76 52 L48 50 L58 76 L40 54 L22 76 L32 50 L4 52 L28 40 L8 22 L34 30 Z" fill="#ff3ad4" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="login-hero-logo">
+      <img class="wordmark-lg" data-logo="wordmark" alt="MAPSKY" />
+    </div>
+    <p class="login-tagline">讓天氣看得見，讓未來更清晰</p>
+
+    <div class="login-panel" id="guestPanel">
+      <div id="providerList">
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <img class="provider-icon" src="https://mapskyapp.vercel.app/login-icons/google.png" alt="" width="22" height="22" />
+          <span>使用 Google 登入</span>
+        </a>
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=microsoft&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <svg class="provider-icon" viewBox="0 0 22 22" width="22" height="22" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="12" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="12" width="9" height="9" fill="#00a4ef"/><rect x="12" y="12" width="9" height="9" fill="#ffb900"/></svg>
+          <span>使用 Microsoft 登入</span>
+        </a>
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=github&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <svg class="provider-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#1d1d1f" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.71.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.46-1.2-1.12-1.52-1.12-1.52-.91-.64.07-.63.07-.63 1.01.07 1.54 1.06 1.54 1.06.9 1.58 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.84c.85.004 1.71.12 2.51.35 1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.38-.01 2.49-.01 2.83 0 .26.18.58.69.48A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"/></svg>
+          <span>使用 GitHub 登入</span>
+        </a>
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=yahoo&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <svg class="provider-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><text x="12" y="17" text-anchor="middle" font-family="Arial Black, Helvetica, sans-serif" font-size="16" font-weight="800" fill="#6001d2">Y!</text></svg>
+          <span>使用 Yahoo 登入</span>
+        </a>
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=x&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <svg class="provider-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#1d1d1f" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          <span>使用 X 登入</span>
+        </a>
+      </div>
+      <button type="button" class="login-more" id="toggleEmail">或使用 Email 驗證碼 ▾</button>
+      <div class="login-email" id="emailBox">
+        <div class="magic-row">
+          <input id="emailInput" type="email" placeholder="your@email.com" autocomplete="email" />
+          <button type="button" id="sendBtn">寄送</button>
+        </div>
+        <p class="hint">會寄 6 位數驗證碼（與 MapSky App 相同帳號）</p>
+        <div class="otp-box" id="otpBox" style="display:none">
+          <div class="magic-row" style="margin-top:4px">
+            <input id="codeInput" type="text" inputmode="numeric" maxlength="6" placeholder="6 位數驗證碼" autocomplete="one-time-code" />
+            <button type="button" id="verifyBtn">驗證</button>
+          </div>
+        </div>
+        <div class="msg" id="msg"></div>
+      </div>
+      <label class="login-agree">
+        <input type="checkbox" id="agreeBox" checked />
+        <span>已閱讀並同意 <a href="/privacy#terms">服務條款</a>與<a href="/privacy">隱私權政策</a></span>
+      </label>
+    </div>
+
+    <div class="account-panel-sky" id="accountPanel">
+      <p id="accountText">你已登入。</p>
+      <div class="account-actions">
+        <a class="btn btn-primary" href="/">回首頁</a>
+        <button type="button" class="btn btn-ghost" id="logoutBtn" style="color:#1d1d1f !important; border:1px solid rgba(0,0,0,0.15)">登出</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-success" id="loginSuccess" aria-live="polite" aria-hidden="true">
+    <div class="login-success-circle">
+      <svg class="login-success-check" viewBox="0 0 36 36" aria-hidden="true">
+        <path d="M8 18 L15 25 L28 11"/>
+      </svg>
+    </div>
+    <p class="login-success-text">登入成功</p>
+    <p class="login-success-sub">正在返回首頁…</p>
+  </div>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    (function () {
+      var toggle = document.getElementById("navToggle");
+      var panel = document.getElementById("navRight");
+      function bindToggle(btn) {
+        if (!btn || !panel) return;
+        btn.addEventListener("click", function () {
+          var open = panel.classList.toggle("open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          btn.classList.toggle("open", open);
+          document.body.classList.toggle("nav-open", open);
+        });
+      }
+      bindToggle(toggle);
+      if (panel) {
+        panel.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            panel.classList.remove("open");
+            document.body.classList.remove("nav-open");
+            if (toggle) { toggle.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); }
+          });
+        });
+      }
+    })();
+  </script>
+  <script>
+    (function () {
+      var msg = document.getElementById("msg");
+      var otpBox = document.getElementById("otpBox");
+      var guestPanel = document.getElementById("guestPanel");
+      var accountPanel = document.getElementById("accountPanel");
+      var pendingEmail = "";
+      var redirected = false;
+      function showMsg(t, ok) {
+        if (!msg) return;
+        msg.textContent = t || "";
+        msg.style.color = ok ? "#0a7a3e" : "#c0392b";
+      }
+      function showSuccessThenHome() {
+        if (redirected) return;
+        redirected = true;
+        var el = document.getElementById("loginSuccess");
+        if (el) {
+          el.classList.add("show");
+          el.setAttribute("aria-hidden", "false");
+        }
+        setTimeout(function () { location.replace("/"); }, 1400);
+      }
+      function goHome() { showSuccessThenHome(); }
+      function renderGuest() {
+        if (guestPanel) guestPanel.style.display = "";
+        if (accountPanel) accountPanel.style.display = "none";
+      }
+      function renderAccount(s) {
+        if (guestPanel) guestPanel.style.display = "none";
+        if (accountPanel) accountPanel.style.display = "block";
+        var name = (s && s.profile && (s.profile.nickname || s.profile.name || s.profile.email)) || "已登入";
+        var el = document.getElementById("accountText");
+        if (el) el.textContent = "目前登入：" + name;
+      }
+      window.MapSkyAuthOnSession = function (s) {};
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var xchg = params.get("xchg");
+        if (xchg) {
+          MapSkyAuth.claimXchg(xchg).then(function () {
+            return MapSkyAuth.session();
+          }).then(function (res) {
+            if (res && res.body && res.body.loggedIn) {
+              MapSkyAuth.updateNav(res.body);
+              goHome();
+              return;
+            }
+            renderGuest();
+          }).catch(function () {
+            MapSkyAuth.session().then(function (res) {
+              if (res && res.body && res.body.loggedIn) {
+                MapSkyAuth.updateNav(res.body);
+                goHome();
+                return;
+              }
+              renderGuest();
+            }).catch(function () { renderGuest(); });
+          });
+        } else {
+          MapSkyAuth.session().then(function (res) {
+            if (res && res.body && res.body.loggedIn) {
+              MapSkyAuth.updateNav(res.body);
+              renderAccount(res.body);
+              return;
+            }
+            MapSkyAuth.updateNav({ loggedIn: false });
+            renderGuest();
+          }).catch(function () {
+            MapSkyAuth.updateNav({ loggedIn: false });
+            renderGuest();
+          });
+        }
+      } catch (e) {
+        MapSkyAuth.session().then(function (res) {
+          if (res && res.body && res.body.loggedIn) {
+            renderAccount(res.body);
+            return;
+          }
+          renderGuest();
+        }).catch(function () { renderGuest(); });
+      }
+      document.getElementById("toggleEmail").addEventListener("click", function () {
+        document.getElementById("emailBox").classList.toggle("open");
+      });
+      document.getElementById("sendBtn").addEventListener("click", function () {
+        if (!document.getElementById("agreeBox").checked) return showMsg("請先同意服務條款與隱私權政策", false);
+        var email = document.getElementById("emailInput").value.trim();
+        if (!email) return showMsg("請輸入 Email", false);
+        pendingEmail = email;
+        document.getElementById("sendBtn").disabled = true;
+        MapSkyAuth.sendMagicLink(email).then(function (res) {
+          document.getElementById("sendBtn").disabled = false;
+          if (res.body && res.body.ok) {
+            otpBox.style.display = "block";
+            showMsg("驗證碼已寄出，請到信箱查看。", true);
+          } else {
+            showMsg((res.body && res.body.error) || "寄送失敗", false);
+          }
+        }).catch(function () {
+          document.getElementById("sendBtn").disabled = false;
+          showMsg("網路錯誤", false);
+        });
+      });
+      document.getElementById("verifyBtn").addEventListener("click", function () {
+        var code = document.getElementById("codeInput").value.trim();
+        if (!code || !pendingEmail) return showMsg("請輸入驗證碼", false);
+        document.getElementById("verifyBtn").disabled = true;
+        MapSkyAuth.verifyMagicLink(pendingEmail, code).then(function (res) {
+          document.getElementById("verifyBtn").disabled = false;
+          if (res.body && res.body.ok) {
+            showMsg("登入成功", true);
+            goHome();
+          } else {
+            showMsg((res.body && res.body.error) || "驗證失敗", false);
+          }
+        }).catch(function () {
+          document.getElementById("verifyBtn").disabled = false;
+          showMsg("網路錯誤", false);
+        });
+      });
+      var logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+          MapSkyAuth.logout().then(function () {
+            MapSkyAuth.updateNav({ loggedIn: false });
+            renderGuest();
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
