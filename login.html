@@ -86,7 +86,7 @@
       background: #f5f5f7; transform: translateY(-1px);
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
-    .provider-icon { width: 22px; height: 22px; border-radius: 4px; }
+    .provider-icon { width: 22px; height: 22px; border-radius: 4px; flex-shrink: 0; }
     .login-more {
       background: none; border: 0; color: #6e6e73; font-size: 14px;
       cursor: pointer; padding: 8px; font-family: inherit;
@@ -247,6 +247,14 @@
         <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=google&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
           <img class="provider-icon" src="https://mapskyapp.vercel.app/login-icons/google.png" alt="" width="22" height="22" />
           <span>使用 Google 登入</span>
+        </a>
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=microsoft&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <svg class="provider-icon" viewBox="0 0 22 22" width="22" height="22" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="12" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="12" width="9" height="9" fill="#00a4ef"/><rect x="12" y="12" width="9" height="9" fill="#ffb900"/></svg>
+          <span>使用 Microsoft 登入</span>
+        </a>
+        <a class="provider-btn" href="https://mapskyapp.vercel.app/api/auth/login?provider=github&return_to=https%3A%2F%2Fmapskyweb.vercel.app%2Flogin">
+          <svg class="provider-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="#1d1d1f" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.35 6.84 9.71.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.46-1.2-1.12-1.52-1.12-1.52-.91-.64.07-.63.07-.63 1.01.07 1.54 1.06 1.54 1.06.9 1.58 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.73 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.84c.85.004 1.71.12 2.51.35 1.91-1.32 2.75-1.05 2.75-1.05.55 1.42.2 2.47.1 2.73.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.38-.01 2.49-.01 2.83 0 .26.18.58.69.48A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"/></svg>
+          <span>使用 GitHub 登入</span>
         </a>
       </div>
       <button type="button" class="login-more" id="toggleEmail">或使用 Email 驗證碼 ▾</button>
@@ -419,37 +427,39 @@
             otpBox.style.display = "block";
             showMsg("驗證碼已寄出，請到信箱查看。", true);
           } else {
-            showMsg("寄送失敗，請稍後再試", false);
+            showMsg((res.body && res.body.error) || "寄送失敗", false);
           }
         }).catch(function () {
           document.getElementById("sendBtn").disabled = false;
-          showMsg("網路錯誤，請稍後再試", false);
+          showMsg("網路錯誤", false);
         });
       });
       document.getElementById("verifyBtn").addEventListener("click", function () {
         var code = document.getElementById("codeInput").value.trim();
-        if (!pendingEmail) pendingEmail = document.getElementById("emailInput").value.trim();
-        if (!pendingEmail || !code) return showMsg("請輸入 Email 與驗證碼", false);
+        if (!code || !pendingEmail) return showMsg("請輸入驗證碼", false);
         document.getElementById("verifyBtn").disabled = true;
-        MapSkyAuth.verifyCode(pendingEmail, code).then(function (res) {
+        MapSkyAuth.verifyMagicLink(pendingEmail, code).then(function (res) {
           document.getElementById("verifyBtn").disabled = false;
           if (res.body && res.body.ok) {
-            showMsg("登入成功，正在返回首頁…", true);
-            setTimeout(goHome, 200);
-            return;
+            showMsg("登入成功", true);
+            goHome();
+          } else {
+            showMsg((res.body && res.body.error) || "驗證失敗", false);
           }
-          showMsg("驗證失敗", false);
         }).catch(function () {
           document.getElementById("verifyBtn").disabled = false;
-          showMsg("網路錯誤，請稍後再試", false);
+          showMsg("網路錯誤", false);
         });
       });
-      document.getElementById("logoutBtn").addEventListener("click", function () {
-        MapSkyAuth.logout().then(function () {
-          MapSkyAuth.updateNav({ loggedIn: false });
-          renderGuest();
+      var logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+          MapSkyAuth.logout().then(function () {
+            renderGuest();
+            MapSkyAuth.updateNav({ loggedIn: false });
+          });
         });
-      });
+      }
     })();
   </script>
 </body>
