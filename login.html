@@ -80,11 +80,14 @@
       padding: 16px 22px; border-radius: 980px; border: 1px solid rgba(0,0,0,0.1);
       background: #fff; color: #1d1d1f !important;
       font-weight: 600; font-size: 16px; cursor: pointer; text-decoration: none !important;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: background 0.2s, transform 0.15s, box-shadow 0.2s, opacity 0.2s;
     }
     .login-panel .provider-btn:hover {
       background: #f5f5f7; transform: translateY(-1px);
       box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .login-panel .provider-btn.disabled-agree {
+      opacity: 0.45; pointer-events: none; cursor: not-allowed;
     }
     .provider-icon { width: 22px; height: 22px; border-radius: 4px; flex-shrink: 0; }
     .login-more {
@@ -110,6 +113,10 @@
       font-size: 13px; color: #6e6e73; text-align: left;
     }
     .login-agree a { color: #0066cc; text-decoration: underline; }
+    .agree-hint {
+      display: none; margin: 0; font-size: 13px; color: #c0392b; text-align: center;
+    }
+    .agree-hint.show { display: block; }
     .account-panel-sky {
       display: none; width: min(100%, 380px); padding: 28px 24px;
       border-radius: 24px; background: #f5f5f7;
@@ -272,9 +279,10 @@
         <div class="msg" id="msg"></div>
       </div>
       <label class="login-agree">
-        <input type="checkbox" id="agreeBox" checked />
+        <input type="checkbox" id="agreeBox" />
         <span>已閱讀並同意 <a href="/privacy#terms">服務條款</a>與<a href="/privacy">隱私權政策</a></span>
       </label>
+      <p class="agree-hint" id="agreeHint">請先勾選同意服務條款與隱私權政策</p>
     </div>
 
     <div class="account-panel-sky" id="accountPanel">
@@ -407,11 +415,42 @@
           renderGuest();
         }).catch(function () { renderGuest(); });
       }
+
+      // Require terms agreement before any OAuth login
+      var agreeBox = document.getElementById("agreeBox");
+      var agreeHint = document.getElementById("agreeHint");
+      function syncAgreeState() {
+        var ok = agreeBox && agreeBox.checked;
+        document.querySelectorAll("#providerList .provider-btn").forEach(function (a) {
+          a.classList.toggle("disabled-agree", !ok);
+          if (!ok) a.setAttribute("aria-disabled", "true");
+          else a.removeAttribute("aria-disabled");
+        });
+        if (agreeHint && ok) agreeHint.classList.remove("show");
+      }
+      if (agreeBox) {
+        agreeBox.addEventListener("change", syncAgreeState);
+        syncAgreeState();
+      }
+      document.querySelectorAll("#providerList .provider-btn").forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          if (!agreeBox || !agreeBox.checked) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (agreeHint) agreeHint.classList.add("show");
+            return false;
+          }
+        });
+      });
+
       document.getElementById("toggleEmail").addEventListener("click", function () {
         document.getElementById("emailBox").classList.toggle("open");
       });
       document.getElementById("sendBtn").addEventListener("click", function () {
-        if (!document.getElementById("agreeBox").checked) return showMsg("請先同意服務條款與隱私權政策", false);
+        if (!document.getElementById("agreeBox").checked) {
+          if (agreeHint) agreeHint.classList.add("show");
+          return showMsg("請先同意服務條款與隱私權政策", false);
+        }
         var email = document.getElementById("emailInput").value.trim();
         if (!email) return showMsg("請輸入 Email", false);
         pendingEmail = email;
@@ -430,6 +469,10 @@
         });
       });
       document.getElementById("verifyBtn").addEventListener("click", function () {
+        if (!document.getElementById("agreeBox").checked) {
+          if (agreeHint) agreeHint.classList.add("show");
+          return showMsg("請先同意服務條款與隱私權政策", false);
+        }
         var code = document.getElementById("codeInput").value.trim();
         if (!code || !pendingEmail) return showMsg("請輸入驗證碼", false);
         document.getElementById("verifyBtn").disabled = true;
