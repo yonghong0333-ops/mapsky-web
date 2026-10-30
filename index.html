@@ -102,12 +102,23 @@
         '.iphone-modal .modal-desc{margin:0 0 16px!important;font-size:15px!important;line-height:1.6!important;color:#a1a1a6!important;max-width:42em!important;}',
         '.iphone-modal .modal-section{margin:20px 0 8px!important;font-size:20px!important;font-weight:700!important;color:#f5f5f7!important;}',
         '.iphone-modal .modal-section-desc{margin:0 0 16px!important;font-size:14px!important;line-height:1.55!important;color:#a1a1a6!important;}',
-        '.iphone-modal .modal-models{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px 20px!important;margin-top:4px!important;}',
-        '.iphone-modal .modal-models ul{list-style:none!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:6px!important;}',
-        '.iphone-modal .modal-models li{background:transparent!important;border:0!important;border-radius:0!important;padding:4px 0!important;font-size:14px!important;font-weight:500!important;color:#f5f5f7!important;line-height:1.35!important;transition:none!important;}',
+        '.iphone-modal .seg{display:inline-flex!important;background:#1c1c1e!important;border-radius:980px!important;padding:3px!important;margin:4px 0 20px!important;gap:2px!important;}',
+        '.iphone-modal .seg button{border:0!important;background:transparent!important;color:#a1a1a6!important;font-size:13px!important;font-weight:600!important;padding:8px 16px!important;border-radius:980px!important;cursor:pointer!important;font-family:inherit!important;transition:background .2s,color .2s,transform .2s cubic-bezier(0.34,1.56,0.64,1)!important;}',
+        '.iphone-modal .seg button.on{background:#f5f5f7!important;color:#1d1d1f!important;}',
+        '.iphone-modal .seg button:active{transform:scale(0.96)!important;}',
+        '.iphone-modal .series-tabs{display:flex!important;flex-wrap:wrap!important;gap:6px 4px!important;margin:0 0 18px!important;padding:0 0 12px!important;border-bottom:1px solid rgba(255,255,255,.1)!important;}',
+        '.iphone-modal .series-tabs button{border:0!important;background:transparent!important;color:#6e6e73!important;font-size:13px!important;font-weight:500!important;padding:6px 10px!important;cursor:pointer!important;font-family:inherit!important;position:relative!important;border-radius:8px!important;transition:color .15s,transform .2s cubic-bezier(0.34,1.56,0.64,1)!important;}',
+        '.iphone-modal .series-tabs button.on{color:#f5f5f7!important;font-weight:600!important;}',
+        '.iphone-modal .series-tabs button.on::after{content:""!important;position:absolute!important;left:10px!important;right:10px!important;bottom:0!important;height:2px!important;background:#2997ff!important;border-radius:2px!important;}',
+        '.iphone-modal .series-tabs button:active{transform:scale(0.96)!important;}',
+        '.iphone-modal .model-panel{min-height:120px!important;}',
+        '.iphone-modal .model-panel ul{list-style:none!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:8px!important;}',
+        '.iphone-modal .model-panel li{background:#1c1c1e!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:12px!important;padding:12px 14px!important;font-size:15px!important;font-weight:600!important;color:#f5f5f7!important;line-height:1.35!important;}',
+        '.iphone-modal .model-panel li span{display:block!important;margin-top:3px!important;font-size:12px!important;font-weight:400!important;color:#a1a1a6!important;}',
+        '.iphone-modal .model-note{margin:12px 0 0!important;font-size:12px!important;color:#6e6e73!important;line-height:1.45!important;}',
         '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;height:64px!important;margin:20px 0 12px!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:hidden!important;z-index:3!important;border:0!important;}',
         '.torn-mid-svg{display:block!important;width:100%!important;height:80px!important;margin-top:-10px!important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 2px rgba(0,0,0,.12));}',
-        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:56px!important;}.torn-mid-svg{height:72px!important;margin-top:-10px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}.iphone-modal{padding:28px 20px 24px!important;border-radius:18px!important;}.iphone-modal .modal-models{grid-template-columns:1fr 1fr!important;gap:6px 16px!important;}}'
+        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:56px!important;}.torn-mid-svg{height:72px!important;margin-top:-10px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}.iphone-modal{padding:28px 20px 24px!important;border-radius:18px!important;}}'
       ].join('');
       document.head.appendChild(full);
 
@@ -162,52 +173,122 @@
           '  <p class="modal-desc">MapSky 專為 iOS 26 系統生態與現代 iPhone 螢幕架構深度打造。只要你的裝置支援並已升級至 iOS 26，即可完美解鎖一站式氣象預報、大眾運輸即時班次、YouBike 2.0 車輛統計，以及停班停課動態警報。</p>',
           '  <p class="modal-desc">本應用完整支援動態島（Dynamic Island）、鎖定畫面即時動態（Live Activities）與背景快取同步，確保你在任何氣候條件與網路狀態下，都能獲得最流暢的出門決策體驗。</p>',
           '  <p class="modal-section">支援機型</p>',
-          '  <p class="modal-section-desc">下方列出所有相容機型。</p>',
-          '  <div class="modal-models">',
-          '    <ul>',
-          '      <li>iPhone Duo</li>',
-          '      <li>iPhone 18 Pro Max</li>',
-          '      <li>iPhone 18 Pro</li>',
-          '      <li>iPhone 17 Pro Max</li>',
-          '      <li>iPhone 17 Pro</li>',
-          '      <li>iPhone Air</li>',
-          '      <li>iPhone 17</li>',
-          '      <li>iPhone 17e</li>',
-          '      <li>iPhone 16 Pro Max</li>',
-          '      <li>iPhone 16 Pro</li>',
-          '      <li>iPhone 16 Plus</li>',
-          '    </ul>',
-          '    <ul>',
-          '      <li>iPhone 16</li>',
-          '      <li>iPhone 16e</li>',
-          '      <li>iPhone 15 Pro Max</li>',
-          '      <li>iPhone 15 Pro</li>',
-          '      <li>iPhone 15 Plus</li>',
-          '      <li>iPhone 15</li>',
-          '      <li>iPhone 14 Pro Max</li>',
-          '      <li>iPhone 14 Pro</li>',
-          '      <li>iPhone 14 Plus</li>',
-          '      <li>iPhone 14</li>',
-          '      <li>iPhone 13 Pro Max</li>',
-          '    </ul>',
-          '    <ul>',
-          '      <li>iPhone 13 Pro</li>',
-          '      <li>iPhone 13</li>',
-          '      <li>iPhone 13 mini</li>',
-          '      <li>iPhone 12 Pro Max</li>',
-          '      <li>iPhone 12 Pro</li>',
-          '      <li>iPhone 12</li>',
-          '      <li>iPhone 12 mini</li>',
-          '      <li>iPhone 11 Pro Max</li>',
-          '      <li>iPhone 11 Pro</li>',
-          '      <li>iPhone 11</li>',
-          '      <li>iPhone SE（第 2 代與後續機型）</li>',
-          '    </ul>',
+          '  <p class="modal-section-desc">切換系列查看各機型；動態冒險效果需 iPhone 14 Pro 以上。</p>',
+          '  <div class="seg" id="iphoneSeg" role="tablist">',
+          '    <button type="button" class="on" data-mode="all" role="tab" aria-selected="true">全部機型</button>',
+          '    <button type="button" data-mode="adventure" role="tab" aria-selected="false">MapSky 動態冒險效果</button>',
           '  </div>',
+          '  <div class="series-tabs" id="iphoneSeries" role="tablist"></div>',
+          '  <div class="model-panel" id="iphoneModels"></div>',
+          '  <p class="model-note" id="iphoneNote"></p>',
           '</div>'
         ].join('');
         document.body.appendChild(ov);
         var scrollY = 0;
+        var SERIES = [
+          { id: '18', label: 'iPhone 18 系列', models: [
+            { name: 'iPhone 18 Pro Max', adventure: true },
+            { name: 'iPhone 18 Pro', adventure: true },
+            { name: 'iPhone Duo', adventure: true }
+          ]},
+          { id: '17', label: 'iPhone 17 系列', models: [
+            { name: 'iPhone 17 Pro Max', adventure: true },
+            { name: 'iPhone 17 Pro', adventure: true },
+            { name: 'iPhone 17', adventure: true },
+            { name: 'iPhone 17e', adventure: true },
+            { name: 'iPhone Air', adventure: true }
+          ]},
+          { id: '16', label: 'iPhone 16 系列', models: [
+            { name: 'iPhone 16 Pro Max', adventure: true },
+            { name: 'iPhone 16 Pro', adventure: true },
+            { name: 'iPhone 16 Plus', adventure: true },
+            { name: 'iPhone 16', adventure: true },
+            { name: 'iPhone 16e', adventure: true }
+          ]},
+          { id: '15', label: 'iPhone 15 系列', models: [
+            { name: 'iPhone 15 Pro Max', adventure: true },
+            { name: 'iPhone 15 Pro', adventure: true },
+            { name: 'iPhone 15 Plus', adventure: true },
+            { name: 'iPhone 15', adventure: true }
+          ]},
+          { id: '14', label: 'iPhone 14 系列', models: [
+            { name: 'iPhone 14 Pro Max', adventure: true },
+            { name: 'iPhone 14 Pro', adventure: true },
+            { name: 'iPhone 14 Plus', adventure: false },
+            { name: 'iPhone 14', adventure: false }
+          ]},
+          { id: '13', label: 'iPhone 13 系列', models: [
+            { name: 'iPhone 13 Pro Max', adventure: false },
+            { name: 'iPhone 13 Pro', adventure: false },
+            { name: 'iPhone 13', adventure: false },
+            { name: 'iPhone 13 mini', adventure: false }
+          ]},
+          { id: '12', label: 'iPhone 12 系列', models: [
+            { name: 'iPhone 12 Pro Max', adventure: false },
+            { name: 'iPhone 12 Pro', adventure: false },
+            { name: 'iPhone 12', adventure: false },
+            { name: 'iPhone 12 mini', adventure: false }
+          ]},
+          { id: '11', label: 'iPhone 11 系列', models: [
+            { name: 'iPhone 11 Pro Max', adventure: false },
+            { name: 'iPhone 11 Pro', adventure: false },
+            { name: 'iPhone 11', adventure: false }
+          ]},
+          { id: 'se', label: 'iPhone SE', models: [
+            { name: 'iPhone SE（第 2 代與後續機型）', adventure: false }
+          ]}
+        ];
+        var mode = 'all';
+        var seriesId = '18';
+        var seriesEl = document.getElementById('iphoneSeries');
+        var modelsEl = document.getElementById('iphoneModels');
+        var noteEl = document.getElementById('iphoneNote');
+        function renderSeriesTabs() {
+          seriesEl.innerHTML = SERIES.map(function (s) {
+            return '<button type="button" data-series="' + s.id + '" class="' + (s.id === seriesId ? 'on' : '') + '" role="tab">' + s.label.replace('iPhone ', '') + '</button>';
+          }).join('');
+          seriesEl.querySelectorAll('button').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              seriesId = btn.getAttribute('data-series');
+              renderSeriesTabs();
+              renderModels();
+            });
+          });
+        }
+        function renderModels() {
+          var s = SERIES.filter(function (x) { return x.id === seriesId; })[0];
+          if (!s) return;
+          var list = s.models.filter(function (m) {
+            return mode === 'all' || m.adventure;
+          });
+          if (!list.length) {
+            modelsEl.innerHTML = '<p class="modal-section-desc" style="margin:0">此系列在「動態冒險效果」模式下無可支援機型。請改選 iPhone 14 Pro 以上系列。</p>';
+          } else {
+            modelsEl.innerHTML = '<ul>' + list.map(function (m) {
+              var sub = m.adventure ? '支援 MapSky 動態冒險效果' : '支援標準功能';
+              return '<li>' + m.name + '<span>' + sub + '</span></li>';
+            }).join('') + '</ul>';
+          }
+          noteEl.textContent = mode === 'adventure'
+            ? '動態冒險效果需 iPhone 14 Pro 以上機型。'
+            : '完整功能需升級至 iOS 26。動態冒險效果需 iPhone 14 Pro 以上。';
+        }
+        document.getElementById('iphoneSeg').querySelectorAll('button').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            mode = btn.getAttribute('data-mode');
+            document.getElementById('iphoneSeg').querySelectorAll('button').forEach(function (b) {
+              b.classList.toggle('on', b === btn);
+              b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+            });
+            if (mode === 'adventure' && ['13','12','11','se'].indexOf(seriesId) >= 0) {
+              seriesId = '14';
+            }
+            renderSeriesTabs();
+            renderModels();
+          });
+        });
+        renderSeriesTabs();
+        renderModels();
         function closeIphoneModal() {
           ov.classList.remove('open');
           document.documentElement.classList.remove('iphone-modal-open');
