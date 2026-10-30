@@ -70,7 +70,7 @@
         document.body.appendChild(s);
       });
 
-      // Full-bleed torn edges + mid tear (full teeth visible, no flat top line)
+      // Full-bleed torn edges + mid tear (full tips visible)
       var full = document.createElement('style');
       full.textContent = [
         '.black-band{min-height:100vh!important;min-height:100dvh!important;width:100%!important;max-width:none!important;box-sizing:border-box;}',
@@ -84,9 +84,9 @@
         '.block-news,.block-news.block,#features.block-news,.block{border-top:none!important;}',
         '.block-news{border:none!important;box-shadow:none!important;}',
         '.card-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;max-width:720px;margin-left:auto;margin-right:auto;}',
-        '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;height:56px!important;margin:24px 0 8px!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:hidden!important;z-index:3!important;border:0!important;}',
-        '.torn-mid-svg{display:block!important;width:100%!important;height:80px!important;margin-top:-18px!important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 2px rgba(0,0,0,.12));}',
-        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:48px!important;}.torn-mid-svg{height:68px!important;margin-top:-16px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}}'
+        '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;height:64px!important;margin:20px 0 12px!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:hidden!important;z-index:3!important;border:0!important;}',
+        '.torn-mid-svg{display:block!important;width:100%!important;height:80px!important;margin-top:-10px!important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 2px rgba(0,0,0,.12));}',
+        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:56px!important;}.torn-mid-svg{height:72px!important;margin-top:-10px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}}'
       ].join('');
       document.head.appendChild(full);
 
@@ -119,7 +119,7 @@
         ].join('');
       }
 
-      // Torn separator — full teeth visible, flat top clipped
+      // Torn separator — tips fully visible
       if (features && !document.querySelector('.torn-mid')) {
         var div = document.createElement('div');
         div.className = 'torn-mid';
