@@ -119,6 +119,62 @@
     .account-panel-sky .account-actions {
       display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
     }
+
+    .login-success {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .login-success.show {
+      opacity: 1; pointer-events: auto;
+    }
+    .login-success-circle {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: #34c759;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 28px rgba(52,199,89,0.35);
+      transform: scale(0.4);
+      opacity: 0;
+    }
+    .login-success.show .login-success-circle {
+      animation: successPop 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) 0.1s forwards;
+    }
+    .login-success-check {
+      width: 36px; height: 36px;
+      stroke: #fff; stroke-width: 3.5; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 48; stroke-dashoffset: 48;
+    }
+    .login-success.show .login-success-check {
+      animation: successDraw 0.4s ease 0.35s forwards;
+    }
+    .login-success-text {
+      margin-top: 20px; font-size: 20px; font-weight: 700; color: #1d1d1f;
+      opacity: 0; transform: translateY(8px);
+    }
+    .login-success.show .login-success-text {
+      animation: successFadeUp 0.4s ease 0.45s forwards;
+    }
+    .login-success-sub {
+      margin-top: 6px; font-size: 14px; color: #6e6e73;
+      opacity: 0;
+    }
+    .login-success.show .login-success-sub {
+      animation: successFadeUp 0.4s ease 0.55s forwards;
+    }
+    @keyframes successPop {
+      0% { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes successDraw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes successFadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="login-page">
@@ -223,6 +279,16 @@
     </div>
   </div>
 
+  <div class="login-success" id="loginSuccess" aria-live="polite" aria-hidden="true">
+    <div class="login-success-circle">
+      <svg class="login-success-check" viewBox="0 0 36 36" aria-hidden="true">
+        <path d="M8 18 L15 25 L28 11"/>
+      </svg>
+    </div>
+    <p class="login-success-text">登入成功</p>
+    <p class="login-success-sub">正在返回首頁…</p>
+  </div>
+
   <script src="logo-icon.js"></script>
   <script src="logo-wordmark.js"></script>
   <script src="logo-apply.js"></script>
@@ -265,10 +331,20 @@
         msg.textContent = t || "";
         msg.style.color = ok ? "#0a7a3e" : "#c0392b";
       }
-      function goHome() {
+      function showSuccessThenHome() {
         if (redirected) return;
         redirected = true;
-        location.replace("/");
+        var el = document.getElementById("loginSuccess");
+        if (el) {
+          el.classList.add("show");
+          el.setAttribute("aria-hidden", "false");
+        }
+        setTimeout(function () {
+          location.replace("/");
+        }, 1400);
+      }
+      function goHome() {
+        showSuccessThenHome();
       }
       function renderGuest() {
         if (guestPanel) guestPanel.style.display = "";
@@ -359,7 +435,7 @@
           document.getElementById("verifyBtn").disabled = false;
           if (res.body && res.body.ok) {
             showMsg("登入成功，正在返回首頁…", true);
-            setTimeout(goHome, 300);
+            setTimeout(goHome, 200);
             return;
           }
           showMsg("驗證失敗", false);
