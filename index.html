@@ -13,7 +13,7 @@
   <script>
   (async function () {
     try {
-      var res = await fetch('https://raw.githubusercontent.com/yonghong0333-ops/mapsky-web/ff94f146fd204f7b927a81f91c08f293c353c5c5/index.html', { cache: 'no-store' });
+      var res = await fetch('https://cdn.jsdelivr.net/gh/yonghong0333-ops/mapsky-web@ff94f146fd204f7b927a81f91c08f293c353c5c5/index.html', { cache: 'no-store' });
       var html = await res.text();
       document.open();
       document.write(html);
