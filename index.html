@@ -20,34 +20,38 @@
       document.close();
 
       function wireUp() {
-        // Logo
         document.querySelectorAll('img[data-logo="icon"]').forEach(function (img) {
           if (!img.getAttribute('src')) img.src = 'assets/icon.png';
         });
 
-        // Nav menu toggle (scripts inside document.write often do not run)
         var toggle = document.getElementById('navToggle');
         var nav = document.getElementById('topNav');
+        var navRight = document.getElementById('navRight');
         if (toggle && nav && !toggle.getAttribute('data-wired')) {
           toggle.setAttribute('data-wired', '1');
           toggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            var open = nav.classList.toggle('nav-open');
-            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            var open = !document.body.classList.contains('nav-open');
             document.body.classList.toggle('nav-open', open);
-          });
-          // Close menu when tapping a link
-          nav.querySelectorAll('.nav-links a').forEach(function (a) {
-            a.addEventListener('click', function () {
-              nav.classList.remove('nav-open');
-              document.body.classList.remove('nav-open');
-              toggle.setAttribute('aria-expanded', 'false');
+            nav.classList.toggle('nav-open', open);
+            toggle.classList.toggle('open', open);
+            if (navRight) navRight.classList.toggle('open', open);
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          }, { passive: false });
+          if (navRight) {
+            navRight.querySelectorAll('a').forEach(function (a) {
+              a.addEventListener('click', function () {
+                document.body.classList.remove('nav-open');
+                nav.classList.remove('nav-open');
+                toggle.classList.remove('open');
+                navRight.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+              });
             });
-          });
+          }
         }
 
-        // Scroll style
         if (!window.__mapskyScrollWired) {
           window.__mapskyScrollWired = true;
           window.addEventListener('scroll', function () {
@@ -55,7 +59,6 @@
           }, { passive: true });
         }
 
-        // Torn separator
         var news = document.getElementById('news');
         var features = document.getElementById('features');
         if (news && features && !document.querySelector('.torn-mid')) {
@@ -73,7 +76,6 @@
           features.parentNode.insertBefore(div, features);
         }
 
-        // Logo data URI + auth
         if (!window.__mapskyScriptsWired) {
           window.__mapskyScriptsWired = true;
           var s1 = document.createElement('script');
@@ -89,21 +91,16 @@
           document.body.appendChild(s3);
         }
 
-        // Ensure toggle is interactive (z-index / pointer)
         if (toggle) {
           toggle.style.pointerEvents = 'auto';
-          toggle.style.zIndex = '1001';
-          toggle.style.position = toggle.style.position || 'relative';
-        }
-        if (nav) {
-          nav.style.pointerEvents = 'auto';
+          toggle.style.zIndex = '2001';
         }
       }
 
       requestAnimationFrame(wireUp);
       setTimeout(wireUp, 50);
       setTimeout(wireUp, 200);
-      setTimeout(wireUp, 500);
+      setTimeout(wireUp, 600);
     } catch (e) {
       document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入失敗，請重新整理。</p>';
       console.error(e);
