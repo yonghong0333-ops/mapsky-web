@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#0a0a0a" />
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
-  <script src="https://cdn.jsdelivr.net/gh/yonghong0333-ops/mapsky-web@c28210ebaf1361aa0dcac6e53c03ee92f5592589/index.html" type="text/plain" id="skip"></script>
   <script>
   (async function () {
     try {
@@ -153,7 +152,7 @@
           '  <p class="modal-desc">本應用完整支援動態島（Dynamic Island）、鎖定畫面即時動態（Live Activities）與背景快取同步，確保你在任何氣候條件與網路狀態下，都能獲得最流暢的出門決策體驗。</p>',
           '  <div class="frame">',
           '    <p class="modal-section">支援機型</p>',
-          '    <p class="modal-section-desc">切換系列查看各機型；動態冒險效果需 iPhone 14 Pro 以上。</p>',
+          '    <p class="modal-section-desc">切換系列查看各機型（iPhone 14 起）；動態冒險效果需 iPhone 14 Pro 以上。</p>',
           '    <div class="frame-inner">',
           '      <div class="seg" id="iphoneSeg" role="tablist">',
           '        <button type="button" class="on" data-mode="all" role="tab" aria-selected="true">全部機型</button>',
@@ -199,26 +198,6 @@
             { name: 'iPhone 14 Pro', adventure: true },
             { name: 'iPhone 14 Plus', adventure: false },
             { name: 'iPhone 14', adventure: false }
-          ]},
-          { id: '13', label: 'iPhone 13 系列', models: [
-            { name: 'iPhone 13 Pro Max', adventure: false },
-            { name: 'iPhone 13 Pro', adventure: false },
-            { name: 'iPhone 13', adventure: false },
-            { name: 'iPhone 13 mini', adventure: false }
-          ]},
-          { id: '12', label: 'iPhone 12 系列', models: [
-            { name: 'iPhone 12 Pro Max', adventure: false },
-            { name: 'iPhone 12 Pro', adventure: false },
-            { name: 'iPhone 12', adventure: false },
-            { name: 'iPhone 12 mini', adventure: false }
-          ]},
-          { id: '11', label: 'iPhone 11 系列', models: [
-            { name: 'iPhone 11 Pro Max', adventure: false },
-            { name: 'iPhone 11 Pro', adventure: false },
-            { name: 'iPhone 11', adventure: false }
-          ]},
-          { id: 'se', label: 'iPhone SE', models: [
-            { name: 'iPhone SE（第 2 代與後續機型）', adventure: false }
           ]}
         ];
         var mode = 'all';
@@ -261,7 +240,6 @@
               b.classList.toggle('on', b === btn);
               b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
             });
-            if (mode === 'adventure' && ['13','12','11','se'].indexOf(seriesId) >= 0) seriesId = '14';
             renderSeriesTabs();
             renderModels();
           });
