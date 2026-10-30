@@ -87,6 +87,9 @@
         '.fcard-iphone{cursor:pointer!important;transition:transform .22s cubic-bezier(0.34,1.56,0.64,1),box-shadow .22s ease!important;}',
         '.fcard-iphone:active{transform:scale(0.96)!important;}',
         '.fcard-iphone:hover{transform:scale(1.02)!important;}',
+        '.iphone-modal-open{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important;}',
+        '.iphone-modal-overlay{touch-action:none!important;overscroll-behavior:none!important;}',
+        '.iphone-modal{touch-action:pan-y!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;}',
         '.iphone-modal-overlay{position:fixed!important;inset:0!important;z-index:9999!important;background:rgba(0,0,0,.65)!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:20px!important;opacity:0!important;pointer-events:none!important;transition:opacity .28s ease!important;}',
         '.iphone-modal-overlay.open{opacity:1!important;pointer-events:auto!important;}',
         '.iphone-modal{position:relative!important;background:#000!important;color:#f5f5f7!important;border-radius:22px!important;border:1px solid rgba(10,132,255,.45)!important;padding:40px 36px 36px!important;width:min(100%,780px)!important;max-height:min(90vh,900px)!important;overflow:auto!important;box-shadow:0 24px 80px rgba(0,0,0,.55)!important;transform:scale(.88) translateY(24px)!important;transition:transform .45s cubic-bezier(0.34,1.56,0.64,1)!important;}',
@@ -204,11 +207,34 @@
           '</div>'
         ].join('');
         document.body.appendChild(ov);
-        function closeIphoneModal() { ov.classList.remove('open'); }
-        function openIphoneModal() { ov.classList.add('open'); }
+        var scrollY = 0;
+        function closeIphoneModal() {
+          ov.classList.remove('open');
+          document.documentElement.classList.remove('iphone-modal-open');
+          document.body.classList.remove('iphone-modal-open');
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+          window.scrollTo(0, scrollY);
+        }
+        function openIphoneModal() {
+          scrollY = window.scrollY || window.pageYOffset || 0;
+          document.documentElement.classList.add('iphone-modal-open');
+          document.body.classList.add('iphone-modal-open');
+          document.body.style.position = 'fixed';
+          document.body.style.top = '-' + scrollY + 'px';
+          document.body.style.width = '100%';
+          ov.classList.add('open');
+        }
         ov.addEventListener('click', function (e) {
           if (e.target === ov) closeIphoneModal();
         });
+        ov.addEventListener('wheel', function (e) {
+          if (!e.target.closest('.iphone-modal')) e.preventDefault();
+        }, { passive: false });
+        ov.addEventListener('touchmove', function (e) {
+          if (!e.target.closest('.iphone-modal')) e.preventDefault();
+        }, { passive: false });
         document.getElementById('iphoneModalClose').addEventListener('click', closeIphoneModal);
         document.addEventListener('keydown', function (e) {
           if (e.key === 'Escape') closeIphoneModal();
