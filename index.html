@@ -70,7 +70,7 @@
         document.body.appendChild(s);
       });
 
-      // Full-bleed torn edges + full-screen black band + deeper mid tear
+      // Full-bleed torn edges + full-screen black band + deeper mid tear (no flat top line)
       var full = document.createElement('style');
       full.textContent = [
         '.black-band{min-height:100vh!important;min-height:100dvh!important;width:100%!important;max-width:none!important;box-sizing:border-box;}',
@@ -84,9 +84,10 @@
         '.block-news,.block-news.block,#features.block-news,.block{border-top:none!important;}',
         '.block-news{border:none!important;box-shadow:none!important;}',
         '.card-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;max-width:720px;margin-left:auto;margin-right:auto;}',
-        '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;height:72px!important;margin:28px 0 4px!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:visible!important;z-index:3!important;border:0!important;}',
-        '.torn-mid-svg{display:block!important;width:100%!important;height:72px!important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 2px rgba(0,0,0,.12));}',
-        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid,.torn-mid-svg{height:56px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}}'
+        /* clip away SVG flat top so only jagged teeth + shadow remain */
+        '.torn-mid{position:relative!important;left:50%!important;transform:translateX(-50%)!important;width:100vw!important;max-width:100vw!important;height:48px!important;margin:20px 0 0!important;padding:0!important;line-height:0!important;pointer-events:none!important;background:transparent!important;overflow:hidden!important;z-index:3!important;border:0!important;}',
+        '.torn-mid-svg{display:block!important;width:100%!important;height:72px!important;margin-top:-24px!important;filter:drop-shadow(0 10px 8px rgba(0,0,0,.18)) drop-shadow(0 3px 2px rgba(0,0,0,.12));}',
+        '@media (max-width:560px){.torn-edge,.torn-svg{height:52px!important;}.torn-mid{height:40px!important;}.torn-mid-svg{height:60px!important;margin-top:-20px!important;}.st-sun{width:96px!important;}.st-rain{width:100px!important;}.card-grid{grid-template-columns:1fr!important;}}'
       ].join('');
       document.head.appendChild(full);
 
@@ -119,7 +120,7 @@
         ].join('');
       }
 
-      // Torn separator — deeper, more dramatic teeth
+      // Torn separator — deeper teeth; flat top clipped away
       if (features && !document.querySelector('.torn-mid')) {
         var div = document.createElement('div');
         div.className = 'torn-mid';
