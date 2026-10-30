@@ -207,13 +207,17 @@
       .st-spark { right: 18%; top: 18%; width: 48px; }
     }
 
-    /* mobile menu: left align + larger */
+    /* logo fixed when menu open; menu left + large */
     @media (max-width: 768px) {
+      body.home .brand,
+      body.home.nav-open .brand {
+        transform: none !important;
+      }
       body.home .nav-right {
         align-items: flex-start !important;
         padding-left: max(28px, env(safe-area-inset-left)) !important;
         padding-right: max(28px, env(safe-area-inset-right)) !important;
-        padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 36px) !important;
+        padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 20px) !important;
         gap: 32px !important;
       }
       body.home .nav-links {
@@ -244,7 +248,6 @@
     </button>
     <div class="nav-right" id="navRight">
       <nav class="nav-links" aria-label="主選單">
-        <a href="/features">畫面</a>
         <a href="/features">最新消息</a>
         <a href="/features">功能</a>
         <a href="/privacy">隱私與條款</a>
@@ -316,7 +319,6 @@
 
       <nav class="footer-link-row" aria-label="頁尾連結">
         <a href="/features">功能</a>
-        <a href="/features">畫面</a>
         <a href="/features">最新消息</a>
         <a href="/login">登入</a>
         <a href="/privacy">隱私與條款</a>
