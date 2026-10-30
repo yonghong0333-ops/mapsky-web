@@ -46,7 +46,6 @@
       z-index: 1;
     }
 
-    /* decorative illustrations */
     .login-art {
       position: absolute; pointer-events: none; z-index: 0;
       filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.06));
@@ -156,39 +155,11 @@
   </header>
 
   <div class="login-stage">
-    <!-- weather illustrations -->
     <div class="login-art art-clip" aria-hidden="true">
       <svg viewBox="0 0 64 96" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 12
-          C24 6 30 2 36 2
-          C44 2 50 8 50 16
-          L50 64
-          C50 78 38 88 26 88
-          C14 88 6 78 6 64
-          L6 28
-          C6 20 12 16 18 16
-          C24 16 28 20 28 28
-          L28 60
-          C28 66 22 70 18 70
-          C14 70 12 66 12 60
-          L12 34"
-          fill="none" stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M24 12
-          C24 6 30 2 36 2
-          C44 2 50 8 50 16
-          L50 64
-          C50 78 38 88 26 88
-          C14 88 6 78 6 64
-          L6 28
-          C6 20 12 16 18 16
-          C24 16 28 20 28 28
-          L28 60
-          C28 66 22 70 18 70
-          C14 70 12 66 12 60
-          L12 34"
-          fill="none" stroke="#d1d5db" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M36 8 C40 8 44 11 44 16 L44 40"
-          fill="none" stroke="#f3f4f6" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+        <path d="M24 12 C24 6 30 2 36 2 C44 2 50 8 50 16 L50 64 C50 78 38 88 26 88 C14 88 6 78 6 64 L6 28 C6 20 12 16 18 16 C24 16 28 20 28 28 L28 60 C28 66 22 70 18 70 C14 70 12 66 12 60 L12 34" fill="none" stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M24 12 C24 6 30 2 36 2 C44 2 50 8 50 16 L50 64 C50 78 38 88 26 88 C14 88 6 78 6 64 L6 28 C6 20 12 16 18 16 C24 16 28 20 28 28 L28 60 C28 66 22 70 18 70 C14 70 12 66 12 60 L12 34" fill="none" stroke="#d1d5db" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M36 8 C40 8 44 11 44 16 L44 40" fill="none" stroke="#f3f4f6" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
       </svg>
     </div>
     <div class="login-art art-sun" aria-hidden="true">
@@ -303,7 +274,7 @@
         msg.textContent = t || "";
         msg.style.color = ok ? "#0a7a3e" : "#c0392b";
       }
-      function goHome() { location.href = "/"; }
+      function goHome() { location.replace("/"); }
       function renderGuest() {
         if (guestPanel) guestPanel.style.display = "";
         if (accountPanel) accountPanel.style.display = "none";
@@ -318,11 +289,12 @@
       MapSkyAuth.session().then(function (res) {
         if (res.body && res.body.loggedIn) {
           MapSkyAuth.updateNav(res.body);
-          renderAccount(res.body);
-        } else {
-          MapSkyAuth.updateNav({ loggedIn: false });
-          renderGuest();
+          // 已登入：自動回首頁（Google / Email 登入成功後都會走到這裡）
+          location.replace("/");
+          return;
         }
+        MapSkyAuth.updateNav({ loggedIn: false });
+        renderGuest();
       }).catch(function () {
         MapSkyAuth.updateNav({ loggedIn: false });
         renderGuest();
@@ -358,7 +330,7 @@
           document.getElementById("verifyBtn").disabled = false;
           if (res.body && res.body.ok) {
             showMsg("登入成功，正在返回首頁…", true);
-            setTimeout(goHome, 500);
+            setTimeout(function () { location.replace("/"); }, 300);
             return;
           }
           showMsg("驗證失敗", false);
