@@ -21,7 +21,7 @@
       ".torn-mid{position:relative!important;left:50%!important;width:100vw!important;max-width:none!important;margin:-6px 0 -6px -50vw!important;transform:none!important;height:40px!important;overflow:visible!important;background:transparent!important;display:block!important;}" +
       ".marker-line{display:block!important;width:100vw!important;height:40px!important;overflow:visible!important;}" +
       ".paper-tape{display:none!important;}" +
-      "@media (max-width:560px){.torn-mid,.marker-line{height:34px!important;}}" +
+      "@media (max-width:560px){.torn-mid,.marker-line{height:34px!important;}}.sheet #features{position:relative!important;z-index:1!important;background-color:#fff!important;background-image:linear-gradient(rgba(142,176,214,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(142,176,214,.55) 1px,transparent 1px)!important;background-size:28px 28px!important;background-position:0 0!important;width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:0!important;margin-top:-14px!important;margin-bottom:-48px!important;padding:22px 20px 88px!important;box-sizing:border-box!important;}.sheet #features .card-grid{max-width:720px!important;}.sheet #features .fcard{background:#fff!important;}" +
       "';document.head.appendChild(tapeFix);";
     if (code.indexOf(hook) === -1) throw new Error('style hook missing');
     code = code.replace(hook, extra);
