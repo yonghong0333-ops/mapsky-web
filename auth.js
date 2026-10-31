@@ -36,7 +36,7 @@
     return fetchJSON(API_PROXY + "/login?provider=email&action=verify-code", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, code: code })
+      body: JSON.stringify({ token: token })
     });
   }
 
@@ -140,7 +140,7 @@
 
   if (!document.querySelector('script[src*="nav-scroll.js"]')) {
     var ns = document.createElement("script");
-    ns.src = "nav-scroll.js?v=9";
+    ns.src = "nav-scroll.js?v=10";
     ns.defer = true;
     document.head.appendChild(ns);
   }
