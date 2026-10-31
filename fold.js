@@ -1,7 +1,7 @@
 (function () {
   var css = [
     '.torn-mid,.marker-line,.paper-tape{display:none!important;height:0!important;margin:0!important;overflow:hidden!important;}',
-    '.sheet #features{overflow:hidden!important;margin-bottom:-96px!important;position:relative!important;z-index:4!important;',
+    '.sheet #features{overflow:hidden!important;margin-bottom:-180px!important;position:relative!important;z-index:6!important;',
     'padding:28px 36px 108px 56px!important;',
     'box-shadow:inset 0 14px 16px -14px rgba(0,0,0,.22),inset 16px 0 18px -16px rgba(0,0,0,.16),inset -16px 0 18px -16px rgba(0,0,0,.16)!important;}',
     '.sheet #features::before{content:""!important;position:absolute!important;left:22px!important;top:0!important;bottom:0!important;width:7px!important;',
