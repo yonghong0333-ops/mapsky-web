@@ -67,6 +67,18 @@
     if (code.indexOf(oldClose) === -1) throw new Error('closeIphoneModal missing');
     code = code.replace(oldClose, newClose);
 
+    // 6. Don't collapse page height (that jumps scroll to 0)
+    var oldLock = ".iphone-modal-open{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important;height:100%!important;}";
+    var newLock = ".iphone-modal-open{overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important;}";
+    if (code.indexOf(oldLock) === -1) throw new Error('lock css missing');
+    code = code.replace(oldLock, newLock);
+
+    // 7. Freeze body at the user's current scroll instead of jumping to top
+    var oldOpenFn = "function openIphoneModal(e) {\n          if (e) { e.preventDefault(); e.stopPropagation(); }\n          if (ov.classList.contains('open')) return;\n          scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;\n          document.documentElement.classList.add('iphone-modal-open');\n          document.body.classList.add('iphone-modal-open');\n          document.documentElement.style.overflow = 'hidden';\n          document.body.style.overflow = 'hidden';\n          ov.classList.add('open');\n          var x = document.getElementById('iphoneModalClose');\n          if (x && x.focus) try { x.focus({ preventScroll: true }); } catch (err) {}\n        }";
+    var newOpenFn = "function openIphoneModal(e) {\n          if (e) { e.preventDefault(); e.stopPropagation(); }\n          if (ov.classList.contains('open') || ov._closing) return;\n          scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;\n          document.body.style.position = 'fixed';\n          document.body.style.top = '-' + scrollY + 'px';\n          document.body.style.left = '0';\n          document.body.style.right = '0';\n          document.body.style.width = '100%';\n          document.documentElement.classList.add('iphone-modal-open');\n          document.body.classList.add('iphone-modal-open');\n          document.documentElement.style.overflow = 'hidden';\n          document.body.style.overflow = 'hidden';\n          ov.classList.add('open');\n          var x = document.getElementById('iphoneModalClose');\n          if (x && x.focus) try { x.focus({ preventScroll: true }); } catch (err) {}\n        }";
+    if (code.indexOf(oldOpenFn) === -1) throw new Error('openIphoneModal missing');
+    code = code.replace(oldOpenFn, newOpenFn);
+
     await (async function () { eval(code); }).call(window);
   } catch (e) {
     document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入失敗，請重新整理。<br>' + e + '</p>';
