@@ -26,6 +26,47 @@
     if (code.indexOf(hook) === -1) throw new Error('style hook missing');
     code = code.replace(hook, extra);
 
+    // ===== Modal close animation patches =====
+    // 1. Overlay: fade + delayed visibility so close transform can play
+    var oldOv = ".iphone-modal-overlay{position:fixed!important;inset:0!important;z-index:9999!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:20px!important;background:transparent!important;opacity:1!important;visibility:hidden!important;pointer-events:none!important;}";
+    var newOv = ".iphone-modal-overlay{position:fixed!important;inset:0!important;z-index:9999!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:20px!important;background:transparent!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;transition:opacity .38s ease,visibility 0s linear .38s!important;}";
+    if (code.indexOf(oldOv) === -1) throw new Error('overlay css missing');
+    code = code.replace(oldOv, newOv);
+
+    var oldOpen = ".iphone-modal-overlay.open{visibility:visible!important;pointer-events:auto!important;}";
+    var newOpen = ".iphone-modal-overlay.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transition:opacity .38s ease,visibility 0s!important;}";
+    if (code.indexOf(oldOpen) === -1) throw new Error('overlay.open css missing');
+    code = code.replace(oldOpen, newOpen);
+
+    // 2. Backdrop (::before) also fades
+    var oldBefore = ".iphone-modal-overlay::before{content:\\\"\\\"!important;position:absolute!important;inset:0!important;background:rgba(255,255,255,.22)!important;backdrop-filter:blur(28px) saturate(180%)!important;-webkit-backdrop-filter:blur(28px) saturate(180%)!important;}";
+    var newBefore = ".iphone-modal-overlay::before{content:\\\"\\\"!important;position:absolute!important;inset:0!important;background:rgba(255,255,255,.22)!important;backdrop-filter:blur(28px) saturate(180%)!important;-webkit-backdrop-filter:blur(28px) saturate(180%)!important;opacity:0!important;transition:opacity .38s ease!important;}.iphone-modal-overlay.open::before{opacity:1!important;}";
+    if (code.indexOf(oldBefore) === -1) throw new Error('overlay::before css missing');
+    code = code.replace(oldBefore, newBefore);
+
+    // 3. Modal transform: bounce on open, smooth ease-out on close
+    var oldModalT = "transform:scale(.88) translateY(24px)!important;transition:transform .45s cubic-bezier(0.34,1.56,0.64,1)!important;";
+    var newModalT = "transform:scale(.88) translateY(24px)!important;transition:transform .38s cubic-bezier(0.32,0.72,0,1)!important;";
+    if (code.indexOf(oldModalT) === -1) throw new Error('modal transform css missing');
+    code = code.replace(oldModalT, newModalT);
+
+    var oldOpenModal = ".iphone-modal-overlay.open .iphone-modal{transform:scale(1) translateY(0)!important;}";
+    var newOpenModal = ".iphone-modal-overlay.open .iphone-modal{transform:scale(1) translateY(0)!important;transition:transform .45s cubic-bezier(0.34,1.56,0.64,1)!important;}";
+    if (code.indexOf(oldOpenModal) === -1) throw new Error('open modal transform css missing');
+    code = code.replace(oldOpenModal, newOpenModal);
+
+    // 4. ovFix currently forces opacity:1 — change it so fade works
+    var oldOvFix = "ovFix.textContent = '.iphone-modal-overlay{background:transparent!important;opacity:1!important;}.iphone-modal-overlay::before{content:\\\"\\\"!important;position:absolute!important;inset:0!important;z-index:0!important;background:rgba(255,255,255,.22)!important;backdrop-filter:blur(28px) saturate(180%)!important;-webkit-backdrop-filter:blur(28px) saturate(180%)!important;}.iphone-modal{position:relative!important;z-index:1!important;}';";
+    var newOvFix = "ovFix.textContent = '.iphone-modal-overlay{background:transparent!important;}.iphone-modal-overlay::before{content:\\\"\\\"!important;position:absolute!important;inset:0!important;z-index:0!important;background:rgba(255,255,255,.22)!important;backdrop-filter:blur(28px) saturate(180%)!important;-webkit-backdrop-filter:blur(28px) saturate(180%)!important;}.iphone-modal{position:relative!important;z-index:1!important;}';";
+    if (code.indexOf(oldOvFix) === -1) throw new Error('ovFix missing');
+    code = code.replace(oldOvFix, newOvFix);
+
+    // 5. closeIphoneModal: wait for animation before restoring scroll / body classes
+    var oldClose = "function closeIphoneModal() {\n          if (!ov.classList.contains('open')) return;\n          var y = scrollY;\n          ov.classList.remove('open');\n          document.documentElement.classList.remove('iphone-modal-open');\n          document.body.classList.remove('iphone-modal-open');\n          // 同一幀內解除 fixed 並立刻還原捲動，避免先跳頂\n          document.body.style.position = '';\n          document.body.style.top = '';\n          document.body.style.left = '';\n          document.body.style.right = '';\n          document.body.style.width = '';\n          document.body.style.overflow = '';\n          document.documentElement.style.overflow = '';\n          document.documentElement.style.scrollBehavior = 'auto';\n          window.scrollTo(0, y);\n          document.documentElement.scrollTop = y;\n          document.body.scrollTop = y;\n          setTimeout(function () {\n            window.scrollTo(0, y);\n            document.documentElement.style.scrollBehavior = '';\n          }, 0);\n        }";
+    var newClose = "function closeIphoneModal() {\n          if (!ov.classList.contains('open') || ov._closing) return;\n          ov._closing = true;\n          var y = scrollY;\n          ov.classList.remove('open');\n          setTimeout(function () {\n            ov._closing = false;\n            document.documentElement.classList.remove('iphone-modal-open');\n            document.body.classList.remove('iphone-modal-open');\n            document.body.style.position = '';\n            document.body.style.top = '';\n            document.body.style.left = '';\n            document.body.style.right = '';\n            document.body.style.width = '';\n            document.body.style.overflow = '';\n            document.documentElement.style.overflow = '';\n            document.documentElement.style.scrollBehavior = 'auto';\n            window.scrollTo(0, y);\n            document.documentElement.scrollTop = y;\n            document.body.scrollTop = y;\n            setTimeout(function () {\n              window.scrollTo(0, y);\n              document.documentElement.style.scrollBehavior = '';\n            }, 0);\n          }, 390);\n        }";
+    if (code.indexOf(oldClose) === -1) throw new Error('closeIphoneModal missing');
+    code = code.replace(oldClose, newClose);
+
     await (async function () { eval(code); }).call(window);
   } catch (e) {
     document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入失敗，請重新整理。<br>' + e + '</p>';
