@@ -141,7 +141,7 @@
   // Floating pill nav on all pages (idempotent)
   if (!document.querySelector('script[src*="nav-scroll.js"]')) {
     var ns = document.createElement("script");
-    ns.src = "nav-scroll.js?v=3";
+    ns.src = "nav-scroll.js?v=4";
     ns.defer = true;
     document.head.appendChild(ns);
   }
