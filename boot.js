@@ -210,6 +210,154 @@
       }
     })();
 
+    (function () {
+      var MACS = [
+        ['MacBook Neo', '(2026 年)'],
+        ['MacBook Air 配備', 'Apple 晶片 (2020 年與後續機型)'],
+        ['MacBook Pro 配備', 'Apple 晶片 (2020 年與後續機型)'],
+        ['MacBook Pro 配備', 'PROLED XDR 顯示器', '(2026 年)'],
+        ['iMac 配備 Apple 晶片', '(2021 年與後續機型)'],
+        ['Mac mini 配備 Apple 晶片', '(2020 年與後續機型)'],
+        ['Mac Studio (2022 年與', '後續機型)'],
+        ['Mac Pro 配備 Apple 晶片', '(2023 年)']
+      ];
+      function findMac(node) {
+        if (!node || !node.querySelectorAll) return null;
+        var card = null;
+        node.querySelectorAll('.fcard, li').forEach(function (el) {
+          var h = el.querySelector('h3');
+          if (h && h.textContent.trim() === 'Mac') card = el;
+        });
+        return card;
+      }
+      function mark(card) {
+        if (!card || card.classList.contains('fcard-mac')) return;
+        card.classList.add('fcard-mac');
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-label', '查看 Mac 適用機型');
+      }
+      function itemHtml(parts) {
+        return '<li><span>' + parts.map(function (t) {
+          return t.replace(/&/g,'&').replace(/</g,'<');
+        }).join('<br>') + '</span><span class="mac-chev" aria-hidden="true">›</span></li>';
+      }
+      function ensureModal() {
+        var existing = document.getElementById('macModal');
+        if (existing) return existing;
+        var st = document.createElement('style');
+        st.textContent = [
+          '.fcard-mac{cursor:pointer!important;transition:transform .22s cubic-bezier(0.34,1.56,0.64,1)!important;}',
+          '.fcard-mac:active{transform:scale(0.96)!important;}',
+          '.fcard-mac:hover{transform:scale(1.02)!important;}',
+          '#macModal .mac-sheet{position:relative;z-index:1;width:min(920px,100%);background:#f5f5f7;color:#1d1d1f;border-radius:28px;padding:56px 48px 48px;box-shadow:0 24px 80px rgba(0,0,0,.18);max-height:min(86dvh,820px);overflow:auto;}',
+          '#macModal .mac-x{position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;border-radius:50%;background:#e8e8ed;color:#1d1d1f;font-size:18px;line-height:32px;cursor:pointer;padding:0;}',
+          '#macModal h3{margin:0 0 22px;text-align:center;font-size:clamp(28px,4vw,40px);font-weight:700;letter-spacing:-.02em;color:#1d1d1f;}',
+          '#macModal .mac-cta{display:flex;justify-content:center;margin:0 0 36px;}',
+          '#macModal .mac-cta a{display:inline-flex;align-items:center;justify-content:center;min-width:112px;height:40px;padding:0 18px;border-radius:980px;background:#0071e3;color:#fff;font-size:15px;font-weight:500;text-decoration:none;}',
+          '#macModal .mac-cta a:hover{background:#0077ed;}',
+          '#macModal .mac-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 32px;}',
+          '#macModal .mac-grid li{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;color:#6e6e73;font-size:15px;line-height:1.35;}',
+          '#macModal .mac-chev{color:#86868b;font-size:18px;line-height:1.2;}',
+          '@media (max-width:760px){#macModal .mac-sheet{padding:48px 22px 28px;border-radius:22px;}#macModal .mac-grid{grid-template-columns:1fr;gap:18px;}}'
+        ].join('');
+        document.head.appendChild(st);
+        var ov = document.createElement('div');
+        ov.id = 'macModal';
+        ov.className = 'iphone-modal-overlay';
+        ov.setAttribute('role', 'dialog');
+        ov.setAttribute('aria-modal', 'true');
+        ov.setAttribute('aria-labelledby', 'macModalTitle');
+        ov.innerHTML = [
+          '<div class="mac-sheet">',
+          '  <button type="button" class="mac-x" id="macModalClose" aria-label="關閉">×</button>',
+          '  <h3 id="macModalTitle">與 macOS 27 相容的裝置</h3>',
+          '  <div class="mac-cta"><a href="https://www.apple.com/tw/mac/" target="_blank" rel="noopener noreferrer">探索 Mac</a></div>',
+          '  <ul class="mac-grid">',
+          MACS.map(itemHtml).join(''),
+          '  </ul>',
+          '</div>'
+        ].join('');
+        document.body.appendChild(ov);
+        var scrollY = 0;
+        function closeMac() {
+          if (!ov.classList.contains('open') || ov._closing) return;
+          ov._closing = true;
+          var y = scrollY;
+          ov.classList.remove('open');
+          setTimeout(function () {
+            ov._closing = false;
+            document.documentElement.classList.remove('iphone-modal-open');
+            document.body.classList.remove('iphone-modal-open');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+            document.documentElement.style.scrollBehavior = 'auto';
+            window.scrollTo(0, y);
+            setTimeout(function () { document.documentElement.style.scrollBehavior = ''; }, 0);
+          }, 390);
+        }
+        function openFrom(e) {
+          if (e) { e.preventDefault(); e.stopPropagation(); }
+          if (ov.classList.contains('open') || ov._closing) return;
+          scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+          document.documentElement.classList.add('iphone-modal-open');
+          document.body.classList.add('iphone-modal-open');
+          document.documentElement.style.overflow = 'hidden';
+          document.body.style.overflow = 'hidden';
+          ov.classList.add('open');
+          var x = document.getElementById('macModalClose');
+          if (x && x.focus) try { x.focus({ preventScroll: true }); } catch (err) {}
+        }
+        ov._openFrom = openFrom;
+        ov.addEventListener('click', function (e) { if (e.target === ov) closeMac(); });
+        document.getElementById('macModalClose').addEventListener('click', closeMac);
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && ov.classList.contains('open')) closeMac();
+        });
+        return ov;
+      }
+      function isMacCard(el) {
+        if (!el) return false;
+        var h = el.querySelector('h3');
+        return !!(h && h.textContent.trim() === 'Mac');
+      }
+      document.addEventListener('click', function (e) {
+        var t = e.target;
+        if (!t || !t.closest) return;
+        var card = t.closest('.fcard, li');
+        if (!isMacCard(card)) return;
+        mark(card);
+        var ov = ensureModal();
+        if (ov && ov._openFrom) ov._openFrom(e);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var t = e.target;
+        if (!t || !t.closest) return;
+        var card = t.closest('.fcard, li');
+        if (!isMacCard(card)) return;
+        e.preventDefault();
+        mark(card);
+        var ov = ensureModal();
+        if (ov && ov._openFrom) ov._openFrom(e);
+      });
+      function scan() {
+        var card = findMac(document);
+        if (card) mark(card);
+      }
+      scan();
+      var tries = 0;
+      var timer = setInterval(function () {
+        tries++;
+        scan();
+        if (findMac(document) || tries > 120) clearInterval(timer);
+      }, 100);
+      if (window.MutationObserver) {
+        new MutationObserver(scan).observe(document.documentElement, { childList: true, subtree: true });
+      }
+    })();
+
+
   } catch (e) {
     document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入失敗，請重新整理。<br>' + e + '</p>';
     console.error(e);
