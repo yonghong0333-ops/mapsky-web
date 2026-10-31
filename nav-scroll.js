@@ -30,15 +30,17 @@
     'background:#f5f5f7!important;color:#0a0a0a!important;border:0!important;}',
     'body.is-scrolled .nav-actions .btn-primary:hover,',
     'body.is-scrolled .nav-actions [data-auth-slot] a.btn-primary:hover{background:#fff!important;}',
-    /* logged-in: hollow outline */
+    /* logged-in: hollow outline — thicker border */
     'body.is-scrolled .nav-actions .btn-ghost,',
     'body.is-scrolled .nav-actions [data-auth-slot] a.btn-ghost{',
     'background:transparent!important;color:#f5f5f7!important;',
-    'border:1px solid rgba(255,255,255,.35)!important;}',
+    'border:2px solid rgba(255,255,255,.4)!important;}',
     'body.is-scrolled .nav-actions .btn-ghost:hover,',
     'body.is-scrolled .nav-actions [data-auth-slot] a.btn-ghost:hover{',
-    'background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.55)!important;}',
+    'background:rgba(255,255,255,.1)!important;border-color:rgba(255,255,255,.6)!important;}',
     'body.is-scrolled .nav-toggle span{background:#f5f5f7!important;}',
+    /* also thicken outline when not scrolled */
+    '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;}',
     '@media (max-width:768px){',
     'body.is-scrolled .nav{width:calc(100vw - 20px)!important;padding-left:10px!important;padding-right:10px!important;}',
     'body.is-scrolled .nav-toggle{width:36px!important;height:36px!important;background:rgba(255,255,255,.1)!important;}',
