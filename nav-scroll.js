@@ -1,14 +1,15 @@
 (function () {
   var css = [
-    /* outline logged-in button (all pages) */
+    /* outline logged-in button */
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* desktop only: floating pill when scrolled */
-    '@media (min-width:769px){',
-    'body .nav{transition:transform .28s cubic-bezier(.32,.72,0,1),border-radius .28s cubic-bezier(.32,.72,0,1),box-shadow .28s ease,background .25s ease,padding .28s cubic-bezier(.32,.72,0,1)!important;}',
+    /* base transition — prefer transform over layout props */
+    'body .nav{transition:top .3s cubic-bezier(.32,.72,0,1),left .3s cubic-bezier(.32,.72,0,1),right .3s cubic-bezier(.32,.72,0,1),width .3s cubic-bezier(.32,.72,0,1),max-width .3s cubic-bezier(.32,.72,0,1),height .3s cubic-bezier(.32,.72,0,1),padding .3s cubic-bezier(.32,.72,0,1),border-radius .3s cubic-bezier(.32,.72,0,1),background .25s ease,box-shadow .25s ease,transform .3s cubic-bezier(.32,.72,0,1)!important;}',
+
+    /* ===== desktop + mobile: pill when scrolled, menu closed ===== */
     'body.is-scrolled:not(.nav-open) .nav{',
-    'top:12px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;',
-    'width:max-content!important;max-width:calc(100vw - 32px)!important;',
+    'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
+    'width:auto!important;max-width:calc(100vw - 24px)!important;',
     'height:52px!important;padding:4px 6px 4px 8px!important;padding-top:4px!important;',
     'border-radius:980px!important;',
     'background:rgba(18,18,22,.92)!important;',
@@ -33,35 +34,47 @@
     'body.is-scrolled:not(.nav-open) .nav-actions .btn-ghost,',
     'body.is-scrolled:not(.nav-open) .nav-actions [data-auth-slot] a.btn-ghost{',
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
-    '}',
+    'body.is-scrolled:not(.nav-open) .nav-toggle{',
+    'width:36px!important;height:36px!important;background:rgba(255,255,255,.1)!important;}',
+    'body.is-scrolled:not(.nav-open) .nav-toggle span{background:#f5f5f7!important;}',
 
-    /* mobile: never pill — keep full-width fixed bar, full-screen menu */
-    '@media (max-width:768px){',
-    'body.is-scrolled .nav{',
+    /* ===== when menu open: always full top bar (no pill morph) ===== */
+    'body.nav-open .nav{',
     'top:0!important;left:0!important;right:0!important;transform:none!important;',
-    'width:100%!important;max-width:none!important;height:calc(var(--nav-h,52px) + env(safe-area-inset-top,0px))!important;',
+    'width:100%!important;max-width:none!important;',
+    'height:calc(var(--nav-h,52px) + env(safe-area-inset-top,0px))!important;',
     'padding-left:max(16px,env(safe-area-inset-left))!important;',
     'padding-right:max(16px,env(safe-area-inset-right))!important;',
     'padding-top:env(safe-area-inset-top,0px)!important;',
     'border-radius:0!important;border:0!important;border-bottom:1px solid transparent!important;',
-    'box-shadow:none!important;background:rgba(10,10,10,.72)!important;}',
-    'body.is-scrolled .nav .wordmark{display:block!important;}',
-    'body.is-scrolled .nav .brand{border-right:0!important;padding-right:0!important;margin-right:0!important;height:auto!important;}',
-    'body.is-scrolled .nav .logo-img{width:36px!important;height:36px!important;}',
-    'body.is-scrolled .nav-right,body.nav-open .nav-right,.nav-right.open{',
+    'box-shadow:none!important;background:rgba(10,10,10,.92)!important;',
+    'z-index:3000!important;}',
+    'body.nav-open .nav .wordmark{display:block!important;}',
+    'body.nav-open .nav .brand{border-right:0!important;padding-right:0!important;margin-right:0!important;height:auto!important;gap:8px!important;}',
+    'body.nav-open .nav .logo-img{width:36px!important;height:36px!important;}',
+
+    /* mobile scrolled pill is tighter */
+    '@media (max-width:768px){',
+    'body.is-scrolled:not(.nav-open) .nav{',
+    'width:calc(100vw - 20px)!important;max-width:calc(100vw - 20px)!important;',
+    'padding-left:10px!important;padding-right:10px!important;}',
+    /* full-screen menu panel — never constrained by pill */
+    'body.nav-open .nav-right,body.nav-open .nav-right.open,.nav-right.open{',
     'position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;',
     'width:100%!important;height:100%!important;height:100dvh!important;',
     'background:#000!important;border-radius:0!important;',
     'flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;',
     'padding:calc(var(--nav-h,52px) + env(safe-area-inset-top,0px) + 36px) max(28px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(28px,env(safe-area-inset-left))!important;',
-    'z-index:3001!important;}',
-    'body.is-scrolled .nav-links,body.nav-open .nav-links{',
+    'opacity:1!important;pointer-events:auto!important;z-index:3001!important;',
+    'gap:32px!important;}',
+    'body.nav-open .nav-links{',
     'flex-direction:column!important;align-items:flex-start!important;',
     'font-size:28px!important;font-weight:600!important;gap:28px!important;}',
-    'body.is-scrolled .nav-links a,body.nav-open .nav-links a{',
-    'padding:0!important;opacity:1!important;background:transparent!important;}',
-    'body.is-scrolled .nav-actions,body.nav-open .nav-actions{',
-    'margin-top:24px!important;align-self:flex-start!important;}',
+    'body.nav-open .nav-links a{',
+    'padding:0!important;opacity:1!important;background:transparent!important;border-radius:0!important;}',
+    'body.nav-open .nav-actions{',
+    'margin-top:16px!important;align-self:flex-start!important;}',
+    'body.nav-open .nav-actions .btn-sm{padding:12px 22px!important;font-size:16px!important;}',
     '}'
   ].join('');
 
@@ -75,9 +88,10 @@
     s.textContent = css;
   }
 
-  // hysteresis: avoid flicker / jank near threshold
+  // hysteresis to reduce flicker near threshold
   var scrolled = false;
   function onScroll() {
+    if (document.body.classList.contains('nav-open')) return; // freeze while menu open
     var y = window.scrollY || window.pageYOffset || 0;
     if (!scrolled && y > 48) scrolled = true;
     else if (scrolled && y < 12) scrolled = false;
