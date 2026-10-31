@@ -86,12 +86,17 @@
     await (async function () { eval(code); }).call(window);
 
     (function () {
-      var card = null;
-      document.querySelectorAll('.fcard').forEach(function (el) {
-        var h = el.querySelector('h3');
-        if (h && h.textContent.trim() === 'iPad') card = el;
-      });
-      if (!card || document.getElementById('ipadModal')) return;
+      function findCard() {
+        var card = null;
+        document.querySelectorAll('.fcard, li').forEach(function (el) {
+          var h = el.querySelector('h3');
+          if (h && h.textContent.trim() === 'iPad') card = el;
+        });
+        return card;
+      }
+      function setup() {
+      var card = findCard();
+      if (!card || document.getElementById('ipadModal')) return !!card;
       card.classList.add('fcard-ipad');
       card.setAttribute('role', 'button');
       card.setAttribute('tabindex', '0');
@@ -160,6 +165,15 @@
       card.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIpadModal(); }
       });
+      return true;
+      }
+      if (!setup()) {
+        var tries = 0;
+        var timer = setInterval(function () {
+          tries++;
+          if (setup() || tries > 80) clearInterval(timer);
+        }, 100);
+      }
     })();
 
   } catch (e) {
