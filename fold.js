@@ -1,11 +1,7 @@
 (function () {
   var css = [
-    'body.home{min-height:100vh!important;min-height:100dvh!important;display:flex!important;flex-direction:column!important;}',
-    'body.home main{flex:1 0 auto!important;display:flex!important;flex-direction:column!important;}',
-    'body.home .sheet{flex:1 0 auto!important;}',
-    'body.home .site-footer{margin-top:0!important;position:relative!important;z-index:5!important;width:100%!important;}',
-    '.sheet #features{overflow:hidden!important;margin-bottom:0!important;',
-    'padding:28px 36px 120px 56px!important;',
+    '.sheet #features{overflow:hidden!important;',
+    'padding:28px 36px 168px 56px!important;',
     'box-shadow:inset 0 14px 16px -14px rgba(0,0,0,.22),inset 16px 0 18px -16px rgba(0,0,0,.16),inset -16px 0 18px -16px rgba(0,0,0,.16),inset 0 -14px 16px -14px rgba(0,0,0,.12)!important;}',
     '.sheet #features::before{content:""!important;position:absolute!important;left:22px!important;top:0!important;bottom:0!important;width:7px!important;',
     'background:linear-gradient(90deg,rgba(0,0,0,.16),rgba(255,255,255,.92) 42%,rgba(0,0,0,.08))!important;',
