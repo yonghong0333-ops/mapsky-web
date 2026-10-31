@@ -2,28 +2,28 @@
   var css = [
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* shared transitions */
+    /* shared transitions — slower */
     'body .nav{',
     'transition:',
-    'top .7s cubic-bezier(.22,.68,0,1),',
-    'left .7s cubic-bezier(.22,.68,0,1),',
-    'right .7s cubic-bezier(.22,.68,0,1),',
-    'width .7s cubic-bezier(.22,.68,0,1),',
-    'max-width .7s cubic-bezier(.22,.68,0,1),',
-    'height .7s cubic-bezier(.22,.68,0,1),',
-    'padding .7s cubic-bezier(.22,.68,0,1),',
-    'border-radius .7s cubic-bezier(.22,.68,0,1),',
-    'background .5s ease,',
-    'box-shadow .7s ease,',
-    'transform .7s cubic-bezier(.22,.68,0,1),',
-    'gap .7s cubic-bezier(.22,.68,0,1)!important;',
+    'top 1.2s cubic-bezier(.22,.68,0,1),',
+    'left 1.2s cubic-bezier(.22,.68,0,1),',
+    'right 1.2s cubic-bezier(.22,.68,0,1),',
+    'width 1.2s cubic-bezier(.22,.68,0,1),',
+    'max-width 1.2s cubic-bezier(.22,.68,0,1),',
+    'height 1.2s cubic-bezier(.22,.68,0,1),',
+    'padding 1.2s cubic-bezier(.22,.68,0,1),',
+    'border-radius 1.2s cubic-bezier(.22,.68,0,1),',
+    'background .8s ease,',
+    'box-shadow 1.2s ease,',
+    'transform 1.2s cubic-bezier(.22,.68,0,1),',
+    'gap 1.2s cubic-bezier(.22,.68,0,1)!important;',
     '}',
     'body .nav .wordmark{',
-    'transition:opacity .45s ease,max-width .7s cubic-bezier(.22,.68,0,1),width .7s cubic-bezier(.22,.68,0,1),margin .7s cubic-bezier(.22,.68,0,1)!important;',
+    'transition:opacity .7s ease,max-width 1.2s cubic-bezier(.22,.68,0,1),width 1.2s cubic-bezier(.22,.68,0,1),margin 1.2s cubic-bezier(.22,.68,0,1)!important;',
     'max-width:120px;overflow:hidden;}',
-    'body .nav .brand{transition:padding .7s cubic-bezier(.22,.68,0,1),margin .7s cubic-bezier(.22,.68,0,1),border-color .5s ease,gap .7s cubic-bezier(.22,.68,0,1)!important;}',
-    'body .nav .logo-img{transition:width .7s cubic-bezier(.22,.68,0,1),height .7s cubic-bezier(.22,.68,0,1),border-radius .7s cubic-bezier(.22,.68,0,1)!important;}',
-    'body .nav-toggle{transition:width .5s ease,height .5s ease,background .4s ease,margin .7s cubic-bezier(.22,.68,0,1)!important;}',
+    'body .nav .brand{transition:padding 1.2s cubic-bezier(.22,.68,0,1),margin 1.2s cubic-bezier(.22,.68,0,1),border-color .8s ease,gap 1.2s cubic-bezier(.22,.68,0,1)!important;}',
+    'body .nav .logo-img{transition:width 1.2s cubic-bezier(.22,.68,0,1),height 1.2s cubic-bezier(.22,.68,0,1),border-radius 1.2s cubic-bezier(.22,.68,0,1)!important;}',
+    'body .nav-toggle{transition:width .8s ease,height .8s ease,background .6s ease,margin 1.2s cubic-bezier(.22,.68,0,1)!important;}',
 
     /* ===== desktop pill ===== */
     '@media (min-width:769px){',
@@ -56,7 +56,7 @@
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
     '}',
 
-    /* ===== mobile: width shrink with space-between = natural pull-together ===== */
+    /* ===== mobile ===== */
     '@media (max-width:768px){',
     'body .nav{',
     'width:100%!important;',
@@ -91,13 +91,11 @@
     'body.is-scrolled:not(.nav-open) .nav-toggle{',
     'width:36px!important;height:36px!important;background:rgba(255,255,255,.12)!important;flex-shrink:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav-toggle span{background:#f5f5f7!important;}',
-    /* keep menu panel out of layout while closed */
     'body.is-scrolled:not(.nav-open) .nav-right{',
     'position:fixed!important;opacity:0!important;pointer-events:none!important;',
     'width:0!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;}',
     '}',
 
-    /* menu open → full bar */
     'body.nav-open .nav{',
     'top:0!important;left:0!important;right:0!important;transform:none!important;',
     'width:100%!important;max-width:none!important;',
@@ -150,7 +148,6 @@
     var toggle = nav.querySelector('.nav-toggle');
     var logoW = logo ? (logo.offsetWidth || 32) : 32;
     var toggleW = toggle ? (toggle.offsetWidth || 36) : 36;
-    // logo + gap + toggle + horizontal padding
     var w = logoW + 14 + toggleW + 16;
     document.documentElement.style.setProperty('--pill-w', w + 'px');
   }
@@ -160,10 +157,8 @@
 
   function applyScrolled(next) {
     if (next === scrolled) return;
-    // measure before shrink so width target is ready
     if (next) measurePill();
     scrolled = next;
-    // force style recalc so transition always starts from current computed values
     var nav = document.querySelector('.nav');
     if (nav) void nav.offsetWidth;
     document.body.classList.toggle('is-scrolled', scrolled);
