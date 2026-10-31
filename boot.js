@@ -84,6 +84,84 @@
     document.head.appendChild(blurFix);
 
     await (async function () { eval(code); }).call(window);
+
+    (function () {
+      var card = null;
+      document.querySelectorAll('.fcard').forEach(function (el) {
+        var h = el.querySelector('h3');
+        if (h && h.textContent.trim() === 'iPad') card = el;
+      });
+      if (!card || document.getElementById('ipadModal')) return;
+      card.classList.add('fcard-ipad');
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', '查看 iPad 適用機型');
+      var st = document.createElement('style');
+      st.textContent = '.fcard-ipad{cursor:pointer!important;transition:transform .22s cubic-bezier(0.34,1.56,0.64,1),box-shadow .22s ease!important;}.fcard-ipad:active{transform:scale(0.96)!important;}.fcard-ipad:hover{transform:scale(1.02)!important;}';
+      document.head.appendChild(st);
+      var ov = document.createElement('div');
+      ov.id = 'ipadModal';
+      ov.className = 'iphone-modal-overlay';
+      ov.setAttribute('role', 'dialog');
+      ov.setAttribute('aria-modal', 'true');
+      ov.setAttribute('aria-labelledby', 'ipadModalTitle');
+      ov.innerHTML = [
+        '<div class="iphone-modal">',
+        '  <button type="button" class="modal-x" id="ipadModalClose" aria-label="關閉">×</button>',
+        '  <p class="modal-eyebrow">iPad</p>',
+        '  <h3 id="ipadModalTitle">與 iPadOS 27 相容的裝置</h3>',
+        '  <p class="modal-desc">MapSky 可在支援並已升級至 iPadOS 27 的 iPad 上使用。大螢幕瀏覽天氣、班次與停班停課。</p>',
+        '  <div class="frame"><div class="frame-inner">',
+        '    <ul>',
+        '      <li>iPad Pro<span>第 4 代與後續機型，M1 與更新的晶片</span></li>',
+        '      <li>iPad<span>第 9 代與後續機型，A16</span></li>',
+        '      <li>iPad Air<span>第 4 代與後續機型，M2 與更新的晶片</span></li>',
+        '      <li>iPad mini<span>第 6 代，A17 Pro 與更新的晶片</span></li>',
+        '    </ul>',
+        '  </div></div>',
+        '</div>'
+      ].join('');
+      document.body.appendChild(ov);
+      var scrollY = 0;
+      function closeIpadModal() {
+        if (!ov.classList.contains('open') || ov._closing) return;
+        ov._closing = true;
+        var y = scrollY;
+        ov.classList.remove('open');
+        setTimeout(function () {
+          ov._closing = false;
+          document.documentElement.classList.remove('iphone-modal-open');
+          document.body.classList.remove('iphone-modal-open');
+          document.documentElement.style.overflow = '';
+          document.body.style.overflow = '';
+          document.documentElement.style.scrollBehavior = 'auto';
+          window.scrollTo(0, y);
+          setTimeout(function () { document.documentElement.style.scrollBehavior = ''; }, 0);
+        }, 390);
+      }
+      function openIpadModal(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        if (ov.classList.contains('open') || ov._closing) return;
+        scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        document.documentElement.classList.add('iphone-modal-open');
+        document.body.classList.add('iphone-modal-open');
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        ov.classList.add('open');
+        var x = document.getElementById('ipadModalClose');
+        if (x && x.focus) try { x.focus({ preventScroll: true }); } catch (err) {}
+      }
+      ov.addEventListener('click', function (e) { if (e.target === ov) closeIpadModal(); });
+      document.getElementById('ipadModalClose').addEventListener('click', closeIpadModal);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeIpadModal();
+      });
+      card.addEventListener('click', openIpadModal);
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIpadModal(); }
+      });
+    })();
+
   } catch (e) {
     document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">載入失敗，請重新整理。<br>' + e + '</p>';
     console.error(e);
