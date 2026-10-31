@@ -3,25 +3,25 @@
     /* outline logged-in button */
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* base transitions — all animatable props */
+    /* base transitions — slower, smoother */
     'body .nav{',
     'transition:',
-    'top .4s cubic-bezier(.32,.72,0,1),',
-    'left .4s cubic-bezier(.32,.72,0,1),',
-    'right .4s cubic-bezier(.32,.72,0,1),',
-    'width .4s cubic-bezier(.32,.72,0,1),',
-    'max-width .4s cubic-bezier(.32,.72,0,1),',
-    'height .4s cubic-bezier(.32,.72,0,1),',
-    'padding .4s cubic-bezier(.32,.72,0,1),',
-    'border-radius .4s cubic-bezier(.32,.72,0,1),',
-    'background .35s ease,',
-    'box-shadow .4s ease,',
-    'transform .4s cubic-bezier(.32,.72,0,1),',
-    'gap .4s cubic-bezier(.32,.72,0,1)!important;',
+    'top .75s cubic-bezier(.22,.68,0,1),',
+    'left .75s cubic-bezier(.22,.68,0,1),',
+    'right .75s cubic-bezier(.22,.68,0,1),',
+    'width .75s cubic-bezier(.22,.68,0,1),',
+    'max-width .75s cubic-bezier(.22,.68,0,1),',
+    'height .75s cubic-bezier(.22,.68,0,1),',
+    'padding .75s cubic-bezier(.22,.68,0,1),',
+    'border-radius .75s cubic-bezier(.22,.68,0,1),',
+    'background .55s ease,',
+    'box-shadow .75s ease,',
+    'transform .75s cubic-bezier(.22,.68,0,1),',
+    'gap .75s cubic-bezier(.22,.68,0,1)!important;',
     '}',
-    'body .nav .wordmark{transition:opacity .25s ease,width .35s ease,margin .35s ease!important;}',
-    'body .nav .brand{transition:padding .35s ease,margin .35s ease,border-color .35s ease,gap .35s ease!important;}',
-    'body .nav .logo-img{transition:width .35s ease,height .35s ease,border-radius .35s ease!important;}',
+    'body .nav .wordmark{transition:opacity .5s ease,max-width .75s cubic-bezier(.22,.68,0,1),margin .75s cubic-bezier(.22,.68,0,1),width .75s cubic-bezier(.22,.68,0,1)!important;}',
+    'body .nav .brand{transition:padding .75s cubic-bezier(.22,.68,0,1),margin .75s cubic-bezier(.22,.68,0,1),border-color .55s ease,gap .75s cubic-bezier(.22,.68,0,1)!important;}',
+    'body .nav .logo-img{transition:width .75s cubic-bezier(.22,.68,0,1),height .75s cubic-bezier(.22,.68,0,1),border-radius .75s cubic-bezier(.22,.68,0,1)!important;}',
 
     /* ===== desktop: centered content-width pill ===== */
     '@media (min-width:769px){',
@@ -56,7 +56,6 @@
 
     /* ===== mobile: compact pill with smooth width shrink ===== */
     '@media (max-width:768px){',
-    /* start from full width so width can interpolate to px */
     'body .nav{width:100%!important;left:0!important;right:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:10px!important;',
@@ -79,7 +78,7 @@
     'gap:0!important;padding-right:8px!important;border-right:1px solid rgba(255,255,255,.14)!important;',
     'margin-right:2px!important;height:36px!important;flex-shrink:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav .wordmark{',
-    'opacity:0!important;width:0!important;margin:0!important;overflow:hidden!important;',
+    'opacity:0!important;width:0!important;max-width:0!important;margin:0!important;overflow:hidden!important;',
     'pointer-events:none!important;}',
     'body.is-scrolled:not(.nav-open) .nav .logo-img{width:32px!important;height:32px!important;border-radius:9px!important;}',
     'body.is-scrolled:not(.nav-open) .nav-toggle{',
@@ -102,7 +101,7 @@
     'box-shadow:none!important;background:rgba(10,10,10,.95)!important;',
     'justify-content:space-between!important;gap:0!important;',
     'z-index:3000!important;}',
-    'body.nav-open .nav .wordmark{display:block!important;opacity:1!important;width:auto!important;}',
+    'body.nav-open .nav .wordmark{display:block!important;opacity:1!important;width:auto!important;max-width:none!important;}',
     'body.nav-open .nav .brand{border-right:0!important;padding-right:0!important;margin-right:0!important;height:auto!important;gap:8px!important;}',
     'body.nav-open .nav .logo-img{width:36px!important;height:36px!important;}',
 
@@ -142,11 +141,10 @@
     var brand = nav.querySelector('.brand');
     var toggle = nav.querySelector('.nav-toggle');
     if (!brand || !toggle) return;
-    // logo (~32) + divider pad + toggle (36) + padding
     var logo = brand.querySelector('.logo-img');
     var logoW = logo ? (logo.offsetWidth || 32) : 32;
     var toggleW = toggle.offsetWidth || 36;
-    var w = logoW + 8 + 1 + 2 + toggleW + 12; // pads + border gap
+    var w = logoW + 8 + 1 + 2 + toggleW + 12;
     document.documentElement.style.setProperty('--pill-w', w + 'px');
   }
 
