@@ -54,7 +54,7 @@
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
     '}',
 
-    /* ===== mobile: compact pill with smooth width shrink ===== */
+    /* ===== mobile: compact pill — slightly more open ===== */
     '@media (max-width:768px){',
     'body .nav{width:100%!important;left:0!important;right:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav{',
@@ -62,21 +62,21 @@
     'left:50%!important;',
     'right:auto!important;',
     'transform:translate3d(-50%,0,0)!important;',
-    'width:var(--pill-w,110px)!important;',
+    'width:var(--pill-w,128px)!important;',
     'max-width:calc(100vw - 24px)!important;',
-    'height:48px!important;',
-    'padding:4px 6px!important;',
+    'height:50px!important;',
+    'padding:5px 8px!important;',
     'border-radius:980px!important;',
     'justify-content:flex-start!important;',
-    'gap:6px!important;',
+    'gap:8px!important;',
     'background:rgba(18,18,22,.94)!important;',
     'backdrop-filter:saturate(180%) blur(24px)!important;-webkit-backdrop-filter:saturate(180%) blur(24px)!important;',
     'border:1px solid rgba(255,255,255,.12)!important;border-bottom-color:rgba(255,255,255,.12)!important;',
     'box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset!important;',
     'z-index:2000!important;}',
     'body.is-scrolled:not(.nav-open) .nav .brand{',
-    'gap:0!important;padding-right:8px!important;border-right:1px solid rgba(255,255,255,.14)!important;',
-    'margin-right:2px!important;height:36px!important;flex-shrink:0!important;}',
+    'gap:0!important;padding-right:10px!important;border-right:1px solid rgba(255,255,255,.14)!important;',
+    'margin-right:4px!important;height:36px!important;flex-shrink:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav .wordmark{',
     'opacity:0!important;width:0!important;max-width:0!important;margin:0!important;overflow:hidden!important;',
     'pointer-events:none!important;}',
@@ -144,7 +144,8 @@
     var logo = brand.querySelector('.logo-img');
     var logoW = logo ? (logo.offsetWidth || 32) : 32;
     var toggleW = toggle.offsetWidth || 36;
-    var w = logoW + 8 + 1 + 2 + toggleW + 12;
+    // logo + brand pad/border + gap + toggle + outer padding (slightly more open)
+    var w = logoW + 10 + 1 + 4 + 8 + toggleW + 16;
     document.documentElement.style.setProperty('--pill-w', w + 'px');
   }
 
