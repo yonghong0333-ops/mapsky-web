@@ -140,7 +140,7 @@
 
   if (!document.querySelector('script[src*="nav-scroll.js"]')) {
     var ns = document.createElement("script");
-    ns.src = "nav-scroll.js?v=11";
+    ns.src = "nav-scroll.js?v=12";
     ns.defer = true;
     document.head.appendChild(ns);
   }
