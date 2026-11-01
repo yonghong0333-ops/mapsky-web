@@ -21,7 +21,6 @@
     'body .nav-toggle{transition:background .4s ease!important;}',
     'body .nav-toggle span{transition:background .4s ease!important;}',
 
-    /* desktop — dark pill default */
     '@media (min-width:769px){',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
@@ -52,13 +51,12 @@
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
     '}',
 
-    /* mobile geometry */
     '@media (max-width:768px){',
     'body .nav{',
     'left:0px!important;right:0px!important;width:auto!important;max-width:none!important;',
     'transform:none!important;justify-content:space-between!important;}',
 
-    /* mobile scrolled on dark: white pill + strong shadow */
+    /* white pill on dark — deep multi-layer shadow so it reads on black */
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:10px!important;',
     'left:var(--pill-inset, 120px)!important;',
@@ -67,10 +65,15 @@
     'padding:5px 8px!important;',
     'padding-top:5px!important;',
     'border-radius:980px!important;',
-    'background:rgba(255,255,255,.94)!important;',
+    'background:rgba(255,255,255,.96)!important;',
     'backdrop-filter:saturate(180%) blur(20px)!important;-webkit-backdrop-filter:saturate(180%) blur(20px)!important;',
-    'border:1px solid rgba(0,0,0,.08)!important;border-bottom-color:rgba(0,0,0,.08)!important;',
-    'box-shadow:0 2px 8px rgba(0,0,0,.12),0 8px 24px rgba(0,0,0,.22),0 16px 48px rgba(0,0,0,.16)!important;',
+    'border:1px solid rgba(255,255,255,.35)!important;border-bottom-color:rgba(255,255,255,.35)!important;',
+    'box-shadow:',
+    '0 1px 2px rgba(0,0,0,.35),',
+    '0 4px 12px rgba(0,0,0,.45),',
+    '0 12px 32px rgba(0,0,0,.5),',
+    '0 24px 48px rgba(0,0,0,.35),',
+    '0 0 0 0.5px rgba(0,0,0,.25)!important;',
     'z-index:2000!important;}',
     'body.is-scrolled:not(.nav-open) .nav .brand{',
     'gap:0!important;padding-right:0!important;border-right:0!important;',
@@ -85,11 +88,15 @@
     'position:fixed!important;opacity:0!important;pointer-events:none!important;',
     'width:0!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;}',
 
-    /* mobile on light → black pill + strong shadow */
+    /* black pill on light */
     'body.is-scrolled.nav-on-light:not(.nav-open) .nav{',
     'background:rgba(18,18,22,.94)!important;',
     'border:1px solid rgba(255,255,255,.12)!important;border-bottom-color:rgba(255,255,255,.12)!important;',
-    'box-shadow:0 2px 8px rgba(0,0,0,.2),0 10px 28px rgba(0,0,0,.35),0 20px 50px rgba(0,0,0,.22)!important;}',
+    'box-shadow:',
+    '0 1px 2px rgba(0,0,0,.2),',
+    '0 4px 12px rgba(0,0,0,.28),',
+    '0 12px 32px rgba(0,0,0,.32),',
+    '0 24px 48px rgba(0,0,0,.2)!important;}',
     'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle{background:rgba(255,255,255,.12)!important;}',
     'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle span{background:#f5f5f7!important;}',
     '}',
