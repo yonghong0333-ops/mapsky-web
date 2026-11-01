@@ -2,30 +2,26 @@
   var css = [
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* shared transitions — slower */
+    /* force transitions on the real nav element */
     'body .nav{',
     'transition:',
-    'top 1.2s cubic-bezier(.22,.68,0,1),',
-    'left 1.2s cubic-bezier(.22,.68,0,1),',
-    'right 1.2s cubic-bezier(.22,.68,0,1),',
-    'width 1.2s cubic-bezier(.22,.68,0,1),',
-    'max-width 1.2s cubic-bezier(.22,.68,0,1),',
-    'height 1.2s cubic-bezier(.22,.68,0,1),',
-    'padding 1.2s cubic-bezier(.22,.68,0,1),',
-    'border-radius 1.2s cubic-bezier(.22,.68,0,1),',
-    'background .8s ease,',
-    'box-shadow 1.2s ease,',
-    'transform 1.2s cubic-bezier(.22,.68,0,1),',
-    'gap 1.2s cubic-bezier(.22,.68,0,1)!important;',
+    'top 1s cubic-bezier(.25,.8,.25,1),',
+    'left 1s cubic-bezier(.25,.8,.25,1),',
+    'right 1s cubic-bezier(.25,.8,.25,1),',
+    'padding 1s cubic-bezier(.25,.8,.25,1),',
+    'border-radius 1s cubic-bezier(.25,.8,.25,1),',
+    'background .7s ease,',
+    'box-shadow 1s ease,',
+    'height 1s cubic-bezier(.25,.8,.25,1),',
+    'transform 1s cubic-bezier(.25,.8,.25,1)!important;',
     '}',
     'body .nav .wordmark{',
-    'transition:opacity .7s ease,max-width 1.2s cubic-bezier(.22,.68,0,1),width 1.2s cubic-bezier(.22,.68,0,1),margin 1.2s cubic-bezier(.22,.68,0,1)!important;',
-    'max-width:120px;overflow:hidden;}',
-    'body .nav .brand{transition:padding 1.2s cubic-bezier(.22,.68,0,1),margin 1.2s cubic-bezier(.22,.68,0,1),border-color .8s ease,gap 1.2s cubic-bezier(.22,.68,0,1)!important;}',
-    'body .nav .logo-img{transition:width 1.2s cubic-bezier(.22,.68,0,1),height 1.2s cubic-bezier(.22,.68,0,1),border-radius 1.2s cubic-bezier(.22,.68,0,1)!important;}',
-    'body .nav-toggle{transition:width .8s ease,height .8s ease,background .6s ease,margin 1.2s cubic-bezier(.22,.68,0,1)!important;}',
+    'transition:opacity .6s ease,max-width 1s cubic-bezier(.25,.8,.25,1),margin 1s cubic-bezier(.25,.8,.25,1)!important;',
+    'max-width:140px;overflow:hidden;white-space:nowrap;}',
+    'body .nav .brand{transition:gap .8s ease,padding .8s ease,border-color .6s ease!important;}',
+    'body .nav .logo-img{transition:width .8s ease,height .8s ease,border-radius .8s ease!important;}',
 
-    /* ===== desktop pill ===== */
+    /* ===== desktop: content-width centered pill ===== */
     '@media (min-width:769px){',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
@@ -38,7 +34,7 @@
     'box-shadow:0 10px 40px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04) inset!important;',
     'z-index:2000!important;}',
     'body.is-scrolled:not(.nav-open) .nav .brand{gap:0!important;padding-right:10px!important;border-right:1px solid rgba(255,255,255,.14)!important;margin-right:4px!important;height:36px!important;}',
-    'body.is-scrolled:not(.nav-open) .nav .wordmark{display:none!important;}',
+    'body.is-scrolled:not(.nav-open) .nav .wordmark{opacity:0!important;max-width:0!important;margin:0!important;pointer-events:none!important;}',
     'body.is-scrolled:not(.nav-open) .nav .logo-img{width:32px!important;height:32px!important;border-radius:9px!important;}',
     'body.is-scrolled:not(.nav-open) .nav-right{gap:8px!important;}',
     'body.is-scrolled:not(.nav-open) .nav-links{gap:4px!important;font-size:13.5px!important;font-weight:500!important;}',
@@ -56,24 +52,27 @@
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
     '}',
 
-    /* ===== mobile ===== */
+    /* ===== mobile: left+right inset shrink (animatable lengths) ===== */
     '@media (max-width:768px){',
+    /* expanded baseline — both sides 0 so inset can interpolate */
     'body .nav{',
-    'width:100%!important;',
     'left:0!important;',
     'right:0!important;',
+    'width:auto!important;',
+    'max-width:none!important;',
     'transform:none!important;',
     'justify-content:space-between!important;',
     '}',
+    /* collapsed pill — inset from both sides toward center */
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:10px!important;',
-    'left:50%!important;',
-    'right:auto!important;',
-    'transform:translate3d(-50%,0,0)!important;',
-    'width:var(--pill-w,120px)!important;',
-    'max-width:calc(100vw - 24px)!important;',
+    'left:var(--pill-inset, calc(50vw - 60px))!important;',
+    'right:var(--pill-inset, calc(50vw - 60px))!important;',
+    'transform:none!important;',
+    'width:auto!important;',
     'height:50px!important;',
     'padding:5px 8px!important;',
+    'padding-top:5px!important;',
     'border-radius:980px!important;',
     'justify-content:space-between!important;',
     'background:rgba(18,18,22,.94)!important;',
@@ -85,7 +84,7 @@
     'gap:0!important;padding-right:0!important;border-right:0!important;',
     'margin-right:0!important;height:36px!important;flex-shrink:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav .wordmark{',
-    'opacity:0!important;width:0!important;max-width:0!important;margin:0!important;',
+    'opacity:0!important;max-width:0!important;margin:0!important;',
     'pointer-events:none!important;}',
     'body.is-scrolled:not(.nav-open) .nav .logo-img{width:32px!important;height:32px!important;border-radius:9px!important;}',
     'body.is-scrolled:not(.nav-open) .nav-toggle{',
@@ -96,18 +95,19 @@
     'width:0!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;}',
     '}',
 
+    /* menu open → full bar */
     'body.nav-open .nav{',
     'top:0!important;left:0!important;right:0!important;transform:none!important;',
-    'width:100%!important;max-width:none!important;',
+    'width:auto!important;max-width:none!important;',
     'height:calc(var(--nav-h,52px) + env(safe-area-inset-top,0px))!important;',
     'padding-left:max(16px,env(safe-area-inset-left))!important;',
     'padding-right:max(16px,env(safe-area-inset-right))!important;',
     'padding-top:env(safe-area-inset-top,0px)!important;',
     'border-radius:0!important;border:0!important;border-bottom:1px solid transparent!important;',
     'box-shadow:none!important;background:rgba(10,10,10,.95)!important;',
-    'justify-content:space-between!important;gap:0!important;',
+    'justify-content:space-between!important;',
     'z-index:3000!important;}',
-    'body.nav-open .nav .wordmark{opacity:1!important;width:auto!important;max-width:120px!important;}',
+    'body.nav-open .nav .wordmark{opacity:1!important;max-width:140px!important;}',
     'body.nav-open .nav .brand{border-right:0!important;padding-right:0!important;margin-right:0!important;height:auto!important;gap:8px!important;}',
     'body.nav-open .nav .logo-img{width:36px!important;height:36px!important;}',
 
@@ -148,20 +148,26 @@
     var toggle = nav.querySelector('.nav-toggle');
     var logoW = logo ? (logo.offsetWidth || 32) : 32;
     var toggleW = toggle ? (toggle.offsetWidth || 36) : 36;
-    var w = logoW + 14 + toggleW + 16;
-    document.documentElement.style.setProperty('--pill-w', w + 'px');
+    var pillW = logoW + 14 + toggleW + 16; // content + padding
+    var vw = window.innerWidth || document.documentElement.clientWidth || 375;
+    var inset = Math.max(12, (vw - pillW) / 2);
+    document.documentElement.style.setProperty('--pill-inset', inset + 'px');
   }
 
   var scrolled = false;
   var ticking = false;
+  var animating = false;
 
   function applyScrolled(next) {
     if (next === scrolled) return;
-    if (next) measurePill();
+    if (animating) return; // finish current anim before reversing
+    measurePill();
     scrolled = next;
+    animating = true;
     var nav = document.querySelector('.nav');
-    if (nav) void nav.offsetWidth;
+    if (nav) void nav.offsetWidth; // reflow
     document.body.classList.toggle('is-scrolled', scrolled);
+    setTimeout(function () { animating = false; }, 1050);
   }
 
   function onScroll() {
@@ -171,8 +177,8 @@
     requestAnimationFrame(function () {
       ticking = false;
       var y = window.scrollY || window.pageYOffset || 0;
-      if (!scrolled && y > 36) applyScrolled(true);
-      else if (scrolled && y < 8) applyScrolled(false);
+      if (!scrolled && y > 40) applyScrolled(true);
+      else if (scrolled && y < 10) applyScrolled(false);
     });
   }
 
