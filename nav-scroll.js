@@ -2,7 +2,6 @@
   var css = [
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* geometry transitions */
     'body .nav{',
     'transition:',
     'top 1.1s cubic-bezier(.25,.8,.25,1),',
@@ -11,15 +10,18 @@
     'padding 1.1s cubic-bezier(.25,.8,.25,1),',
     'border-radius 1.1s cubic-bezier(.25,.8,.25,1),',
     'height 1.1s cubic-bezier(.25,.8,.25,1),',
-    'background .7s ease,',
-    'box-shadow 1.1s ease!important;',
+    'background .45s ease,',
+    'box-shadow 1.1s ease,',
+    'border-color .45s ease!important;',
     '}',
     'body .nav .wordmark{',
-    'transition:opacity .55s ease,max-width 1.1s cubic-bezier(.25,.8,.25,1),margin 1.1s cubic-bezier(.25,.8,.25,1)!important;',
+    'transition:opacity .55s ease,max-width 1.1s cubic-bezier(.25,.8,.25,1),margin 1.1s cubic-bezier(.25,.8,.25,1),filter .45s ease!important;',
     'max-width:140px;overflow:hidden;white-space:nowrap;}',
     'body .nav .logo-img{transition:width .7s ease,height .7s ease!important;}',
+    'body .nav-toggle{transition:background .45s ease!important;}',
+    'body .nav-toggle span{transition:background .45s ease!important;}',
 
-    /* desktop */
+    /* desktop dark pill (default on dark) */
     '@media (min-width:769px){',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
@@ -48,18 +50,30 @@
     'body.is-scrolled:not(.nav-open) .nav-actions .btn-ghost,',
     'body.is-scrolled:not(.nav-open) .nav-actions [data-auth-slot] a.btn-ghost{',
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
+
+    /* desktop light surface → white pill, dark text */
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav{',
+    'background:rgba(255,255,255,.92)!important;',
+    'border:1px solid rgba(0,0,0,.08)!important;border-bottom-color:rgba(0,0,0,.08)!important;',
+    'box-shadow:0 10px 40px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04) inset!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav .brand{border-right-color:rgba(0,0,0,.12)!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-links a{color:#1d1d1f!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-links a:hover{background:rgba(0,0,0,.06)!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions .btn-primary,',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions [data-auth-slot] a.btn-primary{',
+    'background:#1d1d1f!important;color:#fff!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions .btn-ghost,',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions [data-auth-slot] a.btn-ghost{',
+    'color:#1d1d1f!important;border-color:rgba(0,0,0,.25)!important;}',
     '}',
 
-    /* mobile — left/right both always in px so they interpolate */
+    /* mobile geometry */
     '@media (max-width:768px){',
     'body .nav{',
-    'left:0px!important;',
-    'right:0px!important;',
-    'width:auto!important;',
-    'max-width:none!important;',
-    'transform:none!important;',
-    'justify-content:space-between!important;',
-    '}',
+    'left:0px!important;right:0px!important;width:auto!important;max-width:none!important;',
+    'transform:none!important;justify-content:space-between!important;}',
+
+    /* mobile scrolled: default white pill on dark hero */
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:10px!important;',
     'left:var(--pill-inset, 120px)!important;',
@@ -68,10 +82,10 @@
     'padding:5px 8px!important;',
     'padding-top:5px!important;',
     'border-radius:980px!important;',
-    'background:rgba(18,18,22,.94)!important;',
+    'background:rgba(255,255,255,.94)!important;',
     'backdrop-filter:saturate(180%) blur(20px)!important;-webkit-backdrop-filter:saturate(180%) blur(20px)!important;',
-    'border:1px solid rgba(255,255,255,.12)!important;border-bottom-color:rgba(255,255,255,.12)!important;',
-    'box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset!important;',
+    'border:1px solid rgba(0,0,0,.08)!important;border-bottom-color:rgba(0,0,0,.08)!important;',
+    'box-shadow:0 8px 28px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.04) inset!important;',
     'z-index:2000!important;}',
     'body.is-scrolled:not(.nav-open) .nav .brand{',
     'gap:0!important;padding-right:0!important;border-right:0!important;',
@@ -80,11 +94,19 @@
     'opacity:0!important;max-width:0!important;margin:0!important;pointer-events:none!important;}',
     'body.is-scrolled:not(.nav-open) .nav .logo-img{width:32px!important;height:32px!important;border-radius:9px!important;}',
     'body.is-scrolled:not(.nav-open) .nav-toggle{',
-    'width:36px!important;height:36px!important;background:rgba(255,255,255,.12)!important;flex-shrink:0!important;}',
-    'body.is-scrolled:not(.nav-open) .nav-toggle span{background:#f5f5f7!important;}',
+    'width:36px!important;height:36px!important;background:rgba(0,0,0,.08)!important;flex-shrink:0!important;}',
+    'body.is-scrolled:not(.nav-open) .nav-toggle span{background:#1d1d1f!important;}',
     'body.is-scrolled:not(.nav-open) .nav-right{',
     'position:fixed!important;opacity:0!important;pointer-events:none!important;',
     'width:0!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;}',
+
+    /* mobile on light paper → also white pill (same), keep contrast via dark icons already set */
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav{',
+    'background:rgba(255,255,255,.96)!important;',
+    'border:1px solid rgba(0,0,0,.1)!important;border-bottom-color:rgba(0,0,0,.1)!important;',
+    'box-shadow:0 8px 28px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04) inset!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle{background:rgba(0,0,0,.08)!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle span{background:#1d1d1f!important;}',
     '}',
 
     'body.nav-open .nav{',
@@ -100,6 +122,7 @@
     'body.nav-open .nav .wordmark{opacity:1!important;max-width:140px!important;}',
     'body.nav-open .nav .brand{border-right:0!important;padding-right:0!important;margin-right:0!important;height:auto!important;gap:8px!important;}',
     'body.nav-open .nav .logo-img{width:36px!important;height:36px!important;}',
+    'body.nav-open .nav-toggle span{background:#f5f5f7!important;}',
 
     '@media (max-width:768px){',
     'body.nav-open .nav-right,body.nav-open .nav-right.open,.nav-right.open{',
@@ -143,6 +166,46 @@
     document.documentElement.style.setProperty('--pill-inset', inset + 'px');
   }
 
+  function isLightSurface() {
+    // sample a point just below the nav
+    var y = 64;
+    var el = document.elementFromPoint(Math.min(40, window.innerWidth / 2), y);
+    if (!el) {
+      // fallback: sheet / features position
+      var sheet = document.querySelector('.sheet, #features, .paper, main section');
+      if (sheet) {
+        var r = sheet.getBoundingClientRect();
+        return r.top < 80;
+      }
+      return false;
+    }
+    var node = el;
+    for (var i = 0; i < 12 && node; i++) {
+      if (node.classList) {
+        if (node.classList.contains('sheet') || node.id === 'features' || node.classList.contains('paper')) return true;
+        if (node.classList.contains('hero') || node.classList.contains('hero-section')) return false;
+      }
+      try {
+        var bg = window.getComputedStyle(node).backgroundColor;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+          var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+          if (m) {
+            var r = +m[1], g = +m[2], b = +m[3];
+            var lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return lum > 0.72;
+          }
+        }
+      } catch (e) {}
+      node = node.parentElement;
+    }
+    return false;
+  }
+
+  function updateSurface() {
+    var light = isLightSurface();
+    document.body.classList.toggle('nav-on-light', light);
+  }
+
   var scrolled = false;
   var ticking = false;
 
@@ -151,6 +214,7 @@
     measurePill();
     scrolled = next;
     document.body.classList.toggle('is-scrolled', scrolled);
+    updateSurface();
   }
 
   function onScroll() {
@@ -162,6 +226,7 @@
       var y = window.scrollY || window.pageYOffset || 0;
       if (!scrolled && y > 40) applyScrolled(true);
       else if (scrolled && y < 10) applyScrolled(false);
+      else if (scrolled) updateSurface();
     });
   }
 
@@ -171,6 +236,7 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
     measurePill();
+    updateSurface();
   }, { passive: true });
 
   function rename() {
