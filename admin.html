@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>後台管理 — MapSky</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.admin-page {
+      min-height: 100vh; min-height: 100dvh;
+      background: #0a0a0a;
+      color: #f5f5f7;
+    }
+    .admin-stage {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px) + 36px) 20px 80px;
+    }
+    .admin-stage h1 {
+      font-size: 26px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.02em;
+    }
+    .admin-stage .sub { color: #a1a1a6; font-size: 14px; margin: 0 0 28px; }
+
+    .gate, .panel {
+      background: #1c1c1e;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    .gate h2, .panel h2 {
+      font-size: 16px; font-weight: 650; margin: 0 0 12px;
+    }
+    .gate p, .panel p { color: #a1a1a6; font-size: 14px; margin: 0 0 12px; line-height: 1.5; }
+    .gate .btn, .panel .btn, .admin-actions .btn {
+      display: inline-block;
+      border-radius: 980px;
+      padding: 11px 20px;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none; border: 0; cursor: pointer; font-family: inherit;
+    }
+    .btn-primary { background: #f5f5f7; color: #0a0a0a; }
+    .btn-ghost {
+      background: transparent; color: #f5f5f7;
+      border: 2px solid rgba(255,255,255,0.3) !important;
+    }
+    .btn-danger {
+      background: transparent; color: #ff453a;
+      border: 2px solid rgba(255,69,58,0.4) !important;
+    }
+
+    .kv { display: grid; gap: 10px; }
+    .kv-row {
+      display: flex; justify-content: space-between; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 14px;
+    }
+    .kv-row:last-child { border-bottom: 0; }
+    .kv-label { color: #8e8e93; }
+    .kv-value { font-weight: 600; text-align: right; word-break: break-all; }
+
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+
+    textarea.admin-notes {
+      width: 100%; min-height: 140px;
+      background: #121214; color: #f5f5f7;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 12px 14px;
+      font-size: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      resize: vertical; box-sizing: border-box;
+    }
+    .hint { font-size: 12px; color: #6e6e73; margin-top: 8px; }
+    .status-ok { color: #30d158; font-weight: 600; }
+    .status-no { color: #ff9f0a; font-weight: 600; }
+    #adminApp { display: none; }
+    #adminGate { display: none; }
+  </style>
+</head>
+<body class="admin-page">
+  <header class="nav" id="topNav">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-right" id="navRight">
+      <nav class="nav-links" aria-label="主選單">
+        <a href="/">首頁</a>
+        <a href="/account">帳號</a>
+        <a href="/privacy">隱私與條款</a>
+      </nav>
+      <div class="nav-actions">
+        <span data-auth-slot>
+          <a class="btn btn-sm btn-primary" href="/login">登入</a>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-stage">
+    <h1>後台管理</h1>
+    <p class="sub">僅限 MapSky 管理員</p>
+
+    <div class="gate" id="adminLoading">
+      <p>正在驗證身分…</p>
+    </div>
+
+    <div class="gate" id="adminGate">
+      <h2>無法進入</h2>
+      <p id="gateMsg">此頁面僅限管理員。請使用管理員帳號登入。</p>
+      <div class="admin-actions">
+        <a class="btn btn-primary" href="/login">登入</a>
+        <a class="btn btn-ghost" href="/">回首頁</a>
+      </div>
+    </div>
+
+    <div id="adminApp">
+      <div class="panel">
+        <h2>目前身分 <span class="status-ok">管理員</span></h2>
+        <div class="kv">
+          <div class="kv-row"><span class="kv-label">暱稱</span><span class="kv-value" id="aName">—</span></div>
+          <div class="kv-row"><span class="kv-label">Email</span><span class="kv-value" id="aEmail">—</span></div>
+          <div class="kv-row"><span class="kv-label">登入方式</span><span class="kv-value" id="aProvider">—</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>網站快捷</h2>
+        <div class="admin-actions">
+          <a class="btn btn-ghost" href="/" target="_blank">預覽首頁</a>
+          <a class="btn btn-ghost" href="/features" target="_blank">適用裝置</a>
+          <a class="btn btn-ghost" href="/privacy" target="_blank">隱私條款</a>
+          <a class="btn btn-ghost" href="/account">帳號設定</a>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>管理備註</h2>
+        <p>只存在這個瀏覽器本機，方便你記下待改事項（不會上傳到伺服器）。</p>
+        <textarea class="admin-notes" id="adminNotes" placeholder="例如：首頁文案要改、OG 圖要換…"></textarea>
+        <p class="hint" id="notesHint">自動儲存於本機</p>
+        <div class="admin-actions" style="margin-top:12px">
+          <button type="button" class="btn btn-ghost" id="clearNotes">清空備註</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>登出</h2>
+        <div class="admin-actions">
+          <button type="button" class="btn btn-danger" id="logoutBtn">登出管理員</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script src="nav-scroll.js?v=22"></script>
+  <script>
+    (function () {
+      /**
+       * 只有列在這裡的 Email 才能進後台。
+       * 請改成你真正登入用的 Email（可多個）。
+       */
+      var ADMIN_EMAILS = [
+        'mapskyapp@gmail.com',
+        'yonghong0333@gmail.com'
+      ].map(function (e) { return String(e).trim().toLowerCase(); });
+
+      function isAdmin(session) {
+        if (!session || !session.loggedIn) return false;
+        var p = session.profile || {};
+        var email = String(p.email || '').trim().toLowerCase();
+        if (email && ADMIN_EMAILS.indexOf(email) !== -1) return true;
+        // optional explicit role from API
+        if (p.role === 'admin' || p.isAdmin === true) return true;
+        return false;
+      }
+
+      var toggle = document.getElementById('navToggle');
+      var panel = document.getElementById('navRight');
+      if (toggle && panel) {
+        toggle.addEventListener('click', function () {
+          var open = panel.classList.toggle('open');
+          toggle.classList.toggle('open', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          document.body.classList.toggle('nav-open', open);
+        });
+      }
+
+      var NOTES_KEY = 'mapsky_admin_notes_v1';
+      var notesEl = document.getElementById('adminNotes');
+      var notesHint = document.getElementById('notesHint');
+      try {
+        var saved = localStorage.getItem(NOTES_KEY);
+        if (saved && notesEl) notesEl.value = saved;
+      } catch (e) {}
+      if (notesEl) {
+        var t;
+        notesEl.addEventListener('input', function () {
+          clearTimeout(t);
+          t = setTimeout(function () {
+            try {
+              localStorage.setItem(NOTES_KEY, notesEl.value);
+              if (notesHint) notesHint.textContent = '已儲存 · ' + new Date().toLocaleTimeString();
+            } catch (err) {
+              if (notesHint) notesHint.textContent = '無法寫入本機儲存';
+            }
+          }, 300);
+        });
+      }
+      var clearNotes = document.getElementById('clearNotes');
+      if (clearNotes) {
+        clearNotes.addEventListener('click', function () {
+          if (notesEl) notesEl.value = '';
+          try { localStorage.removeItem(NOTES_KEY); } catch (e) {}
+          if (notesHint) notesHint.textContent = '已清空';
+        });
+      }
+
+      function show(view) {
+        document.getElementById('adminLoading').style.display = view === 'loading' ? 'block' : 'none';
+        document.getElementById('adminGate').style.display = view === 'gate' ? 'block' : 'none';
+        document.getElementById('adminApp').style.display = view === 'app' ? 'block' : 'none';
+      }
+
+      function fillAdmin(s) {
+        var p = (s && s.profile) || {};
+        document.getElementById('aName').textContent = p.nickname || p.name || '—';
+        document.getElementById('aEmail').textContent = p.email || '—';
+        document.getElementById('aProvider').textContent = p.provider || p.authProvider || '—';
+      }
+
+      function applySession(s) {
+        if (!s || !s.loggedIn) {
+          document.getElementById('gateMsg').textContent = '請先登入管理員帳號。';
+          show('gate');
+          return;
+        }
+        if (!isAdmin(s)) {
+          document.getElementById('gateMsg').textContent =
+            '目前登入的帳號沒有後台權限（' + ((s.profile && s.profile.email) || '未知') + '）。';
+          show('gate');
+          return;
+        }
+        fillAdmin(s);
+        show('app');
+      }
+
+      window.MapSkyAuthOnSession = applySession;
+
+      if (window.MapSkyAuth && window.MapSkyAuth.session) {
+        window.MapSkyAuth.session().then(function (res) {
+          applySession(res.body);
+        }).catch(function () {
+          document.getElementById('gateMsg').textContent = '無法驗證登入狀態，請重新登入。';
+          show('gate');
+        });
+      } else {
+        setTimeout(function () {
+          if (window.MapSkyAuth && window.MapSkyAuth.session) {
+            window.MapSkyAuth.session().then(function (res) { applySession(res.body); });
+          } else {
+            show('gate');
+          }
+        }, 400);
+      }
+
+      var logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          if (!window.MapSkyAuth) return;
+          logoutBtn.disabled = true;
+          window.MapSkyAuth.logout().then(function () {
+            location.href = '/';
+          }).catch(function () {
+            logoutBtn.disabled = false;
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
