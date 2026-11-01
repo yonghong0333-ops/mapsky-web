@@ -77,7 +77,7 @@
   function updateNav(s) {
     $all("[data-auth-slot]").forEach(function (el) {
       if (s && s.loggedIn) {
-        el.innerHTML = '<a class="btn btn-sm btn-ghost" href="/login">' + escapeHtml(displayName(s)) + "</a>";
+        el.innerHTML = '<a class="btn btn-sm btn-ghost" href="/account">' + escapeHtml(displayName(s)) + "</a>";
       } else {
         el.innerHTML = '<a class="btn btn-sm btn-primary" href="/login">\u767b\u5165</a>';
       }
