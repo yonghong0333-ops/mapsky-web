@@ -1,20 +1,28 @@
 (function () {
   var css = [
-    /* logged-in = outline; logged-out = solid */
-    '.nav-actions .btn-ghost,',
-    'body.nav-open .nav-actions .btn-ghost,',
-    '.nav-right .btn-ghost,',
-    '[data-auth-slot] .btn-ghost{',
+    /* logged-in outline — highest priority */
+    'a.btn.btn-sm.btn-ghost,',
+    'a.btn-sm.btn-ghost,',
+    '.btn.btn-sm.btn-ghost,',
+    '.btn-ghost.btn-sm,',
+    '.nav-actions a.btn-ghost,',
+    '.nav-right a.btn-ghost,',
+    'body.nav-open .nav-actions a.btn-ghost,',
+    'body.nav-open .nav-right a.btn-ghost,',
+    '[data-auth-slot] a.btn-ghost,',
+    '[data-auth-slot] a{',
+    '}',
+    /* apply ghost look to any auth slot that is not the solid 登入 button */
+    '[data-auth-slot] a.btn-ghost{',
     'background:transparent!important;',
+    'background-color:transparent!important;',
     'color:#f5f5f7!important;',
     'border:2px solid rgba(255,255,255,.55)!important;',
     'box-shadow:none!important;',
     '}',
-    '.nav-actions .btn-primary,',
-    'body.nav-open .nav-actions .btn-primary,',
-    '.nav-right .btn-primary,',
-    '[data-auth-slot] .btn-primary{',
+    '[data-auth-slot] a.btn-primary{',
     'background:#f5f5f7!important;',
+    'background-color:#f5f5f7!important;',
     'color:#0a0a0a!important;',
     'border:0!important;',
     '}',
@@ -125,7 +133,6 @@
     'body.nav-open .nav .logo-img{width:36px!important;height:36px!important;}',
     'body.nav-open .nav-toggle span{background:#f5f5f7!important;}',
 
-    /* open menu: auth button sizes */
     'body.nav-open .nav-actions .btn-sm{',
     'padding:12px 22px!important;font-size:16px!important;border-radius:980px!important;}',
 
@@ -155,6 +162,30 @@
       document.head.appendChild(s);
     }
     s.textContent = css;
+  }
+
+  /* Force hollow style on logged-in name buttons (not 登入) */
+  function forceGhostAuth() {
+    document.querySelectorAll('[data-auth-slot] a').forEach(function (a) {
+      var t = (a.textContent || '').trim();
+      if (t === '登入') {
+        a.classList.remove('btn-ghost');
+        a.classList.add('btn', 'btn-sm', 'btn-primary');
+        a.style.setProperty('background', '#f5f5f7', 'important');
+        a.style.setProperty('background-color', '#f5f5f7', 'important');
+        a.style.setProperty('color', '#0a0a0a', 'important');
+        a.style.setProperty('border', '0', 'important');
+      } else {
+        // logged-in display name → hollow
+        a.classList.remove('btn-primary');
+        a.classList.add('btn', 'btn-sm', 'btn-ghost');
+        a.style.setProperty('background', 'transparent', 'important');
+        a.style.setProperty('background-color', 'transparent', 'important');
+        a.style.setProperty('color', '#f5f5f7', 'important');
+        a.style.setProperty('border', '2px solid rgba(255,255,255,0.55)', 'important');
+        a.style.setProperty('box-shadow', 'none', 'important');
+      }
+    });
   }
 
   function measurePill() {
@@ -238,12 +269,18 @@
 
   inject();
   measurePill();
+  forceGhostAuth();
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
     measurePill();
     updateSurface();
   }, { passive: true });
+
+  // Keep forcing after auth.js updates the slot
+  var obs = new MutationObserver(function () { forceGhostAuth(); });
+  obs.observe(document.documentElement, { childList: true, subtree: true });
+  setInterval(forceGhostAuth, 800);
 
   function rename() {
     document.querySelectorAll('a[href="#features"], a[href="/features"]').forEach(function (a) {
@@ -256,6 +293,7 @@
     n++;
     rename();
     measurePill();
+    forceGhostAuth();
     if (n > 40) clearInterval(iv);
   }, 150);
 })();
