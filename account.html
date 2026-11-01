@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>帳號設定 — MapSky</title>
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.account-page {
+      min-height: 100vh; min-height: 100dvh;
+      background: #0a0a0a;
+      color: #f5f5f7;
+    }
+    .account-stage {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px) + 40px) 24px 80px;
+    }
+    .account-stage h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+    }
+    .account-stage .sub {
+      color: #a1a1a6;
+      font-size: 15px;
+      margin: 0 0 32px;
+    }
+    .account-card {
+      background: #1c1c1e;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .account-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .account-row:first-child { padding-top: 0; }
+    .account-label {
+      font-size: 13px;
+      color: #a1a1a6;
+      margin-bottom: 4px;
+    }
+    .account-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f5f5f7;
+      word-break: break-all;
+    }
+    .account-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .account-actions .btn {
+      border-radius: 980px;
+      padding: 12px 22px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: 0;
+      font-family: inherit;
+    }
+    .account-actions .btn-primary {
+      background: #f5f5f7;
+      color: #0a0a0a;
+    }
+    .account-actions .btn-ghost {
+      background: transparent;
+      color: #f5f5f7;
+      border: 2px solid rgba(255,255,255,0.35);
+    }
+    .account-actions .btn-danger {
+      background: transparent;
+      color: #ff453a;
+      border: 2px solid rgba(255,69,58,0.45);
+    }
+    .guest-box {
+      text-align: center;
+      padding: 48px 24px;
+      color: #a1a1a6;
+    }
+    .guest-box a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 28px;
+      border-radius: 980px;
+      background: #f5f5f7;
+      color: #0a0a0a;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body class="account-page">
+  <header class="nav" id="topNav">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-right" id="navRight">
+      <nav class="nav-links" aria-label="主選單">
+        <a href="/#news">最新消息</a>
+        <a href="/#features">適用裝置</a>
+        <a href="/privacy">隱私與條款</a>
+      </nav>
+      <div class="nav-actions">
+        <span data-auth-slot>
+          <a class="btn btn-sm btn-primary" href="/login">登入</a>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="account-stage">
+    <h1>帳號設定</h1>
+    <p class="sub">管理你的 MapSky 帳號</p>
+
+    <div id="loggedInView" style="display:none">
+      <div class="account-card">
+        <div class="account-row">
+          <div>
+            <div class="account-label">暱稱</div>
+            <div class="account-value" id="nameVal">—</div>
+          </div>
+        </div>
+        <div class="account-row">
+          <div>
+            <div class="account-label">Email</div>
+            <div class="account-value" id="emailVal">—</div>
+          </div>
+        </div>
+        <div class="account-row">
+          <div>
+            <div class="account-label">登入方式</div>
+            <div class="account-value" id="providerVal">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="account-actions">
+        <a class="btn btn-primary" href="/">回首頁</a>
+        <button type="button" class="btn btn-danger" id="logoutBtn">登出</button>
+      </div>
+    </div>
+
+    <div class="guest-box" id="guestView">
+      <p>你尚未登入</p>
+      <a href="/login">前往登入</a>
+    </div>
+  </main>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script src="nav-scroll.js?v=22"></script>
+  <script>
+    (function () {
+      var toggle = document.getElementById('navToggle');
+      var panel = document.getElementById('navRight');
+      if (toggle && panel) {
+        toggle.addEventListener('click', function () {
+          var open = panel.classList.toggle('open');
+          toggle.classList.toggle('open', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          document.body.classList.toggle('nav-open', open);
+        });
+        panel.querySelectorAll('a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            panel.classList.remove('open');
+            toggle.classList.remove('open');
+            document.body.classList.remove('nav-open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      function fill(s) {
+        var logged = s && s.loggedIn;
+        document.getElementById('loggedInView').style.display = logged ? 'block' : 'none';
+        document.getElementById('guestView').style.display = logged ? 'none' : 'block';
+        if (!logged) return;
+        var p = s.profile || {};
+        document.getElementById('nameVal').textContent =
+          p.nickname || p.name || '—';
+        document.getElementById('emailVal').textContent =
+          p.email || '—';
+        document.getElementById('providerVal').textContent =
+          p.provider || p.authProvider || 'OAuth / Email';
+      }
+
+      window.MapSkyAuthOnSession = fill;
+
+      if (window.MapSkyAuth && window.MapSkyAuth.session) {
+        window.MapSkyAuth.session().then(function (res) {
+          fill(res.body);
+        }).catch(function () {
+          fill({ loggedIn: false });
+        });
+      }
+
+      var logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          if (!window.MapSkyAuth) return;
+          logoutBtn.disabled = true;
+          logoutBtn.textContent = '登出中…';
+          window.MapSkyAuth.logout().then(function () {
+            location.href = '/';
+          }).catch(function () {
+            logoutBtn.disabled = false;
+            logoutBtn.textContent = '登出';
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
