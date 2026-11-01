@@ -1,28 +1,23 @@
 (function () {
+  var DURATION = 1400;
+  var EASE = 'cubic-bezier(0.25, 0.8, 0.25, 1)';
+
   var css = [
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* force transitions on the real nav element */
+    /* base: no CSS transition on geometry — WAAPI owns it */
     'body .nav{',
-    'transition:',
-    'top 1s cubic-bezier(.25,.8,.25,1),',
-    'left 1s cubic-bezier(.25,.8,.25,1),',
-    'right 1s cubic-bezier(.25,.8,.25,1),',
-    'padding 1s cubic-bezier(.25,.8,.25,1),',
-    'border-radius 1s cubic-bezier(.25,.8,.25,1),',
-    'background .7s ease,',
-    'box-shadow 1s ease,',
-    'height 1s cubic-bezier(.25,.8,.25,1),',
-    'transform 1s cubic-bezier(.25,.8,.25,1)!important;',
+    'will-change:left,right,top,border-radius,padding,background,box-shadow;',
     '}',
     'body .nav .wordmark{',
-    'transition:opacity .6s ease,max-width 1s cubic-bezier(.25,.8,.25,1),margin 1s cubic-bezier(.25,.8,.25,1)!important;',
+    'transition:opacity .5s ease,max-width .9s cubic-bezier(.25,.8,.25,1),margin .9s cubic-bezier(.25,.8,.25,1)!important;',
     'max-width:140px;overflow:hidden;white-space:nowrap;}',
-    'body .nav .brand{transition:gap .8s ease,padding .8s ease,border-color .6s ease!important;}',
-    'body .nav .logo-img{transition:width .8s ease,height .8s ease,border-radius .8s ease!important;}',
+    'body .nav .brand{transition:gap .6s ease!important;}',
+    'body .nav .logo-img{transition:width .6s ease,height .6s ease!important;}',
 
-    /* ===== desktop: content-width centered pill ===== */
+    /* desktop pill (css ok on desktop) */
     '@media (min-width:769px){',
+    'body .nav{transition:top .9s cubic-bezier(.25,.8,.25,1),left .9s cubic-bezier(.25,.8,.25,1),right .9s cubic-bezier(.25,.8,.25,1),width .9s cubic-bezier(.25,.8,.25,1),border-radius .9s cubic-bezier(.25,.8,.25,1),background .6s ease,box-shadow .9s ease,padding .9s cubic-bezier(.25,.8,.25,1),transform .9s cubic-bezier(.25,.8,.25,1)!important;}',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
     'width:auto!important;max-width:calc(100vw - 32px)!important;',
@@ -52,40 +47,25 @@
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
     '}',
 
-    /* ===== mobile: left+right inset shrink (animatable lengths) ===== */
+    /* mobile static end-states (geometry filled by WAAPI fill:forwards) */
     '@media (max-width:768px){',
-    /* expanded baseline — both sides 0 so inset can interpolate */
     'body .nav{',
-    'left:0!important;',
-    'right:0!important;',
-    'width:auto!important;',
-    'max-width:none!important;',
-    'transform:none!important;',
-    'justify-content:space-between!important;',
+    'left:0!important;right:0!important;width:auto!important;max-width:none!important;',
+    'transform:none!important;justify-content:space-between!important;',
     '}',
-    /* collapsed pill — inset from both sides toward center */
     'body.is-scrolled:not(.nav-open) .nav{',
-    'top:10px!important;',
-    'left:var(--pill-inset, calc(50vw - 60px))!important;',
-    'right:var(--pill-inset, calc(50vw - 60px))!important;',
-    'transform:none!important;',
-    'width:auto!important;',
-    'height:50px!important;',
-    'padding:5px 8px!important;',
-    'padding-top:5px!important;',
-    'border-radius:980px!important;',
-    'justify-content:space-between!important;',
     'background:rgba(18,18,22,.94)!important;',
-    'backdrop-filter:saturate(180%) blur(24px)!important;-webkit-backdrop-filter:saturate(180%) blur(24px)!important;',
+    'backdrop-filter:saturate(180%) blur(20px)!important;-webkit-backdrop-filter:saturate(180%) blur(20px)!important;',
     'border:1px solid rgba(255,255,255,.12)!important;border-bottom-color:rgba(255,255,255,.12)!important;',
     'box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset!important;',
-    'z-index:2000!important;}',
+    'z-index:2000!important;',
+    'justify-content:space-between!important;',
+    '}',
     'body.is-scrolled:not(.nav-open) .nav .brand{',
     'gap:0!important;padding-right:0!important;border-right:0!important;',
     'margin-right:0!important;height:36px!important;flex-shrink:0!important;}',
     'body.is-scrolled:not(.nav-open) .nav .wordmark{',
-    'opacity:0!important;max-width:0!important;margin:0!important;',
-    'pointer-events:none!important;}',
+    'opacity:0!important;max-width:0!important;margin:0!important;pointer-events:none!important;}',
     'body.is-scrolled:not(.nav-open) .nav .logo-img{width:32px!important;height:32px!important;border-radius:9px!important;}',
     'body.is-scrolled:not(.nav-open) .nav-toggle{',
     'width:36px!important;height:36px!important;background:rgba(255,255,255,.12)!important;flex-shrink:0!important;}',
@@ -95,7 +75,6 @@
     'width:0!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;}',
     '}',
 
-    /* menu open → full bar */
     'body.nav-open .nav{',
     'top:0!important;left:0!important;right:0!important;transform:none!important;',
     'width:auto!important;max-width:none!important;',
@@ -105,8 +84,7 @@
     'padding-top:env(safe-area-inset-top,0px)!important;',
     'border-radius:0!important;border:0!important;border-bottom:1px solid transparent!important;',
     'box-shadow:none!important;background:rgba(10,10,10,.95)!important;',
-    'justify-content:space-between!important;',
-    'z-index:3000!important;}',
+    'justify-content:space-between!important;z-index:3000!important;}',
     'body.nav-open .nav .wordmark{opacity:1!important;max-width:140px!important;}',
     'body.nav-open .nav .brand{border-right:0!important;padding-right:0!important;margin-right:0!important;height:auto!important;gap:8px!important;}',
     'body.nav-open .nav .logo-img{width:36px!important;height:36px!important;}',
@@ -125,8 +103,7 @@
     'font-size:28px!important;font-weight:600!important;gap:28px!important;}',
     'body.nav-open .nav-links a{',
     'padding:0!important;opacity:1!important;background:transparent!important;border-radius:0!important;}',
-    'body.nav-open .nav-actions{',
-    'margin-top:16px!important;align-self:flex-start!important;}',
+    'body.nav-open .nav-actions{margin-top:16px!important;align-self:flex-start!important;}',
     'body.nav-open .nav-actions .btn-sm{padding:12px 22px!important;font-size:16px!important;}',
     '}'
   ].join('');
@@ -141,35 +118,143 @@
     s.textContent = css;
   }
 
-  function measurePill() {
+  function isMobile() {
+    return window.matchMedia('(max-width:768px)').matches;
+  }
+
+  function pillMetrics() {
     var nav = document.querySelector('.nav');
-    if (!nav) return;
-    var logo = nav.querySelector('.logo-img');
-    var toggle = nav.querySelector('.nav-toggle');
+    var logo = nav && nav.querySelector('.logo-img');
+    var toggle = nav && nav.querySelector('.nav-toggle');
     var logoW = logo ? (logo.offsetWidth || 32) : 32;
     var toggleW = toggle ? (toggle.offsetWidth || 36) : 36;
-    var pillW = logoW + 14 + toggleW + 16; // content + padding
-    var vw = window.innerWidth || document.documentElement.clientWidth || 375;
-    var inset = Math.max(12, (vw - pillW) / 2);
-    document.documentElement.style.setProperty('--pill-inset', inset + 'px');
+    var pillW = logoW + 14 + toggleW + 16;
+    var vw = window.innerWidth || 375;
+    var inset = Math.max(14, (vw - pillW) / 2);
+    return { inset: inset, pillW: pillW };
   }
 
   var scrolled = false;
-  var ticking = false;
-  var animating = false;
+  var running = null;
+  var locked = false;
+
+  function runMobileAnim(toPill) {
+    var nav = document.querySelector('.nav');
+    if (!nav || !nav.animate) {
+      document.body.classList.toggle('is-scrolled', toPill);
+      return;
+    }
+
+    if (running) {
+      try { running.cancel(); } catch (e) {}
+      running = null;
+    }
+
+    var m = pillMetrics();
+    var safeTop = 0;
+    try {
+      var cs = getComputedStyle(document.documentElement);
+      // approximate; nav already includes safe area in expanded height
+    } catch (e2) {}
+
+    var from = toPill
+      ? {
+          top: '0px',
+          left: '0px',
+          right: '0px',
+          borderRadius: '0px',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          paddingLeft: 'max(16px, env(safe-area-inset-left))',
+          paddingRight: 'max(16px, env(safe-area-inset-right))',
+          paddingBottom: '0px',
+          height: 'calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px))'
+        }
+      : {
+          top: '10px',
+          left: m.inset + 'px',
+          right: m.inset + 'px',
+          borderRadius: '980px',
+          paddingTop: '5px',
+          paddingLeft: '8px',
+          paddingRight: '8px',
+          paddingBottom: '5px',
+          height: '50px'
+        };
+
+    var to = toPill
+      ? {
+          top: '10px',
+          left: m.inset + 'px',
+          right: m.inset + 'px',
+          borderRadius: '980px',
+          paddingTop: '5px',
+          paddingLeft: '8px',
+          paddingRight: '8px',
+          paddingBottom: '5px',
+          height: '50px'
+        }
+      : {
+          top: '0px',
+          left: '0px',
+          right: '0px',
+          borderRadius: '0px',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          paddingLeft: 'max(16px, env(safe-area-inset-left))',
+          paddingRight: 'max(16px, env(safe-area-inset-right))',
+          paddingBottom: '0px',
+          height: 'calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px))'
+        };
+
+    // toggle class early so wordmark/logo styles track
+    document.body.classList.toggle('is-scrolled', toPill);
+
+    locked = true;
+    running = nav.animate([from, to], {
+      duration: DURATION,
+      easing: EASE,
+      fill: 'forwards'
+    });
+
+    running.onfinish = function () {
+      running = null;
+      locked = false;
+      // commit final inline so layout stays until next anim
+      if (toPill) {
+        nav.style.top = '10px';
+        nav.style.left = m.inset + 'px';
+        nav.style.right = m.inset + 'px';
+        nav.style.borderRadius = '980px';
+        nav.style.height = '50px';
+        nav.style.padding = '5px 8px';
+      } else {
+        nav.style.top = '';
+        nav.style.left = '';
+        nav.style.right = '';
+        nav.style.borderRadius = '';
+        nav.style.height = '';
+        nav.style.padding = '';
+      }
+    };
+
+    running.oncancel = function () {
+      running = null;
+      locked = false;
+    };
+  }
 
   function applyScrolled(next) {
     if (next === scrolled) return;
-    if (animating) return; // finish current anim before reversing
-    measurePill();
+    if (locked) return;
     scrolled = next;
-    animating = true;
-    var nav = document.querySelector('.nav');
-    if (nav) void nav.offsetWidth; // reflow
-    document.body.classList.toggle('is-scrolled', scrolled);
-    setTimeout(function () { animating = false; }, 1050);
+
+    if (isMobile()) {
+      runMobileAnim(next);
+    } else {
+      document.body.classList.toggle('is-scrolled', next);
+    }
   }
 
+  var ticking = false;
   function onScroll() {
     if (document.body.classList.contains('nav-open')) return;
     if (ticking) return;
@@ -177,16 +262,24 @@
     requestAnimationFrame(function () {
       ticking = false;
       var y = window.scrollY || window.pageYOffset || 0;
-      if (!scrolled && y > 40) applyScrolled(true);
-      else if (scrolled && y < 10) applyScrolled(false);
+      if (!scrolled && y > 48) applyScrolled(true);
+      else if (scrolled && y < 12) applyScrolled(false);
     });
   }
 
   inject();
-  measurePill();
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', function () { measurePill(); }, { passive: true });
+  window.addEventListener('resize', function () {
+    if (scrolled && isMobile()) {
+      var m = pillMetrics();
+      var nav = document.querySelector('.nav');
+      if (nav) {
+        nav.style.left = m.inset + 'px';
+        nav.style.right = m.inset + 'px';
+      }
+    }
+  }, { passive: true });
 
   function rename() {
     document.querySelectorAll('a[href="#features"], a[href="/features"]').forEach(function (a) {
@@ -198,7 +291,6 @@
   var iv = setInterval(function () {
     n++;
     rename();
-    measurePill();
     if (n > 40) clearInterval(iv);
   }, 150);
 })();
