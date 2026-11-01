@@ -3,6 +3,12 @@
   var API_PROXY = "/api/auth";
   var WEB_RETURN = "https://mapskyweb.vercel.app/login";
 
+  /** Only these emails see「後台管理」and can open /admin */
+  var ADMIN_EMAILS = [
+    "mapskyapp@gmail.com",
+    "yonghong0333@gmail.com"
+  ].map(function (e) { return String(e).trim().toLowerCase(); });
+
   function $all(sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
@@ -74,6 +80,31 @@
       .replace(/"/g, "\u0026quot;");
   }
 
+  function isAdmin(s) {
+    if (!s || !s.loggedIn) return false;
+    var p = s.profile || {};
+    if (p.role === "admin" || p.isAdmin === true) return true;
+    var email = String(p.email || "").trim().toLowerCase();
+    return !!(email && ADMIN_EMAILS.indexOf(email) !== -1);
+  }
+
+  function updateAdminLink(s) {
+    $all(".nav-links").forEach(function (nav) {
+      var existing = nav.querySelector("[data-admin-link]");
+      if (isAdmin(s)) {
+        if (!existing) {
+          var a = document.createElement("a");
+          a.href = "/admin";
+          a.textContent = "\u5f8c\u53f0\u7ba1\u7406";
+          a.setAttribute("data-admin-link", "1");
+          nav.appendChild(a);
+        }
+      } else if (existing) {
+        existing.parentNode.removeChild(existing);
+      }
+    });
+  }
+
   function updateNav(s) {
     $all("[data-auth-slot]").forEach(function (el) {
       if (s && s.loggedIn) {
@@ -82,6 +113,7 @@
         el.innerHTML = '<a class="btn btn-sm btn-primary" href="/login">\u767b\u5165</a>';
       }
     });
+    updateAdminLink(s);
   }
 
   function bootNav() {
@@ -131,6 +163,7 @@
     oauthUrl: oauthUrl,
     claimXchg: claimXchg,
     displayName: displayName,
+    isAdmin: isAdmin,
     bootNav: bootNav,
     updateNav: updateNav
   };
