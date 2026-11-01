@@ -10,18 +10,18 @@
     'padding 1.1s cubic-bezier(.25,.8,.25,1),',
     'border-radius 1.1s cubic-bezier(.25,.8,.25,1),',
     'height 1.1s cubic-bezier(.25,.8,.25,1),',
-    'background .45s ease,',
+    'background .4s ease,',
     'box-shadow 1.1s ease,',
-    'border-color .45s ease!important;',
+    'border-color .4s ease!important;',
     '}',
     'body .nav .wordmark{',
-    'transition:opacity .55s ease,max-width 1.1s cubic-bezier(.25,.8,.25,1),margin 1.1s cubic-bezier(.25,.8,.25,1),filter .45s ease!important;',
+    'transition:opacity .55s ease,max-width 1.1s cubic-bezier(.25,.8,.25,1),margin 1.1s cubic-bezier(.25,.8,.25,1)!important;',
     'max-width:140px;overflow:hidden;white-space:nowrap;}',
     'body .nav .logo-img{transition:width .7s ease,height .7s ease!important;}',
-    'body .nav-toggle{transition:background .45s ease!important;}',
-    'body .nav-toggle span{transition:background .45s ease!important;}',
+    'body .nav-toggle{transition:background .4s ease!important;}',
+    'body .nav-toggle span{transition:background .4s ease!important;}',
 
-    /* desktop dark pill (default on dark) */
+    /* desktop — dark pill default */
     '@media (min-width:769px){',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
@@ -50,21 +50,6 @@
     'body.is-scrolled:not(.nav-open) .nav-actions .btn-ghost,',
     'body.is-scrolled:not(.nav-open) .nav-actions [data-auth-slot] a.btn-ghost{',
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
-
-    /* desktop light surface → white pill, dark text */
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav{',
-    'background:rgba(255,255,255,.92)!important;',
-    'border:1px solid rgba(0,0,0,.08)!important;border-bottom-color:rgba(0,0,0,.08)!important;',
-    'box-shadow:0 10px 40px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04) inset!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav .brand{border-right-color:rgba(0,0,0,.12)!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-links a{color:#1d1d1f!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-links a:hover{background:rgba(0,0,0,.06)!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions .btn-primary,',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions [data-auth-slot] a.btn-primary{',
-    'background:#1d1d1f!important;color:#fff!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions .btn-ghost,',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-actions [data-auth-slot] a.btn-ghost{',
-    'color:#1d1d1f!important;border-color:rgba(0,0,0,.25)!important;}',
     '}',
 
     /* mobile geometry */
@@ -73,7 +58,7 @@
     'left:0px!important;right:0px!important;width:auto!important;max-width:none!important;',
     'transform:none!important;justify-content:space-between!important;}',
 
-    /* mobile scrolled: default white pill on dark hero */
+    /* mobile scrolled on dark: white pill */
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:10px!important;',
     'left:var(--pill-inset, 120px)!important;',
@@ -100,13 +85,13 @@
     'position:fixed!important;opacity:0!important;pointer-events:none!important;',
     'width:0!important;height:0!important;overflow:hidden!important;padding:0!important;margin:0!important;}',
 
-    /* mobile on light paper → also white pill (same), keep contrast via dark icons already set */
+    /* mobile on light (最新消息 / 白底) → black pill */
     'body.is-scrolled.nav-on-light:not(.nav-open) .nav{',
-    'background:rgba(255,255,255,.96)!important;',
-    'border:1px solid rgba(0,0,0,.1)!important;border-bottom-color:rgba(0,0,0,.1)!important;',
-    'box-shadow:0 8px 28px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04) inset!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle{background:rgba(0,0,0,.08)!important;}',
-    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle span{background:#1d1d1f!important;}',
+    'background:rgba(18,18,22,.94)!important;',
+    'border:1px solid rgba(255,255,255,.12)!important;border-bottom-color:rgba(255,255,255,.12)!important;',
+    'box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04) inset!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle{background:rgba(255,255,255,.12)!important;}',
+    'body.is-scrolled.nav-on-light:not(.nav-open) .nav-toggle span{background:#f5f5f7!important;}',
     '}',
 
     'body.nav-open .nav{',
@@ -167,43 +152,47 @@
   }
 
   function isLightSurface() {
-    // sample a point just below the nav
-    var y = 64;
-    var el = document.elementFromPoint(Math.min(40, window.innerWidth / 2), y);
-    if (!el) {
-      // fallback: sheet / features position
-      var sheet = document.querySelector('.sheet, #features, .paper, main section');
-      if (sheet) {
-        var r = sheet.getBoundingClientRect();
-        return r.top < 80;
-      }
-      return false;
+    // Prefer section anchors: news / features / sheet
+    var markers = document.querySelectorAll('#news, #features, .sheet, .news, [data-section="news"]');
+    for (var i = 0; i < markers.length; i++) {
+      var r = markers[i].getBoundingClientRect();
+      if (r.top < 90 && r.bottom > 40) return true;
     }
-    var node = el;
-    for (var i = 0; i < 12 && node; i++) {
-      if (node.classList) {
-        if (node.classList.contains('sheet') || node.id === 'features' || node.classList.contains('paper')) return true;
-        if (node.classList.contains('hero') || node.classList.contains('hero-section')) return false;
-      }
-      try {
-        var bg = window.getComputedStyle(node).backgroundColor;
-        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
-          var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-          if (m) {
-            var r = +m[1], g = +m[2], b = +m[3];
-            var lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-            return lum > 0.72;
+
+    // Sample several points under the nav (skip pure black jagged edge)
+    var xs = [window.innerWidth / 2, 24, window.innerWidth - 24];
+    var ys = [72, 100, 130];
+    for (var yi = 0; yi < ys.length; yi++) {
+      for (var xi = 0; xi < xs.length; xi++) {
+        var el = document.elementFromPoint(xs[xi], ys[yi]);
+        if (!el) continue;
+        var node = el;
+        for (var d = 0; d < 10 && node; d++) {
+          if (node.classList) {
+            if (node.classList.contains('sheet') || node.id === 'features' || node.id === 'news' || node.classList.contains('news') || node.classList.contains('paper')) return true;
+            if (node.classList.contains('hero') || node.classList.contains('hero-section')) break;
           }
+          try {
+            var bg = window.getComputedStyle(node).backgroundColor;
+            if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+              var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+              if (m) {
+                var r = +m[1], g = +m[2], b = +m[3];
+                var lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                if (lum > 0.65) return true;
+                if (lum < 0.25) break;
+              }
+            }
+          } catch (e) {}
+          node = node.parentElement;
         }
-      } catch (e) {}
-      node = node.parentElement;
+      }
     }
     return false;
   }
 
   function updateSurface() {
-    var light = isLightSurface();
-    document.body.classList.toggle('nav-on-light', light);
+    document.body.classList.toggle('nav-on-light', isLightSurface());
   }
 
   var scrolled = false;
