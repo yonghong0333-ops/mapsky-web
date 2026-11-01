@@ -1,23 +1,26 @@
 (function () {
-  var DURATION = 1400;
-  var EASE = 'cubic-bezier(0.25, 0.8, 0.25, 1)';
-
   var css = [
     '.nav-actions .btn-ghost{border:2px solid rgba(255,255,255,.4)!important;background:transparent!important;}',
 
-    /* base: no CSS transition on geometry — WAAPI owns it */
+    /* geometry transitions */
     'body .nav{',
-    'will-change:left,right,top,border-radius,padding,background,box-shadow;',
+    'transition:',
+    'top 1.1s cubic-bezier(.25,.8,.25,1),',
+    'left 1.1s cubic-bezier(.25,.8,.25,1),',
+    'right 1.1s cubic-bezier(.25,.8,.25,1),',
+    'padding 1.1s cubic-bezier(.25,.8,.25,1),',
+    'border-radius 1.1s cubic-bezier(.25,.8,.25,1),',
+    'height 1.1s cubic-bezier(.25,.8,.25,1),',
+    'background .7s ease,',
+    'box-shadow 1.1s ease!important;',
     '}',
     'body .nav .wordmark{',
-    'transition:opacity .5s ease,max-width .9s cubic-bezier(.25,.8,.25,1),margin .9s cubic-bezier(.25,.8,.25,1)!important;',
+    'transition:opacity .55s ease,max-width 1.1s cubic-bezier(.25,.8,.25,1),margin 1.1s cubic-bezier(.25,.8,.25,1)!important;',
     'max-width:140px;overflow:hidden;white-space:nowrap;}',
-    'body .nav .brand{transition:gap .6s ease!important;}',
-    'body .nav .logo-img{transition:width .6s ease,height .6s ease!important;}',
+    'body .nav .logo-img{transition:width .7s ease,height .7s ease!important;}',
 
-    /* desktop pill (css ok on desktop) */
+    /* desktop */
     '@media (min-width:769px){',
-    'body .nav{transition:top .9s cubic-bezier(.25,.8,.25,1),left .9s cubic-bezier(.25,.8,.25,1),right .9s cubic-bezier(.25,.8,.25,1),width .9s cubic-bezier(.25,.8,.25,1),border-radius .9s cubic-bezier(.25,.8,.25,1),background .6s ease,box-shadow .9s ease,padding .9s cubic-bezier(.25,.8,.25,1),transform .9s cubic-bezier(.25,.8,.25,1)!important;}',
     'body.is-scrolled:not(.nav-open) .nav{',
     'top:12px!important;left:50%!important;right:auto!important;transform:translate3d(-50%,0,0)!important;',
     'width:auto!important;max-width:calc(100vw - 32px)!important;',
@@ -47,20 +50,29 @@
     'background:transparent!important;color:#f5f5f7!important;border:2px solid rgba(255,255,255,.4)!important;}',
     '}',
 
-    /* mobile static end-states (geometry filled by WAAPI fill:forwards) */
+    /* mobile — left/right both always in px so they interpolate */
     '@media (max-width:768px){',
     'body .nav{',
-    'left:0!important;right:0!important;width:auto!important;max-width:none!important;',
-    'transform:none!important;justify-content:space-between!important;',
+    'left:0px!important;',
+    'right:0px!important;',
+    'width:auto!important;',
+    'max-width:none!important;',
+    'transform:none!important;',
+    'justify-content:space-between!important;',
     '}',
     'body.is-scrolled:not(.nav-open) .nav{',
+    'top:10px!important;',
+    'left:var(--pill-inset, 120px)!important;',
+    'right:var(--pill-inset, 120px)!important;',
+    'height:50px!important;',
+    'padding:5px 8px!important;',
+    'padding-top:5px!important;',
+    'border-radius:980px!important;',
     'background:rgba(18,18,22,.94)!important;',
     'backdrop-filter:saturate(180%) blur(20px)!important;-webkit-backdrop-filter:saturate(180%) blur(20px)!important;',
     'border:1px solid rgba(255,255,255,.12)!important;border-bottom-color:rgba(255,255,255,.12)!important;',
     'box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset!important;',
-    'z-index:2000!important;',
-    'justify-content:space-between!important;',
-    '}',
+    'z-index:2000!important;}',
     'body.is-scrolled:not(.nav-open) .nav .brand{',
     'gap:0!important;padding-right:0!important;border-right:0!important;',
     'margin-right:0!important;height:36px!important;flex-shrink:0!important;}',
@@ -76,7 +88,7 @@
     '}',
 
     'body.nav-open .nav{',
-    'top:0!important;left:0!important;right:0!important;transform:none!important;',
+    'top:0!important;left:0px!important;right:0px!important;transform:none!important;',
     'width:auto!important;max-width:none!important;',
     'height:calc(var(--nav-h,52px) + env(safe-area-inset-top,0px))!important;',
     'padding-left:max(16px,env(safe-area-inset-left))!important;',
@@ -118,143 +130,29 @@
     s.textContent = css;
   }
 
-  function isMobile() {
-    return window.matchMedia('(max-width:768px)').matches;
-  }
-
-  function pillMetrics() {
+  function measurePill() {
     var nav = document.querySelector('.nav');
-    var logo = nav && nav.querySelector('.logo-img');
-    var toggle = nav && nav.querySelector('.nav-toggle');
+    if (!nav) return;
+    var logo = nav.querySelector('.logo-img');
+    var toggle = nav.querySelector('.nav-toggle');
     var logoW = logo ? (logo.offsetWidth || 32) : 32;
     var toggleW = toggle ? (toggle.offsetWidth || 36) : 36;
     var pillW = logoW + 14 + toggleW + 16;
-    var vw = window.innerWidth || 375;
-    var inset = Math.max(14, (vw - pillW) / 2);
-    return { inset: inset, pillW: pillW };
+    var vw = window.innerWidth || document.documentElement.clientWidth || 375;
+    var inset = Math.max(14, Math.round((vw - pillW) / 2));
+    document.documentElement.style.setProperty('--pill-inset', inset + 'px');
   }
 
   var scrolled = false;
-  var running = null;
-  var locked = false;
-
-  function runMobileAnim(toPill) {
-    var nav = document.querySelector('.nav');
-    if (!nav || !nav.animate) {
-      document.body.classList.toggle('is-scrolled', toPill);
-      return;
-    }
-
-    if (running) {
-      try { running.cancel(); } catch (e) {}
-      running = null;
-    }
-
-    var m = pillMetrics();
-    var safeTop = 0;
-    try {
-      var cs = getComputedStyle(document.documentElement);
-      // approximate; nav already includes safe area in expanded height
-    } catch (e2) {}
-
-    var from = toPill
-      ? {
-          top: '0px',
-          left: '0px',
-          right: '0px',
-          borderRadius: '0px',
-          paddingTop: 'env(safe-area-inset-top, 0px)',
-          paddingLeft: 'max(16px, env(safe-area-inset-left))',
-          paddingRight: 'max(16px, env(safe-area-inset-right))',
-          paddingBottom: '0px',
-          height: 'calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px))'
-        }
-      : {
-          top: '10px',
-          left: m.inset + 'px',
-          right: m.inset + 'px',
-          borderRadius: '980px',
-          paddingTop: '5px',
-          paddingLeft: '8px',
-          paddingRight: '8px',
-          paddingBottom: '5px',
-          height: '50px'
-        };
-
-    var to = toPill
-      ? {
-          top: '10px',
-          left: m.inset + 'px',
-          right: m.inset + 'px',
-          borderRadius: '980px',
-          paddingTop: '5px',
-          paddingLeft: '8px',
-          paddingRight: '8px',
-          paddingBottom: '5px',
-          height: '50px'
-        }
-      : {
-          top: '0px',
-          left: '0px',
-          right: '0px',
-          borderRadius: '0px',
-          paddingTop: 'env(safe-area-inset-top, 0px)',
-          paddingLeft: 'max(16px, env(safe-area-inset-left))',
-          paddingRight: 'max(16px, env(safe-area-inset-right))',
-          paddingBottom: '0px',
-          height: 'calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px))'
-        };
-
-    // toggle class early so wordmark/logo styles track
-    document.body.classList.toggle('is-scrolled', toPill);
-
-    locked = true;
-    running = nav.animate([from, to], {
-      duration: DURATION,
-      easing: EASE,
-      fill: 'forwards'
-    });
-
-    running.onfinish = function () {
-      running = null;
-      locked = false;
-      // commit final inline so layout stays until next anim
-      if (toPill) {
-        nav.style.top = '10px';
-        nav.style.left = m.inset + 'px';
-        nav.style.right = m.inset + 'px';
-        nav.style.borderRadius = '980px';
-        nav.style.height = '50px';
-        nav.style.padding = '5px 8px';
-      } else {
-        nav.style.top = '';
-        nav.style.left = '';
-        nav.style.right = '';
-        nav.style.borderRadius = '';
-        nav.style.height = '';
-        nav.style.padding = '';
-      }
-    };
-
-    running.oncancel = function () {
-      running = null;
-      locked = false;
-    };
-  }
+  var ticking = false;
 
   function applyScrolled(next) {
     if (next === scrolled) return;
-    if (locked) return;
+    measurePill();
     scrolled = next;
-
-    if (isMobile()) {
-      runMobileAnim(next);
-    } else {
-      document.body.classList.toggle('is-scrolled', next);
-    }
+    document.body.classList.toggle('is-scrolled', scrolled);
   }
 
-  var ticking = false;
   function onScroll() {
     if (document.body.classList.contains('nav-open')) return;
     if (ticking) return;
@@ -262,23 +160,17 @@
     requestAnimationFrame(function () {
       ticking = false;
       var y = window.scrollY || window.pageYOffset || 0;
-      if (!scrolled && y > 48) applyScrolled(true);
-      else if (scrolled && y < 12) applyScrolled(false);
+      if (!scrolled && y > 40) applyScrolled(true);
+      else if (scrolled && y < 10) applyScrolled(false);
     });
   }
 
   inject();
+  measurePill();
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () {
-    if (scrolled && isMobile()) {
-      var m = pillMetrics();
-      var nav = document.querySelector('.nav');
-      if (nav) {
-        nav.style.left = m.inset + 'px';
-        nav.style.right = m.inset + 'px';
-      }
-    }
+    measurePill();
   }, { passive: true });
 
   function rename() {
@@ -291,6 +183,7 @@
   var iv = setInterval(function () {
     n++;
     rename();
+    measurePill();
     if (n > 40) clearInterval(iv);
   }, 150);
 })();
