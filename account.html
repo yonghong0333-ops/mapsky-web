@@ -4,14 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>帳號設定 — MapSky</title>
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="icon" type="image/png" href="assets/icon.png" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     body.account-page {
       min-height: 100vh; min-height: 100dvh;
-      background: #0a0a0a;
-      color: #f5f5f7;
+      background: #ffffff;
+      color: #1d1d1f;
+    }
+    body.account-page .nav {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    body.account-page .brand { color: #1d1d1f; }
+    body.account-page .nav-links a { color: #1d1d1f !important; }
+    body.account-page .nav-toggle span { background: #1d1d1f; }
+    body.account-page .nav .btn-ghost {
+      background: transparent !important;
+      color: #1d1d1f !important;
+      border: 2px solid rgba(0,0,0,0.2) !important;
+    }
+    body.account-page .nav .btn-primary {
+      background: #1d1d1f !important;
+      color: #fff !important;
+      border: 0 !important;
+    }
+    @media (max-width: 768px) {
+      body.account-page.nav-open .nav-right,
+      body.account-page .nav-right.open {
+        background: #ffffff !important;
+      }
+      body.account-page.nav-open .nav-links a {
+        color: #1d1d1f !important;
+      }
     }
     .account-stage {
       max-width: 520px;
@@ -23,15 +51,16 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       margin: 0 0 8px;
+      color: #1d1d1f;
     }
     .account-stage .sub {
-      color: #a1a1a6;
+      color: #6e6e73;
       font-size: 15px;
       margin: 0 0 32px;
     }
     .account-card {
-      background: #1c1c1e;
-      border: 1px solid rgba(255,255,255,0.08);
+      background: #f5f5f7;
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 20px;
       padding: 24px;
       margin-bottom: 16px;
@@ -42,19 +71,19 @@
       justify-content: space-between;
       gap: 16px;
       padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
     .account-row:last-child { border-bottom: 0; padding-bottom: 0; }
     .account-row:first-child { padding-top: 0; }
     .account-label {
       font-size: 13px;
-      color: #a1a1a6;
+      color: #6e6e73;
       margin-bottom: 4px;
     }
     .account-value {
       font-size: 16px;
       font-weight: 600;
-      color: #f5f5f7;
+      color: #1d1d1f;
       word-break: break-all;
     }
     .account-actions {
@@ -74,31 +103,26 @@
       font-family: inherit;
     }
     .account-actions .btn-primary {
-      background: #f5f5f7;
-      color: #0a0a0a;
-    }
-    .account-actions .btn-ghost {
-      background: transparent;
-      color: #f5f5f7;
-      border: 2px solid rgba(255,255,255,0.35);
+      background: #1d1d1f;
+      color: #fff;
     }
     .account-actions .btn-danger {
       background: transparent;
-      color: #ff453a;
-      border: 2px solid rgba(255,69,58,0.45);
+      color: #ff3b30;
+      border: 2px solid rgba(255,59,48,0.35);
     }
     .guest-box {
       text-align: center;
       padding: 48px 24px;
-      color: #a1a1a6;
+      color: #6e6e73;
     }
     .guest-box a {
       display: inline-block;
       margin-top: 16px;
       padding: 12px 28px;
       border-radius: 980px;
-      background: #f5f5f7;
-      color: #0a0a0a;
+      background: #1d1d1f;
+      color: #fff;
       font-weight: 600;
       text-decoration: none;
     }
