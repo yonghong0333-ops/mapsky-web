@@ -106,11 +106,7 @@
       cursor: pointer;
       text-decoration: none;
     }
-    .btn-buy:hover { opacity: 0.92; }
-    .btn-buy:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
+    .btn-buy:disabled { opacity: 0.45; cursor: not-allowed; }
     .btn-outline {
       display: inline-flex;
       align-items: center;
@@ -138,7 +134,6 @@
       background: rgba(52, 199, 89, 0.15);
       color: #30d158;
     }
-    .ticket-status strong { color: #fff; }
     .ticket-status.ok strong { color: #30d158; }
     .hint-sm {
       margin: 10px 0 0;
@@ -159,69 +154,6 @@
       font-size: 17px;
       margin-bottom: 8px;
     }
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 4000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-backdrop.open { display: flex; }
-    .modal {
-      width: min(400px, 100%);
-      background: #fff;
-      border-radius: 20px;
-      padding: 24px 22px;
-      color: #1d1d1f;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.25);
-    }
-    .modal h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      letter-spacing: -0.015em;
-    }
-    .modal p {
-      margin: 0 0 18px;
-      color: #6e6e73;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    .modal .row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-    }
-    .modal .row:last-of-type { border-bottom: 0; margin-bottom: 16px; }
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 8px;
-    }
-    .modal-actions button {
-      padding: 10px 18px;
-      border-radius: 980px;
-      border: 0;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .modal-actions .cancel {
-      background: #f5f5f7;
-      color: #1d1d1f;
-    }
-    .modal-actions .confirm {
-      background: #1d1d1f;
-      color: #fff;
-    }
     .site-footer {
       background: #f5f5f7;
       color: #6e6e73;
@@ -230,7 +162,6 @@
       font-size: 13px;
     }
     .site-footer a { color: #1d1d1f; text-decoration: none; margin: 0 8px; }
-    .site-footer a:hover { color: #0066cc; }
   </style>
 </head>
 <body class="page-light">
@@ -260,23 +191,8 @@
   <main class="events">
     <h1>活動</h1>
     <p class="meta">官方活動、入場券與合作訊息 · 購票採帳號綁定</p>
-
     <div class="event-list" id="eventList"></div>
   </main>
-
-  <div class="modal-backdrop" id="buyModal" role="dialog" aria-modal="true" aria-labelledby="buyTitle">
-    <div class="modal">
-      <h3 id="buyTitle">確認購買入場券</h3>
-      <p id="buyDesc">購買後入場資格會綁定你的 MapSky 帳號，並同步至 App。</p>
-      <div class="row"><span>活動</span><strong id="buyEventName">Qx 定期評量</strong></div>
-      <div class="row"><span>金額</span><strong id="buyPrice">—</strong></div>
-      <div class="row"><span>帳號</span><strong id="buyAccount">—</strong></div>
-      <div class="modal-actions">
-        <button type="button" class="cancel" id="buyCancel">取消</button>
-        <button type="button" class="confirm" id="buyConfirm">確認購買</button>
-      </div>
-    </div>
-  </div>
 
   <footer class="site-footer">
     <div>
@@ -298,21 +214,18 @@
     (function () {
       var CONFIG_KEY = 'mapsky_events_config_v1';
       var TICKETS_KEY = 'mapsky_tickets_v1';
-
-      var DEFAULT_EVENTS = [
-        {
-          id: 'qx-exam',
-          enabled: true,
-          badge: '定期評量',
-          title: 'Qx 定期評量',
-          description: '參加 Qx 定期評量活動。購買入場券後，資格會綁定你的 MapSky 帳號，並回報至 MapSky App。',
-          schedule: '依後台公告場次',
-          price: 0,
-          currency: 'TWD',
-          priceLabel: '免費開放',
-          ticketLabel: '領取入場券'
-        }
-      ];
+      var DEFAULT_EVENTS = [{
+        id: 'qx-exam',
+        enabled: true,
+        badge: '定期評量',
+        title: 'Qx 定期評量',
+        description: '參加 Qx 定期評量活動。點擊購買入場券後，可選擇場次與禮包，完成付款後資格會綁定 MapSky 帳號並同步至 App。',
+        schedule: '多場次可選',
+        price: 0,
+        currency: 'TWD',
+        priceLabel: '依禮包計價',
+        ticketLabel: '購買入場券'
+      }];
 
       function loadConfig() {
         try {
@@ -324,7 +237,6 @@
         } catch (e) {}
         return DEFAULT_EVENTS.map(function (e) { return Object.assign({}, e); });
       }
-
       function loadTickets() {
         try {
           var raw = localStorage.getItem(TICKETS_KEY);
@@ -332,23 +244,16 @@
         } catch (e) {}
         return {};
       }
-
-      function saveTickets(map) {
-        try { localStorage.setItem(TICKETS_KEY, JSON.stringify(map)); } catch (e) {}
-      }
-
       function formatPrice(ev) {
         if (ev.priceLabel) return ev.priceLabel;
         if (!ev.price || Number(ev.price) === 0) return '免費';
         return 'NT$ ' + Number(ev.price).toLocaleString('zh-TW');
       }
-
       function userKey(session) {
         if (!session || !session.loggedIn) return null;
         var p = session.profile || session.user || session;
         return String(p.email || p.id || p.name || '').trim().toLowerCase() || null;
       }
-
       function hasTicket(tickets, uid, eventId) {
         if (!uid || !tickets[uid]) return false;
         return !!tickets[uid][eventId];
@@ -360,49 +265,39 @@
         var events = loadConfig().filter(function (e) { return e.enabled !== false; });
         var tickets = loadTickets();
         var uid = userKey(session);
-
         if (!events.length) {
           list.innerHTML = '<div class="event-empty"><strong>目前沒有進行中的活動</strong>有新活動時會在這裡公布。</div>';
           return;
         }
-
         list.innerHTML = events.map(function (ev) {
           var owned = hasTicket(tickets, uid, ev.id);
-          var priceText = formatPrice(ev);
+          var t = owned ? tickets[uid][ev.id] : null;
           var statusHtml = '';
-          if (owned) {
-            var t = tickets[uid][ev.id];
+          if (owned && t) {
             statusHtml =
-              '<div class="ticket-status ok">' +
-              '<strong>已持有入場券</strong><br />' +
+              '<div class="ticket-status ok"><strong>已持有入場券</strong><br />' +
               '綁定帳號：' + (t.email || uid) + '<br />' +
-              '購買時間：' + (t.at || '—') + '<br />' +
-              '狀態：已回報 MapSky App（帳號綁定）' +
-              '</div>';
+              (t.sessionName ? ('場次：' + t.sessionName + '<br />') : '') +
+              (t.packageName ? ('禮包：' + t.packageName + '<br />') : '') +
+              '購買時間：' + (t.at || '—') + '<br />狀態：已回報 MapSky App</div>';
           }
           var buyLabel = owned ? '已購買' : (ev.ticketLabel || '購買入場券');
           var buyDisabled = owned ? ' disabled' : '';
-          return (
-            '<article class="event-card featured" data-event-id="' + ev.id + '">' +
+          return '<article class="event-card featured" data-event-id="' + ev.id + '">' +
             '<div class="event-badge">' + (ev.badge || '活動') + '</div>' +
             '<h2>' + (ev.title || '活動') + '</h2>' +
             '<p>' + (ev.description || '') + '</p>' +
             '<div class="event-meta-row">' +
             '<span>場次 <strong>' + (ev.schedule || '待公告') + '</strong></span>' +
-            '<span>費用 <strong>' + priceText + '</strong></span>' +
-            '</div>' +
+            '<span>費用 <strong>' + formatPrice(ev) + '</strong></span></div>' +
             '<div class="event-actions">' +
             '<button type="button" class="btn-buy" data-buy="' + ev.id + '"' + buyDisabled + '>' + buyLabel + '</button>' +
             (!session || !session.loggedIn
               ? '<a class="btn-outline" href="/login?return=' + encodeURIComponent('/events') + '">先登入帳號</a>'
               : '') +
-            '</div>' +
-            statusHtml +
-            '<p class="hint-sm">入場券採帳號綁定制：購買後與你的 MapSky 帳號連結，App 端可查詢資格。金流與後台設定完成後會自動對接正式 API。</p>' +
-            '</article>'
-          );
+            '</div>' + statusHtml +
+            '<p class="hint-sm">點擊後進入：選擇場次 → 選擇禮包 → 付款。入場券綁定 MapSky 帳號。</p></article>';
         }).join('');
-
         list.querySelectorAll('[data-buy]').forEach(function (btn) {
           btn.addEventListener('click', function () {
             onBuyClick(btn.getAttribute('data-buy'), session);
@@ -410,57 +305,17 @@
         });
       }
 
-      var pendingEventId = null;
-
       function onBuyClick(eventId, session) {
+        var tickets = loadTickets();
+        var uid = userKey(session);
+        if (uid && hasTicket(tickets, uid, eventId)) return;
+        var url = '/events/buy?event=' + encodeURIComponent(eventId || 'qx-exam');
         if (!session || !session.loggedIn) {
-          location.href = '/login?return=' + encodeURIComponent('/events');
+          location.href = '/login?return=' + encodeURIComponent(url);
           return;
         }
-        var uid = userKey(session);
-        var tickets = loadTickets();
-        if (hasTicket(tickets, uid, eventId)) return;
-
-        var ev = loadConfig().find(function (e) { return e.id === eventId; });
-        if (!ev) return;
-
-        pendingEventId = eventId;
-        document.getElementById('buyEventName').textContent = ev.title || '活動';
-        document.getElementById('buyPrice').textContent = formatPrice(ev);
-        var p = session.profile || session.user || session;
-        document.getElementById('buyAccount').textContent = p.email || p.nickname || p.name || uid;
-        document.getElementById('buyModal').classList.add('open');
+        location.href = url;
       }
-
-      function closeModal() {
-        pendingEventId = null;
-        document.getElementById('buyModal').classList.remove('open');
-      }
-
-      function confirmPurchase(session) {
-        if (!pendingEventId || !session || !session.loggedIn) return;
-        var uid = userKey(session);
-        var p = session.profile || session.user || session;
-        var tickets = loadTickets();
-        if (!tickets[uid]) tickets[uid] = {};
-        tickets[uid][pendingEventId] = {
-          eventId: pendingEventId,
-          email: p.email || '',
-          name: p.nickname || p.name || '',
-          at: new Date().toLocaleString('zh-TW', { hour12: false }),
-          bound: true,
-          syncedToApp: true,
-          orderId: 'local-' + Date.now()
-        };
-        saveTickets(tickets);
-        closeModal();
-        render(session);
-      }
-
-      document.getElementById('buyCancel').addEventListener('click', closeModal);
-      document.getElementById('buyModal').addEventListener('click', function (e) {
-        if (e.target === this) closeModal();
-      });
 
       var toggle = document.getElementById('navToggle');
       var panel = document.getElementById('navRight');
@@ -481,31 +336,17 @@
         });
       }
 
-      var currentSession = null;
-      document.getElementById('buyConfirm').addEventListener('click', function () {
-        confirmPurchase(currentSession);
-      });
-
       function boot() {
         if (window.MapSkyAuth && MapSkyAuth.session) {
           MapSkyAuth.session().then(function (res) {
-            currentSession = (res && res.body) ? res.body : { loggedIn: false };
-            render(currentSession);
-          }).catch(function () {
-            currentSession = { loggedIn: false };
-            render(currentSession);
-          });
+            render((res && res.body) || { loggedIn: false });
+          }).catch(function () { render({ loggedIn: false }); });
         } else {
-          currentSession = { loggedIn: false };
-          render(currentSession);
+          render({ loggedIn: false });
         }
       }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', boot);
-      } else {
-        boot();
-      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+      else boot();
     })();
   </script>
 </body>
