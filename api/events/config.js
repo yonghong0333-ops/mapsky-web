@@ -22,11 +22,15 @@ module.exports = async function handler(req, res) {
     }
     const events = Array.isArray(body.events) ? body.events : (Array.isArray(body) ? body : null);
     if (!events) return res.status(400).json({ ok: false, reason: 'invalid_body' });
+
+    const hasToken = !!(process.env.GITHUB_TOKEN || process.env.MAPSKY_GH_TOKEN);
     const put = await saveConfig(events);
     return res.status(200).json({
       ok: true,
       persisted: !!(put && put.ok),
-      reason: put && put.ok ? 'saved' : (put && put.reason) || 'memory_only',
+      hasToken,
+      reason: put && put.ok ? 'saved' : (put && put.reason) || (hasToken ? 'github_write_failed' : 'no_token'),
+      status: put && put.status,
       events
     });
   }
