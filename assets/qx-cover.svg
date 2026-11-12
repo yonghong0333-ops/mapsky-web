@@ -1,3 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 560 350">
-  <image width="560" height="350" href="data:image/jpeg;base64,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_MORE"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d8d4ce"/>
+      <stop offset="100%" stop-color="#c5bfb6"/>
+    </linearGradient>
+    <filter id="sh" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="2" dy="4" stdDeviation="6" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#desk)"/>
+  <g transform="translate(70,55) rotate(-9)" filter="url(#sh)">
+    <rect width="430" height="400" rx="3" fill="#f3f2ef" stroke="#bdb8b0"/>
+    <text x="36" y="78" font-family="Georgia, serif" font-size="48" font-weight="700" fill="#222">TEST</text>
+    <text x="36" y="128" font-family="Georgia, serif" font-size="40" font-weight="700" fill="#222">PAPER</text>
+    <rect x="36" y="150" width="280" height="10" fill="#e0ddd7"/>
+    <rect x="36" y="180" width="240" height="8" fill="#e8e5df"/>
+    <rect x="36" y="208" width="260" height="8" fill="#e8e5df"/>
+  </g>
+  <g transform="translate(250,80) rotate(5)" filter="url(#sh)">
+    <rect width="480" height="370" rx="3" fill="#fff" stroke="#bdb8b0"/>
+    <text x="55" y="70" font-family="Arial Black, Helvetica, Arial, sans-serif" font-size="44" font-weight="800" fill="#111" letter-spacing="1">TEST PAPER</text>
+    <line x1="40" y1="92" x2="440" y2="92" stroke="#222" stroke-width="2.5"/>
+    <line x1="40" y1="108" x2="440" y2="108" stroke="#222" stroke-width="1.5"/>
+    <rect x="50" y="140" width="360" height="180" fill="#eaf4fb" stroke="#8ebeda"/>
+    <g stroke="#8ebeda" stroke-width="1">
+      <line x1="95" y1="140" x2="95" y2="320"/><line x1="140" y1="140" x2="140" y2="320"/>
+      <line x1="185" y1="140" x2="185" y2="320"/><line x1="230" y1="140" x2="230" y2="320"/>
+      <line x1="275" y1="140" x2="275" y2="320"/><line x1="320" y1="140" x2="320" y2="320"/>
+      <line x1="365" y1="140" x2="365" y2="320"/>
+      <line x1="50" y1="176" x2="410" y2="176"/><line x1="50" y1="212" x2="410" y2="212"/>
+      <line x1="50" y1="248" x2="410" y2="248"/><line x1="50" y1="284" x2="410" y2="284"/>
+    </g>
+    <text x="108" y="164" font-family="Arial" font-size="15" fill="#444">a   b   c   d   e   f   g</text>
+    <text x="58" y="200" font-family="Arial" font-size="14" fill="#333">23</text>
+    <text x="58" y="236" font-family="Arial" font-size="14" fill="#333">24</text>
+    <text x="58" y="272" font-family="Arial" font-size="14" fill="#333">25</text>
+    <text x="58" y="308" font-family="Arial" font-size="14" fill="#333">26</text>
+    <text x="155" y="240" font-family="Arial" font-size="26" fill="#111">✓</text>
+  </g>
+  <rect x="24" y="24" width="92" height="38" rx="12" fill="#0a0a0a"/>
+  <text x="70" y="49" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#fff">Qx</text>
 </svg>
