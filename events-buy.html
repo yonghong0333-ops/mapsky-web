@@ -107,7 +107,7 @@
             btn.onclick = function () { state.sessionId = btn.getAttribute('data-s'); render(); };
           });
         }
-        els.nextBtn.textContent = '下一步：選禮包';
+        els.nextBtn.textContent = packages().length ? '下一步：選禮包' : '下一步：付款';
         els.nextBtn.disabled = !state.sessionId;
       } else if (state.step === 'package') {
         els.lead.textContent = '請選擇禮包';
@@ -135,10 +135,12 @@
         els.payBox.style.display = '';
         var s = sessions().find(function (x) { return x.id === state.sessionId; }) || {};
         var p = packages().find(function (x) { return x.id === state.packageId; }) || {};
+        var pkgName = p.name || (state.packageId === 'free' || !packages().length ? '基本入場（免費）' : state.packageId);
+        var pkgPrice = p.price != null ? p.price : 0;
         els.orderSummary.innerHTML =
           '<div class="pay-row"><span>場次</span><span>' + (s.name || state.sessionId) + '</span></div>' +
-          '<div class="pay-row"><span>禮包</span><span>' + (p.name || state.packageId) + '</span></div>' +
-          '<div class="pay-row"><span>金額</span><span>' + formatPrice(p.price) + '</span></div>';
+          '<div class="pay-row"><span>禮包</span><span>' + pkgName + '</span></div>' +
+          '<div class="pay-row"><span>金額</span><span>' + formatPrice(pkgPrice) + '</span></div>';
         els.nextBtn.textContent = '確認付款';
         els.nextBtn.disabled = false;
       } else if (state.step === 'done') {
@@ -156,10 +158,10 @@
       var ticket = {
         eventId: state.eventId,
         sessionId: state.sessionId,
-        packageId: state.packageId,
+        packageId: state.packageId || 'free',
         sessionName: s.name || state.sessionId,
-        packageName: p.name || state.packageId,
-        price: p.price || 0,
+        packageName: p.name || (state.packageId === 'free' || !packages().length ? '基本入場（免費）' : state.packageId),
+        price: p.price != null ? p.price : 0,
         orderId: 'ORD-' + Date.now().toString(36).toUpperCase(),
         bound: true
       };
@@ -183,7 +185,16 @@
       });
     }
     els.nextBtn.onclick = function () {
-      if (state.step === 'session' && state.sessionId) { state.step = 'package'; render(); return; }
+      if (state.step === 'session' && state.sessionId) {
+        if (!packages().length) {
+          state.packageId = 'free';
+          state.step = 'pay';
+        } else {
+          state.step = 'package';
+        }
+        render();
+        return;
+      }
       if (state.step === 'package' && state.packageId) { state.step = 'pay'; render(); return; }
       if (state.step === 'pay') {
         els.nextBtn.disabled = true;
@@ -194,7 +205,7 @@
     };
     els.backBtn.onclick = function () {
       if (state.step === 'package') { state.step = 'session'; render(); return; }
-      if (state.step === 'pay') { state.step = 'package'; render(); return; }
+      if (state.step === 'pay') { state.step = packages().length ? 'package' : 'session'; render(); return; }
       history.back();
     };
     function boot(session) {
