@@ -1,1 +1,241 @@
-SEE_FILE
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>購買入場券 — MapSky</title>
+  <meta name="theme-color" content="#07070a" />
+  <link rel="icon" type="image/png" href="/assets/icon.png" />
+  <style>
+    :root { --bg:#07070a; --text:#f5f5f7; --dim:rgba(255,255,255,0.55); --blue:#0A84FF; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    a { color:inherit; text-decoration:none; }
+    .topbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:12px; padding:calc(10px + env(safe-area-inset-top,0px)) 16px 12px; background:rgba(7,7,10,0.9); border-bottom:1px solid rgba(255,255,255,0.08); }
+    .back-btn { width:36px; height:36px; border:0; border-radius:50%; background:rgba(255,255,255,0.1); color:#fff; font-size:18px; cursor:pointer; }
+    .topbar-title { flex:1; font-size:16px; font-weight:600; }
+    .stage { max-width:480px; margin:0 auto; padding:20px 20px calc(100px + env(safe-area-inset-bottom,0px)); }
+    .lead { color:var(--dim); font-size:15px; line-height:1.5; }
+    .option { display:block; width:100%; text-align:left; background:#16161a; border:1.5px solid rgba(255,255,255,0.1); border-radius:18px; padding:16px; margin:0 0 12px; color:var(--text); font-family:inherit; cursor:pointer; }
+    .option.selected { border-color:var(--blue); box-shadow:0 0 0 1px var(--blue); }
+    .option .name { font-size:16px; font-weight:650; margin:0 0 4px; }
+    .option .meta { font-size:13px; color:var(--dim); }
+    .option .price { margin-top:10px; font-size:16px; font-weight:700; color:#64d2ff; }
+    .footer-bar { position:fixed; left:0; right:0; bottom:0; padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px)); background:rgba(7,7,10,0.95); }
+    .btn { width:100%; max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:center; padding:14px 18px; border-radius:980px; border:0; font-size:16px; font-weight:650; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); }
+    .btn:disabled { opacity:0.35; cursor:not-allowed; background:#3a3a3c; }
+    .empty { color:var(--dim); padding:24px 0; }
+    .pay-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button type="button" class="back-btn" id="backBtn" aria-label="返回">‹</button>
+    <div class="topbar-title" id="topTitle">購買入場券</div>
+  </header>
+  <div class="stage" id="screenMain">
+    <h1 id="title">載入中…</h1>
+    <p class="lead" id="lead"></p>
+    <div id="sessionList"></div>
+    <div id="packageList"></div>
+    <div id="payBox" style="display:none">
+      <div id="orderSummary"></div>
+      <p class="lead">模擬付款（測試）</p>
+    </div>
+    <div id="doneBox" class="empty" style="display:none">購票完成，資格已綁定帳號。</div>
+  </div>
+  <div class="footer-bar"><button type="button" class="btn" id="nextBtn" disabled>下一步</button></div>
+  <script src="/auth.js"></script>
+  <script>
+  (function () {
+    var EV_KEY = 'mapsky_events_config_v1';
+    var TICKETS_KEY = 'mapsky_tickets_v1';
+    var state = { eventId: 'qx-exam', step: 'session', sessionId: null, packageId: null, session: null, config: null };
+    var els = {
+      title: document.getElementById('title'),
+      lead: document.getElementById('lead'),
+      sessionList: document.getElementById('sessionList'),
+      packageList: document.getElementById('packageList'),
+      payBox: document.getElementById('payBox'),
+      orderSummary: document.getElementById('orderSummary'),
+      doneBox: document.getElementById('doneBox'),
+      nextBtn: document.getElementById('nextBtn'),
+      topTitle: document.getElementById('topTitle'),
+      backBtn: document.getElementById('backBtn')
+    };
+    function parseTW(s) {
+      if (!s) return null;
+      var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?/);
+      if (!m) return null;
+      return new Date(+m[1], +m[2]-1, +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0));
+    }
+    function isOnSale(ev) {
+      if (!ev || ev.enabled === false) return false;
+      var now = new Date();
+      var a = parseTW(ev.saleStart), b = parseTW(ev.saleEnd);
+      if (a && now < a) return false;
+      if (b && now > b) return false;
+      return true;
+    }
+    function formatPrice(n) { return !n ? '免費' : ('NT$ ' + Number(n).toLocaleString('zh-TW')); }
+    function userKey(s) {
+      if (!s || !s.loggedIn) return null;
+      var p = s.profile || {};
+      return String(p.email || p.id || '').trim().toLowerCase() || null;
+    }
+    function sessions() { return (state.config && state.config.sessions) || []; }
+    function packages() { return (state.config && state.config.packages) || []; }
+    function render() {
+      var ev = state.config || {};
+      els.title.textContent = ev.title || '購買入場券';
+      if (state.step === 'session') {
+        els.lead.textContent = '請選擇場次';
+        els.packageList.innerHTML = '';
+        els.payBox.style.display = 'none';
+        els.doneBox.style.display = 'none';
+        var list = sessions();
+        if (!list.length) {
+          els.sessionList.innerHTML = '<p class="empty">目前沒有可選場次。</p>';
+          state.sessionId = null;
+        } else {
+          els.sessionList.innerHTML = list.map(function (s) {
+            var sel = state.sessionId === s.id ? ' selected' : '';
+            var name = (s.name || '').trim() || (s.date || '場次');
+            return '<button type="button" class="option' + sel + '" data-s="' + s.id + '"><div class="name">' + name + '</div><div class="meta">' + (s.date || '') + (s.place ? ' · ' + s.place : '') + '</div></button>';
+          }).join('');
+          els.sessionList.querySelectorAll('[data-s]').forEach(function (btn) {
+            btn.onclick = function () { state.sessionId = btn.getAttribute('data-s'); render(); };
+          });
+        }
+        els.nextBtn.textContent = '下一步：選禮包';
+        els.nextBtn.disabled = !state.sessionId;
+      } else if (state.step === 'package') {
+        els.lead.textContent = '請選擇禮包';
+        els.sessionList.innerHTML = '';
+        els.payBox.style.display = 'none';
+        var list = packages();
+        if (!list.length) {
+          els.packageList.innerHTML = '<p class="empty">目前沒有可選禮包（後台尚未設定）。</p>';
+          state.packageId = null;
+        } else {
+          els.packageList.innerHTML = list.map(function (p) {
+            var sel = state.packageId === p.id ? ' selected' : '';
+            return '<button type="button" class="option' + sel + '" data-p="' + p.id + '"><div class="name">' + (p.name || '禮包') + '</div><div class="meta">' + (p.desc || '') + '</div><div class="price">' + formatPrice(p.price) + '</div></button>';
+          }).join('');
+          els.packageList.querySelectorAll('[data-p]').forEach(function (btn) {
+            btn.onclick = function () { state.packageId = btn.getAttribute('data-p'); render(); };
+          });
+        }
+        els.nextBtn.textContent = '下一步：付款';
+        els.nextBtn.disabled = !state.packageId;
+      } else if (state.step === 'pay') {
+        els.lead.textContent = '確認訂單';
+        els.sessionList.innerHTML = '';
+        els.packageList.innerHTML = '';
+        els.payBox.style.display = '';
+        var s = sessions().find(function (x) { return x.id === state.sessionId; }) || {};
+        var p = packages().find(function (x) { return x.id === state.packageId; }) || {};
+        els.orderSummary.innerHTML =
+          '<div class="pay-row"><span>場次</span><span>' + (s.name || state.sessionId) + '</span></div>' +
+          '<div class="pay-row"><span>禮包</span><span>' + (p.name || state.packageId) + '</span></div>' +
+          '<div class="pay-row"><span>金額</span><span>' + formatPrice(p.price) + '</span></div>';
+        els.nextBtn.textContent = '確認付款';
+        els.nextBtn.disabled = false;
+      } else if (state.step === 'done') {
+        els.sessionList.innerHTML = '';
+        els.packageList.innerHTML = '';
+        els.payBox.style.display = 'none';
+        els.doneBox.style.display = '';
+        els.nextBtn.textContent = '完成';
+        els.nextBtn.disabled = false;
+      }
+    }
+    function claimTicket() {
+      var s = sessions().find(function (x) { return x.id === state.sessionId; }) || {};
+      var p = packages().find(function (x) { return x.id === state.packageId; }) || {};
+      var ticket = {
+        eventId: state.eventId,
+        sessionId: state.sessionId,
+        packageId: state.packageId,
+        sessionName: s.name || state.sessionId,
+        packageName: p.name || state.packageId,
+        price: p.price || 0,
+        orderId: 'ORD-' + Date.now().toString(36).toUpperCase(),
+        bound: true
+      };
+      return fetch('/api/events/tickets', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(ticket)
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        try {
+          var raw = localStorage.getItem(TICKETS_KEY);
+          var all = raw ? JSON.parse(raw) : {};
+          var uid = userKey(state.session);
+          if (uid) {
+            if (!all[uid]) all[uid] = {};
+            all[uid][state.eventId] = ticket;
+            localStorage.setItem(TICKETS_KEY, JSON.stringify(all));
+          }
+        } catch (e) {}
+        return j;
+      });
+    }
+    els.nextBtn.onclick = function () {
+      if (state.step === 'session' && state.sessionId) { state.step = 'package'; render(); return; }
+      if (state.step === 'package' && state.packageId) { state.step = 'pay'; render(); return; }
+      if (state.step === 'pay') {
+        els.nextBtn.disabled = true;
+        claimTicket().then(function () { state.step = 'done'; render(); }).catch(function () { state.step = 'done'; render(); });
+        return;
+      }
+      if (state.step === 'done') location.href = '/events';
+    };
+    els.backBtn.onclick = function () {
+      if (state.step === 'package') { state.step = 'session'; render(); return; }
+      if (state.step === 'pay') { state.step = 'package'; render(); return; }
+      history.back();
+    };
+    function boot(session) {
+      state.session = session || { loggedIn: false };
+      if (!state.session.loggedIn) {
+        location.href = '/login?return=' + encodeURIComponent(location.pathname + location.search);
+        return;
+      }
+      fetch('/api/events/config', { credentials: 'include', headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (j && j.ok && Array.isArray(j.events) && j.events[0]) {
+            state.config = j.events[0];
+            try { localStorage.setItem(EV_KEY, JSON.stringify(j.events)); } catch (e) {}
+          } else {
+            state.config = { title: '活動', sessions: [], packages: [] };
+          }
+          if (!isOnSale(state.config)) {
+            els.title.textContent = '目前無法購票';
+            els.lead.textContent = '不在販賣時間或活動已結束。';
+            els.sessionList.innerHTML = '';
+            els.nextBtn.disabled = true;
+            return;
+          }
+          if (!Array.isArray(state.config.packages)) state.config.packages = [];
+          if (!Array.isArray(state.config.sessions)) state.config.sessions = [];
+          state.step = 'session';
+          render();
+        })
+        .catch(function () {
+          els.title.textContent = '無法載入';
+          els.lead.textContent = '請稍後再試';
+        });
+    }
+    if (window.MapSkyAuth && MapSkyAuth.session) {
+      MapSkyAuth.session().then(function (res) { boot((res && res.body) || { loggedIn: false }); })
+        .catch(function () { boot({ loggedIn: false }); });
+    } else {
+      boot({ loggedIn: false });
+    }
+  })();
+  </script>
+</body>
+</html>
