@@ -170,6 +170,7 @@
     <p style="margin:16px 0 0;color:#6e6e73">Copyright © MapSky · mapskyapp@gmail.com</p>
   </footer>
 
+  <script src="/assets/qx-cover-data.js"></script>
   <script src="/logo-icon.js"></script>
   <script src="/logo-wordmark.js"></script>
   <script src="/logo-apply.js"></script>
@@ -184,7 +185,7 @@
         enabled: true,
         title: 'Qx 定期評量',
         sub: '選場次 · 選禮包 · 付款',
-        cover: '/assets/qx-cover.svg',
+        cover: (typeof QX_COVER !== 'undefined' ? QX_COVER : '/assets/qx-cover.jpg'),
         ticketLabel: '購買入場券'
       }];
 
@@ -196,7 +197,7 @@
             if (Array.isArray(parsed) && parsed.length) {
               return parsed.map(function (e) {
                 return Object.assign({}, DEFAULT_EVENTS[0], e, {
-                  cover: e.cover || '/assets/qx-cover.svg',
+                  cover: e.cover || (typeof QX_COVER !== 'undefined' ? QX_COVER : '/assets/qx-cover.jpg'),
                   sub: e.sub || '選場次 · 選禮包 · 付款'
                 });
               });
@@ -244,9 +245,10 @@
               '</div>';
           }
           var buyLabel = owned ? '已購買' : (ev.ticketLabel || '購買入場券');
+          var cover = ev.cover || (typeof QX_COVER !== 'undefined' ? QX_COVER : '/assets/qx-cover.jpg');
           return (
             '<article class="event-card" data-event-id="' + ev.id + '">' +
-            '<img class="event-cover" src="' + (ev.cover || '/assets/qx-cover.svg') + '" alt="' + (ev.title || '') + '" />' +
+            '<img class="event-cover" src="' + cover + '" alt="' + (ev.title || '') + '" />' +
             '<div class="event-body">' +
             '<div><h2>' + (ev.title || '活動') + '</h2>' +
             '<p class="sub">' + (ev.sub || '') + '</p></div>' +
