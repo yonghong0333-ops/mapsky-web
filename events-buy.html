@@ -197,6 +197,14 @@
     }
     .intro-points li { margin: 0 0 6px; }
     .intro-points strong { color: #f5f5f7; font-weight: 650; }
+    .intro-note {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.5);
+    }
   </style>
 </head>
 <body>
@@ -217,10 +225,10 @@
     </div>
   </div>
 
-  <div class="stage screen" id="screenSession">
-    <p class="eyebrow" id="eventEyebrow">Qx 定期評量</p>
-    <h1>選擇場次</h1>
-    <p class="lead">請先了解活動內容，再選擇要參加的評量場次。</p>
+  <div class="stage screen" id="screenIntro">
+    <p class="eyebrow" id="introEyebrow">Qx 定期評量</p>
+    <h1>活動介紹</h1>
+    <p class="lead">先了解本場活動內容，再選擇場次與禮包。</p>
     <div class="intro-card">
       <div class="intro-hero">定期評量 · 帳號綁定入場</div>
       <p class="intro-desc">Qx 定期評量是 MapSky 官方線上評量活動。分場次報名、購票後資格綁定帳號，並可在 MapSky App 查詢入場與成績。</p>
@@ -230,7 +238,14 @@
         <li><strong>禮包加值</strong>：講義、複習影片、解析回放與證書</li>
         <li><strong>帳號綁定</strong>：購票後同步至 MapSky App</li>
       </ul>
+      <div class="intro-note">流程：介紹 → 選場次 → 選禮包 → 付款。基本入場可免費領取。</div>
     </div>
+  </div>
+
+  <div class="stage screen" id="screenSession">
+    <p class="eyebrow" id="eventEyebrow">Qx 定期評量</p>
+    <h1>選擇場次</h1>
+    <p class="lead">請選擇要參加的評量場次。</p>
     <div id="sessionList"></div>
   </div>
 
@@ -313,7 +328,7 @@
         return String(p.email || p.id || '').trim().toLowerCase() || null;
       }
       function showScreen(id) {
-        ['screenLogin','screenSession','screenPackage','screenPay','screenDone'].forEach(function (sid) {
+        ['screenLogin','screenIntro','screenSession','screenPackage','screenPay','screenDone'].forEach(function (sid) {
           document.getElementById(sid).classList.toggle('active', sid === id);
         });
       }
@@ -385,7 +400,8 @@
           return;
         }
         els.footerBar.style.display = '';
-        if (step === 'session') { next.textContent = '下一步：選擇禮包'; next.disabled = !state.sessionId; }
+        if (step === 'intro') { next.textContent = '下一步：選擇場次'; next.disabled = false; }
+        else if (step === 'session') { next.textContent = '下一步：選擇禮包'; next.disabled = !state.sessionId; }
         else if (step === 'package') { next.textContent = '下一步：付款'; next.disabled = !state.packageId; }
         else if (step === 'pay') {
           var pkg = catalog().packages.find(function (p) { return p.id === state.packageId; });
@@ -398,6 +414,12 @@
         if (step === 'login') {
           els.topTitle.textContent = '購買入場券'; setDots(0); showScreen('screenLogin');
           els.loginLink.href = '/login?return=' + encodeURIComponent(location.pathname + location.search);
+        } else if (step === 'intro') {
+          els.topTitle.textContent = '活動介紹';
+          var introEyebrow = document.getElementById('introEyebrow');
+          if (introEyebrow) introEyebrow.textContent = catalog().title;
+          setDots(0);
+          showScreen('screenIntro');
         } else if (step === 'session') {
           els.topTitle.textContent = '選擇場次'; els.eventEyebrow.textContent = catalog().title;
           setDots(1); showScreen('screenSession'); renderSessions();
@@ -437,12 +459,14 @@
       }
 
       els.backBtn.addEventListener('click', function () {
-        if (state.step === 'session' || state.step === 'login' || state.step === 'done') { location.href = '/events'; return; }
-        if (state.step === 'package') goStep('session');
+        if (state.step === 'intro' || state.step === 'login' || state.step === 'done') { location.href = '/events'; return; }
+        if (state.step === 'session') goStep('intro');
+        else if (state.step === 'package') goStep('session');
         else if (state.step === 'pay') goStep('package');
       });
       els.nextBtn.addEventListener('click', function () {
-        if (state.step === 'session' && state.sessionId) goStep('package');
+        if (state.step === 'intro') goStep('session');
+        else if (state.step === 'session' && state.sessionId) goStep('package');
         else if (state.step === 'package' && state.packageId) goStep('pay');
         else if (state.step === 'pay') { saveTicket(); goStep('done'); }
         else if (state.step === 'done') location.href = '/events';
@@ -462,7 +486,7 @@
       function boot(session) {
         state.session = session || { loggedIn: false };
         if (!state.session.loggedIn) { goStep('login'); return; }
-        goStep('session');
+        goStep('intro');
       }
       function startAuth() {
         if (!window.MapSkyAuth || !MapSkyAuth.session) { boot({ loggedIn: false }); return; }
