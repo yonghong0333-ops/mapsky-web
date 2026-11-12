@@ -4,123 +4,161 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>購買入場券 — MapSky</title>
-  <meta name="theme-color" content="#0a0a0a" />
-  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <meta name="theme-color" content="#07070a" />
+  <link rel="icon" type="image/png" href="/assets/icon.png" />
   <style>
     :root {
-      --bg: #0a0a0a;
-      --card: #1c1c1e;
-      --line: rgba(255,255,255,0.1);
-      --text: #f5f5f7;
-      --dim: rgba(255,255,255,0.55);
+      --bg: #07070a; --card: #16161a; --line: rgba(255,255,255,0.1);
+      --text: #f5f5f7; --dim: rgba(255,255,255,0.55); --blue: #0A84FF;
     }
     * { box-sizing: border-box; }
     html, body {
-      margin: 0;
-      min-height: 100%;
-      min-height: 100dvh;
-      background: var(--bg);
-      color: var(--text);
+      margin: 0; min-height: 100%; min-height: 100dvh; background: var(--bg); color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; text-decoration: none; }
     .topbar {
-      position: sticky; top: 0; z-index: 20;
-      display: flex; align-items: center; gap: 12px;
+      position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
       padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 12px;
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(7,7,10,0.9); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .back-btn {
-      width: 36px; height: 36px; border: 0; border-radius: 50%;
-      background: rgba(255,255,255,0.1); color: #fff; font-size: 18px;
-      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(255,255,255,0.1);
+      color: #fff; font-size: 18px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .topbar-title { flex: 1; font-size: 16px; font-weight: 600; }
     .step-dots { display: flex; gap: 6px; align-items: center; }
-    .step-dots span {
-      width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2);
+    .step-dots span { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.25s ease; }
+    .step-dots span.on {
+      background: linear-gradient(90deg, #0A84FF, #64d2ff); width: 20px; border-radius: 980px;
+      box-shadow: 0 0 12px rgba(10,132,255,0.55);
     }
-    .step-dots span.on { background: #fff; width: 18px; border-radius: 980px; }
-    .stage {
-      max-width: 480px; margin: 0 auto;
-      padding: 20px 20px calc(100px + env(safe-area-inset-bottom, 0px));
-      min-height: calc(100dvh - 60px);
-    }
+    .stage { max-width: 480px; margin: 0 auto; padding: 20px 20px calc(100px + env(safe-area-inset-bottom, 0px)); min-height: calc(100dvh - 60px); }
     .eyebrow {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--dim); margin: 0 0 8px;
+      font-size: 12px; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 8px;
+      background: linear-gradient(90deg, #64d2ff, #0A84FF, #bf5af2);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    .stage h1 {
-      margin: 0 0 8px; font-size: 26px; letter-spacing: -0.025em; line-height: 1.2;
-    }
-    .stage .lead {
-      margin: 0 0 24px; color: var(--dim); font-size: 15px; line-height: 1.5;
-    }
+    .stage h1 { margin: 0 0 8px; font-size: 26px; letter-spacing: -0.025em; line-height: 1.2; }
+    .stage .lead { margin: 0 0 24px; color: var(--dim); font-size: 15px; line-height: 1.5; }
     .option {
-      display: block; width: 100%; text-align: left;
-      background: var(--card); border: 1.5px solid var(--line);
-      border-radius: 16px; padding: 16px; margin: 0 0 12px;
-      color: var(--text); font-family: inherit; cursor: pointer;
+      position: relative; display: block; width: 100%; text-align: left;
+      background: linear-gradient(160deg, #1c1c22 0%, #121218 100%);
+      border: 1.5px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 16px 16px 16px 18px;
+      margin: 0 0 12px; color: var(--text); font-family: inherit; cursor: pointer; overflow: hidden;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     }
-    .option.selected {
-      border-color: #fff; background: #2c2c2e; box-shadow: 0 0 0 1px #fff inset;
+    .option::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: var(--accent, #0A84FF); opacity: 0.55;
     }
-    .option .name { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+    .option:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.2); }
+    .option.selected::before { opacity: 1; width: 5px; }
+    .option .name { font-size: 16px; font-weight: 650; margin: 0 0 4px; }
     .option .meta { font-size: 13px; color: var(--dim); line-height: 1.45; }
-    .option .price { margin-top: 10px; font-size: 15px; font-weight: 600; }
+    .option .price { margin-top: 10px; font-size: 16px; font-weight: 700; color: var(--accent, #64d2ff); }
     .option .tag {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      padding: 3px 8px; border-radius: 980px;
-      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); margin-bottom: 8px;
+      display: inline-block; font-size: 11px; font-weight: 650; padding: 3px 9px; border-radius: 980px; margin-bottom: 8px;
+      background: rgba(10,132,255,0.22); color: var(--accent, #64d2ff);
     }
+    .option.tone-spring { --accent: #34c759; }
+    .option.tone-summer { --accent: #ff9f0a; }
+    .option.tone-fall { --accent: #ff6b6b; }
+    .option.tone-basic { --accent: #64d2ff; }
+    .option.tone-study { --accent: #bf5af2; }
+    .option.tone-full { --accent: #ffd60a; }
+    .option.tone-spring.selected {
+      border-color: #34c759; box-shadow: 0 0 0 1px #34c759, 0 10px 32px rgba(52,199,89,0.28);
+      background: linear-gradient(160deg, rgba(52,199,89,0.18) 0%, #121218 100%);
+    }
+    .option.tone-summer.selected {
+      border-color: #ff9f0a; box-shadow: 0 0 0 1px #ff9f0a, 0 10px 32px rgba(255,159,10,0.28);
+      background: linear-gradient(160deg, rgba(255,159,10,0.18) 0%, #121218 100%);
+    }
+    .option.tone-fall.selected {
+      border-color: #ff6b6b; box-shadow: 0 0 0 1px #ff6b6b, 0 10px 32px rgba(255,107,107,0.28);
+      background: linear-gradient(160deg, rgba(255,107,107,0.18) 0%, #121218 100%);
+    }
+    .option.tone-basic.selected {
+      border-color: #64d2ff; box-shadow: 0 0 0 1px #64d2ff, 0 10px 32px rgba(100,210,255,0.28);
+      background: linear-gradient(160deg, rgba(100,210,255,0.18) 0%, #121218 100%);
+    }
+    .option.tone-study.selected {
+      border-color: #bf5af2; box-shadow: 0 0 0 1px #bf5af2, 0 10px 32px rgba(191,90,242,0.28);
+      background: linear-gradient(160deg, rgba(191,90,242,0.18) 0%, #121218 100%);
+    }
+    .option.tone-full.selected {
+      border-color: #ffd60a; box-shadow: 0 0 0 1px #ffd60a, 0 10px 32px rgba(255,214,10,0.28);
+      background: linear-gradient(160deg, rgba(255,214,10,0.16) 0%, #121218 100%);
+    }
+    .option.tone-spring .tag { color: #34c759; background: rgba(52,199,89,0.18); }
+    .option.tone-summer .tag { color: #ff9f0a; background: rgba(255,159,10,0.18); }
+    .option.tone-fall .tag { color: #ff6b6b; background: rgba(255,107,107,0.18); }
+    .option.tone-basic .tag { color: #64d2ff; background: rgba(100,210,255,0.18); }
+    .option.tone-study .tag { color: #bf5af2; background: rgba(191,90,242,0.18); }
+    .option.tone-full .tag { color: #ffd60a; background: rgba(255,214,10,0.16); }
     .pay-card {
-      background: var(--card); border-radius: 18px; padding: 18px 16px;
-      border: 1px solid var(--line); margin-bottom: 16px;
+      background: linear-gradient(165deg, #1c1c24, #121218); border-radius: 18px; padding: 18px 16px;
+      border: 1px solid rgba(10,132,255,0.25); box-shadow: 0 8px 28px rgba(10,132,255,0.08); margin-bottom: 16px;
     }
     .pay-row {
-      display: flex; justify-content: space-between; gap: 12px;
-      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px;
+      display: flex; justify-content: space-between; gap: 12px; padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px;
     }
     .pay-row:last-child { border-bottom: 0; }
     .pay-row .label { color: var(--dim); }
     .pay-row .value { font-weight: 600; text-align: right; }
     .pay-total {
       display: flex; justify-content: space-between; align-items: baseline;
-      margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 15px;
+      margin-top: 8px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 15px;
     }
-    .pay-total strong { font-size: 22px; letter-spacing: -0.02em; }
+    .pay-total strong {
+      font-size: 22px; letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #64d2ff, #0A84FF);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
     .pay-methods { display: grid; gap: 10px; margin: 8px 0 0; }
     .pay-method {
-      display: flex; align-items: center; gap: 12px; padding: 14px;
-      border-radius: 14px; border: 1.5px solid var(--line); background: var(--card);
-      cursor: pointer; font-size: 15px; font-weight: 500;
+      display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px;
+      border: 1.5px solid rgba(255,255,255,0.1); background: #16161a; cursor: pointer;
+      font-size: 15px; font-weight: 500; transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .pay-method.selected { border-color: #fff; box-shadow: 0 0 0 1px #fff inset; }
-    .pay-method input { accent-color: #fff; width: 18px; height: 18px; }
+    .pay-method.selected {
+      border-color: #0A84FF; box-shadow: 0 0 0 1px #0A84FF, 0 8px 24px rgba(10,132,255,0.2);
+      background: linear-gradient(160deg, rgba(10,132,255,0.18), #16161a);
+    }
+    .pay-method input { accent-color: #0A84FF; width: 18px; height: 18px; }
     .footer-bar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
       padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
-      background: linear-gradient(to top, rgba(10,10,10,0.98) 60%, rgba(10,10,10,0.7));
+      background: linear-gradient(to top, rgba(7,7,10,0.98) 55%, rgba(7,7,10,0.65));
     }
     .footer-inner { max-width: 480px; margin: 0 auto; display: flex; gap: 10px; }
     .btn {
       flex: 1; display: inline-flex; align-items: center; justify-content: center;
-      padding: 14px 18px; border-radius: 980px; border: 0;
-      font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer;
+      padding: 14px 18px; border-radius: 980px; border: 0; font-size: 16px; font-weight: 650;
+      font-family: inherit; cursor: pointer;
     }
-    .btn-primary { background: #fff; color: #0a0a0a; }
-    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, #0A84FF 0%, #5e5ce6 50%, #bf5af2 100%);
+      box-shadow: 0 8px 24px rgba(10,132,255,0.35);
+    }
+    .btn-primary:not(:disabled):active { transform: scale(0.98); }
+    .btn-primary:disabled {
+      opacity: 0.35; cursor: not-allowed; box-shadow: none; background: #3a3a3c; color: rgba(255,255,255,0.7);
+    }
     .screen { display: none; }
-    .screen.active { display: block; }
+    .screen.active { display: block; animation: fadeIn 0.28s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     .done-wrap { text-align: center; padding: 40px 12px 20px; }
     .done-icon {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: rgba(48,209,88,0.15); color: #30d158; font-size: 32px;
-      display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;
+      width: 68px; height: 68px; border-radius: 50%;
+      background: linear-gradient(145deg, rgba(52,199,89,0.25), rgba(10,132,255,0.15));
+      color: #30d158; font-size: 32px; display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 16px; box-shadow: 0 0 28px rgba(52,199,89,0.25);
     }
     .done-wrap p { color: var(--dim); font-size: 15px; line-height: 1.55; margin: 0 0 12px; }
     .login-gate { padding: 32px 8px; text-align: center; }
@@ -212,35 +250,19 @@
         }
       };
 
-      var state = {
-        eventId: 'qx-exam',
-        step: 'session',
-        sessionId: null,
-        packageId: null,
-        session: null
-      };
-
+      var state = { eventId: 'qx-exam', step: 'session', sessionId: null, packageId: null, session: null };
       var els = {
-        topTitle: document.getElementById('topTitle'),
-        backBtn: document.getElementById('backBtn'),
-        nextBtn: document.getElementById('nextBtn'),
-        footerBar: document.getElementById('footerBar'),
-        stepDots: document.getElementById('stepDots'),
-        eventEyebrow: document.getElementById('eventEyebrow'),
-        sessionList: document.getElementById('sessionList'),
-        packageList: document.getElementById('packageList'),
-        packageLead: document.getElementById('packageLead'),
-        orderSummary: document.getElementById('orderSummary'),
-        doneSummary: document.getElementById('doneSummary'),
-        doneText: document.getElementById('doneText'),
+        topTitle: document.getElementById('topTitle'), backBtn: document.getElementById('backBtn'),
+        nextBtn: document.getElementById('nextBtn'), footerBar: document.getElementById('footerBar'),
+        stepDots: document.getElementById('stepDots'), eventEyebrow: document.getElementById('eventEyebrow'),
+        sessionList: document.getElementById('sessionList'), packageList: document.getElementById('packageList'),
+        packageLead: document.getElementById('packageLead'), orderSummary: document.getElementById('orderSummary'),
+        doneSummary: document.getElementById('doneSummary'), doneText: document.getElementById('doneText'),
         loginLink: document.getElementById('loginLink')
       };
 
       function catalog() { return CATALOG[state.eventId] || CATALOG['qx-exam']; }
-      function formatPrice(n) {
-        if (!n) return '免費';
-        return 'NT$ ' + Number(n).toLocaleString('zh-TW');
-      }
+      function formatPrice(n) { if (!n) return '免費'; return 'NT$ ' + Number(n).toLocaleString('zh-TW'); }
       function userKey(session) {
         if (!session || !session.loggedIn) return null;
         var p = session.profile || {};
@@ -260,9 +282,11 @@
 
       function renderSessions() {
         var list = catalog().sessions;
+        var toneMap = { '2026-spring': 'tone-spring', '2026-summer': 'tone-summer', '2026-fall': 'tone-fall' };
         els.sessionList.innerHTML = list.map(function (s) {
           var sel = state.sessionId === s.id ? ' selected' : '';
-          return '<button type="button" class="option' + sel + '" data-session="' + s.id + '">' +
+          var tone = toneMap[s.id] || 'tone-spring';
+          return '<button type="button" class="option ' + tone + sel + '" data-session="' + s.id + '">' +
             '<div class="name">' + s.name + '</div>' +
             '<div class="meta">' + s.date + '<br />' + s.place + (s.note ? '<br />' + s.note : '') + '</div></button>';
         }).join('');
@@ -277,10 +301,12 @@
       function renderPackages() {
         var sess = catalog().sessions.find(function (s) { return s.id === state.sessionId; });
         els.packageLead.textContent = sess ? ('場次：' + sess.name + ' · ' + sess.date) : '請選擇禮包方案。';
+        var pkgTone = { basic: 'tone-basic', study: 'tone-study', full: 'tone-full' };
         els.packageList.innerHTML = catalog().packages.map(function (p) {
           var sel = state.packageId === p.id ? ' selected' : '';
-          return '<button type="button" class="option' + sel + '" data-package="' + p.id + '">' +
-            (p.price === 0 ? '<div class="tag">入門</div>' : '') +
+          var tone = pkgTone[p.id] || 'tone-basic';
+          return '<button type="button" class="option ' + tone + sel + '" data-package="' + p.id + '">' +
+            (p.price === 0 ? '<div class="tag">入門</div>' : (p.id === 'full' ? '<div class="tag">推薦</div>' : '')) +
             '<div class="name">' + p.name + '</div>' +
             '<div class="meta">' + p.desc + '</div>' +
             '<div class="price">' + formatPrice(p.price) + '</div></button>';
@@ -308,62 +334,41 @@
       }
 
       function updateFooter() {
-        var step = state.step;
-        var next = els.nextBtn;
+        var step = state.step; var next = els.nextBtn;
         if (step === 'login' || step === 'done') {
           els.footerBar.style.display = step === 'done' ? '' : 'none';
           if (step === 'done') { next.textContent = '回到活動頁'; next.disabled = false; }
           return;
         }
         els.footerBar.style.display = '';
-        if (step === 'session') {
-          next.textContent = '下一步：選擇禮包';
-          next.disabled = !state.sessionId;
-        } else if (step === 'package') {
-          next.textContent = '下一步：付款';
-          next.disabled = !state.packageId;
-        } else if (step === 'pay') {
+        if (step === 'session') { next.textContent = '下一步：選擇禮包'; next.disabled = !state.sessionId; }
+        else if (step === 'package') { next.textContent = '下一步：付款'; next.disabled = !state.packageId; }
+        else if (step === 'pay') {
           var pkg = catalog().packages.find(function (p) { return p.id === state.packageId; });
-          next.textContent = (!pkg || !pkg.price) ? '確認領取' : '確認付款';
-          next.disabled = false;
+          next.textContent = (!pkg || !pkg.price) ? '確認領取' : '確認付款'; next.disabled = false;
         }
       }
 
       function goStep(step) {
         state.step = step;
         if (step === 'login') {
-          els.topTitle.textContent = '購買入場券';
-          setDots(0);
-          showScreen('screenLogin');
+          els.topTitle.textContent = '購買入場券'; setDots(0); showScreen('screenLogin');
           els.loginLink.href = '/login?return=' + encodeURIComponent(location.pathname + location.search);
         } else if (step === 'session') {
-          els.topTitle.textContent = '選擇場次';
-          els.eventEyebrow.textContent = catalog().title;
-          setDots(1);
-          showScreen('screenSession');
-          renderSessions();
+          els.topTitle.textContent = '選擇場次'; els.eventEyebrow.textContent = catalog().title;
+          setDots(1); showScreen('screenSession'); renderSessions();
         } else if (step === 'package') {
-          els.topTitle.textContent = '選擇禮包';
-          setDots(2);
-          showScreen('screenPackage');
-          renderPackages();
+          els.topTitle.textContent = '選擇禮包'; setDots(2); showScreen('screenPackage'); renderPackages();
         } else if (step === 'pay') {
-          els.topTitle.textContent = '付款';
-          setDots(3);
-          showScreen('screenPay');
-          renderPay();
+          els.topTitle.textContent = '付款'; setDots(3); showScreen('screenPay'); renderPay();
         } else if (step === 'done') {
-          els.topTitle.textContent = '完成';
-          setDots(0);
-          showScreen('screenDone');
+          els.topTitle.textContent = '完成'; setDots(0); showScreen('screenDone');
         }
-        updateFooter();
-        window.scrollTo(0, 0);
+        updateFooter(); window.scrollTo(0, 0);
       }
 
       function saveTicket() {
-        var uid = userKey(state.session);
-        if (!uid) return;
+        var uid = userKey(state.session); if (!uid) return;
         var cat = catalog();
         var sess = cat.sessions.find(function (s) { return s.id === state.sessionId; }) || {};
         var pkg = cat.packages.find(function (p) { return p.id === state.packageId; }) || {};
@@ -372,18 +377,11 @@
         try { tickets = JSON.parse(localStorage.getItem(TICKETS_KEY) || '{}') || {}; } catch (e) {}
         if (!tickets[uid]) tickets[uid] = {};
         tickets[uid][state.eventId] = {
-          eventId: state.eventId,
-          sessionId: state.sessionId,
-          packageId: state.packageId,
-          sessionName: sess.name,
-          packageName: pkg.name,
-          price: pkg.price || 0,
-          email: p.email || '',
-          name: p.nickname || p.name || '',
+          eventId: state.eventId, sessionId: state.sessionId, packageId: state.packageId,
+          sessionName: sess.name, packageName: pkg.name, price: pkg.price || 0,
+          email: p.email || '', name: p.nickname || p.name || '',
           at: new Date().toLocaleString('zh-TW', { hour12: false }),
-          bound: true,
-          syncedToApp: true,
-          orderId: 'QX-' + Date.now()
+          bound: true, syncedToApp: true, orderId: 'QX-' + Date.now()
         };
         try { localStorage.setItem(TICKETS_KEY, JSON.stringify(tickets)); } catch (e) {}
         els.doneText.textContent = '入場券已綁定「' + (p.email || uid) + '」，MapSky App 將可查詢此場次資格。';
@@ -395,30 +393,23 @@
       }
 
       els.backBtn.addEventListener('click', function () {
-        if (state.step === 'session' || state.step === 'login' || state.step === 'done') {
-          location.href = '/events'; return;
-        }
+        if (state.step === 'session' || state.step === 'login' || state.step === 'done') { location.href = '/events'; return; }
         if (state.step === 'package') goStep('session');
         else if (state.step === 'pay') goStep('package');
       });
-
       els.nextBtn.addEventListener('click', function () {
         if (state.step === 'session' && state.sessionId) goStep('package');
         else if (state.step === 'package' && state.packageId) goStep('pay');
         else if (state.step === 'pay') { saveTicket(); goStep('done'); }
         else if (state.step === 'done') location.href = '/events';
       });
-
       document.querySelectorAll('#payMethods .pay-method').forEach(function (lab) {
         lab.addEventListener('click', function () {
-          var input = lab.querySelector('input');
-          if (input.disabled) return;
+          var input = lab.querySelector('input'); if (input.disabled) return;
           document.querySelectorAll('#payMethods .pay-method').forEach(function (x) { x.classList.remove('selected'); });
-          lab.classList.add('selected');
-          input.checked = true;
+          lab.classList.add('selected'); input.checked = true;
         });
       });
-
       try {
         var q = new URLSearchParams(location.search);
         if (q.get('event') && CATALOG[q.get('event')]) state.eventId = q.get('event');
@@ -429,33 +420,20 @@
         if (!state.session.loggedIn) { goStep('login'); return; }
         goStep('session');
       }
-
       function startAuth() {
-        if (!window.MapSkyAuth || !MapSkyAuth.session) {
-          boot({ loggedIn: false });
-          return;
-        }
+        if (!window.MapSkyAuth || !MapSkyAuth.session) { boot({ loggedIn: false }); return; }
         MapSkyAuth.session().then(function (res) {
           boot((res && res.body) || { loggedIn: false });
         }).catch(function () { boot({ loggedIn: false }); });
       }
-
-      window.MapSkyAuthOnSession = function (s) {
-        if (s && s.loggedIn) boot(s);
-      };
-
+      window.MapSkyAuthOnSession = function (s) { if (s && s.loggedIn) boot(s); };
       if (window.MapSkyAuth) startAuth();
       else {
         var n = 0;
         var timer = setInterval(function () {
           n += 1;
-          if (window.MapSkyAuth) {
-            clearInterval(timer);
-            startAuth();
-          } else if (n > 20) {
-            clearInterval(timer);
-            boot({ loggedIn: false });
-          }
+          if (window.MapSkyAuth) { clearInterval(timer); startAuth(); }
+          else if (n > 20) { clearInterval(timer); boot({ loggedIn: false }); }
         }, 50);
       }
     })();
