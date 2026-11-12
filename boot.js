@@ -9,6 +9,40 @@
     if (!m) throw new Error('boot script missing');
     var code = m[1];
 
+    // Seamless handoff: keep black hero shell until new content has painted
+    (function () {
+      var oldBody = "document.body.className = doc.body.className;\n      document.body.innerHTML = doc.body.innerHTML;";
+      var newBody = [
+        "document.body.className = doc.body.className;",
+        "document.documentElement.style.background = '#0a0a0a';",
+        "document.body.style.background = '#0a0a0a';",
+        "document.body.style.minHeight = '100dvh';",
+        "(function () {",
+        "  var shell = document.getElementById('boot-shell');",
+        "  var tmp = document.createElement('div');",
+        "  tmp.innerHTML = doc.body.innerHTML;",
+        "  if (shell) {",
+        "    shell.style.position = 'fixed';",
+        "    shell.style.inset = '0';",
+        "    shell.style.zIndex = '50';",
+        "    shell.style.pointerEvents = 'none';",
+        "  }",
+        "  var frag = document.createDocumentFragment();",
+        "  while (tmp.firstChild) frag.appendChild(tmp.firstChild);",
+        "  document.body.appendChild(frag);",
+        "  requestAnimationFrame(function () {",
+        "    requestAnimationFrame(function () {",
+        "      var s = document.getElementById('boot-shell');",
+        "      if (s) s.remove();",
+        "    });",
+        "  });",
+        "})();"
+      ].join("\n      ");
+      if (code.indexOf(oldBody) === -1) throw new Error('body replace missing');
+      code = code.replace(oldBody, newBody);
+    })();
+
+
     var img = "div.innerHTML = '<img class=\"paper-tape\" src=\"assets/paper-tape.jpg\" alt=\"\" />';";
     var svg = "div.innerHTML = '<svg class=\"marker-line\" viewBox=\"0 0 1200 40\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M-12 22 C 30 16, 70 28, 130 20 S 220 12, 300 24 S 400 32, 490 18 S 590 10, 680 23 S 780 31, 870 17 S 970 12, 1060 25 S 1140 18, 1220 22\" fill=\"none\" stroke=\"#1c1c1e\" stroke-width=\"8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M-8 24 C 48 20, 96 27, 160 22 S 250 16, 340 25 S 450 30, 540 20 S 650 15, 750 24 S 860 29, 960 19 S 1060 16, 1220 23\" fill=\"none\" stroke=\"#1c1c1e\" stroke-width=\"3.4\" stroke-linecap=\"round\" opacity=\"0.4\"/></svg>';";
     if (code.indexOf(img) === -1) throw new Error('tape markup missing');
@@ -227,11 +261,6 @@
         card.setAttribute('tabindex', '0');
         card.setAttribute('aria-label', '查看 Mac 適用機型');
       }
-      function itemHtml(parts) {
-        return '<li><span>' + parts.map(function (t) {
-          return t.replace(/&/g,'&').replace(/</g,'<');
-        }).join('<br>') + '</span><span class="mac-chev" aria-hidden="true">›</span></li>';
-      }
       function ensureModal() {
         var existing = document.getElementById('macModal');
         if (existing) return existing;
@@ -248,25 +277,23 @@
           '<div class="iphone-modal">',
           '  <button type="button" class="modal-x" id="macModalClose" aria-label="關閉">×</button>',
           '  <p class="modal-eyebrow">Mac</p>',
-          '  <h3 id="macModalTitle">與 macOS 27 相容的裝置</h3>',
-          '  <p class="modal-desc">在 Mac 瀏覽器開啟 MapSky，大畫面一次看天氣、班次與停班停課。</p>',
+          '  <h3 id="macModalTitle">與 macOS 相容的裝置</h3>',
+          '  <p class="modal-desc">MapSky 可在支援的 Mac 上透過 Safari 使用。</p>',
           '  <div class="frame"><div class="frame-inner">',
           '    <ul>',
-          '      <li>MacBook Neo<span>2026 年</span></li>',
-          '      <li>MacBook Air<span>配備 Apple 晶片，2020 年與後續機型</span></li>',
-          '      <li>MacBook Pro<span>配備 Apple 晶片，2020 年與後續機型</span></li>',
-          '      <li>MacBook Pro<span>配備 PROLED XDR 顯示器，2026 年</span></li>',
-          '      <li>iMac<span>配備 Apple 晶片，2021 年與後續機型</span></li>',
-          '      <li>Mac mini<span>配備 Apple 晶片，2020 年與後續機型</span></li>',
-          '      <li>Mac Studio<span>2022 年與後續機型</span></li>',
-          '      <li>Mac Pro<span>配備 Apple 晶片，2023 年</span></li>',
+          '      <li>MacBook Air<span>M1 與後續晶片</span></li>',
+          '      <li>MacBook Pro<span>M1 與後續晶片</span></li>',
+          '      <li>iMac<span>M1 與後續晶片</span></li>',
+          '      <li>Mac mini<span>M1 與後續晶片</span></li>',
+          '      <li>Mac Studio<span>M1 Max 與後續晶片</span></li>',
+          '      <li>Mac Pro<span>M2 Ultra 與後續晶片</span></li>',
           '    </ul>',
           '  </div></div>',
           '</div>'
         ].join('');
         document.body.appendChild(ov);
         var scrollY = 0;
-        function closeMac() {
+        function closeMacModal() {
           if (!ov.classList.contains('open') || ov._closing) return;
           ov._closing = true;
           var y = scrollY;
@@ -295,23 +322,20 @@
           if (x && x.focus) try { x.focus({ preventScroll: true }); } catch (err) {}
         }
         ov._openFrom = openFrom;
-        ov.addEventListener('click', function (e) { if (e.target === ov) closeMac(); });
-        document.getElementById('macModalClose').addEventListener('click', closeMac);
+        ov.addEventListener('click', function (e) { if (e.target === ov) closeMacModal(); });
+        document.getElementById('macModalClose').addEventListener('click', closeMacModal);
         document.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape' && ov.classList.contains('open')) closeMac();
+          if (e.key === 'Escape') closeMacModal();
         });
         return ov;
-      }
-      function isMacCard(el) {
-        if (!el) return false;
-        var h = el.querySelector('h3');
-        return !!(h && h.textContent.trim() === 'Mac');
       }
       document.addEventListener('click', function (e) {
         var t = e.target;
         if (!t || !t.closest) return;
         var card = t.closest('.fcard, li');
-        if (!isMacCard(card)) return;
+        if (!card) return;
+        var h = card.querySelector('h3');
+        if (!h || h.textContent.trim() !== 'Mac') return;
         mark(card);
         var ov = ensureModal();
         if (ov && ov._openFrom) ov._openFrom(e);
@@ -321,7 +345,9 @@
         var t = e.target;
         if (!t || !t.closest) return;
         var card = t.closest('.fcard, li');
-        if (!isMacCard(card)) return;
+        if (!card) return;
+        var h = card.querySelector('h3');
+        if (!h || h.textContent.trim() !== 'Mac') return;
         e.preventDefault();
         mark(card);
         var ov = ensureModal();
