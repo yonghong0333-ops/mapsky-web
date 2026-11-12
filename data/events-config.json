@@ -1,23 +1,48 @@
 [
   {
-    "id": "qx-exam",
-    "enabled": true,
+    "appShowUntil": "2027-11-12 22:22:55",
     "badge": "定期評量",
-    "title": "Qx 定期評量",
-    "description": "",
     "schedule": "",
-    "price": 0,
-    "currency": "TWD",
-    "priceLabel": "",
+    "appShowFrom": "2026-11-12 22:22:55",
     "ticketLabel": "購買入場券",
+    "price": 0,
+    "saleStart": "2026-11-12 22:22:55",
+    "description": "",
+    "visibleFrom": "2026-11-12 22:22:55",
+    "currency": "TWD",
     "introHero": "Qx 定期評量",
+    "saleEnd": "2027-11-12 22:22:55",
+    "priceLabel": "免費開放",
     "introNote": "",
-    "visibleFrom": null,
-    "saleStart": null,
-    "saleEnd": null,
-    "appShowFrom": null,
-    "appShowUntil": null,
-    "sessions": [],
-    "packages": []
+    "sessions": [
+      {
+        "subjectList": [
+          {
+            "name": "test",
+            "range": "",
+            "end": "2026-11-12 15:00:00",
+            "start": "2026-11-12 14:00:00"
+          }
+        ],
+        "examDate": "2026-11-12",
+        "price": 0,
+        "id": "session-1794493658",
+        "name": "Test",
+        "subjects": "test",
+        "examEnd": "2026-11-12 15:00:00",
+        "capacity": 0,
+        "saleEnd": "2027-11-12 22:22:55",
+        "note": "",
+        "saleStart": "2026-11-12 22:22:55",
+        "date": "2026/11/12 14:00 – 15:00",
+        "place": "線上",
+        "examStart": "2026-11-12 14:00:00",
+        "syllabus": "test 2026/11/12 14:00 – 15:00 "
+      }
+    ],
+    "packages": [],
+    "enabled": true,
+    "title": "Qx 定期評量",
+    "id": "qx-exam"
   }
 ]
