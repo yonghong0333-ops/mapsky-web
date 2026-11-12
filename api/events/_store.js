@@ -49,23 +49,53 @@ function safeParse(t) {
   try { return JSON.parse(t); } catch { return null; }
 }
 
+async function fetchJson(url) {
+  const r = await fetch(url, { cache: 'no-store', headers: { Accept: 'application/json' } });
+  if (!r.ok) return null;
+  return r.json().catch(() => null);
+}
+
 async function loadConfig() {
-  // 1) 永遠先從 raw GitHub 讀（不需 token、不受記憶體快取卡死）
+  const bust = Date.now();
+  // 1) jsDelivr（比 raw.githubusercontent CDN 更新快）
   try {
-    const r = await fetch(
-      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json?t=${Date.now()}`,
-      { cache: 'no-store' }
+    const j = await fetchJson(
+      `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/events-config.json?t=${bust}`
     );
-    if (r.ok) {
-      const j = await r.json();
+    if (Array.isArray(j)) {
+      mem.config = j;
+      return j;
+    }
+  } catch {}
+
+  // 2) GitHub Contents API（公開 repo 不需 token）
+  try {
+    const meta = await fetchJson(
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/data/events-config.json?ref=${BRANCH}&t=${bust}`
+    );
+    if (meta && meta.content) {
+      const text = Buffer.from(meta.content, 'base64').toString('utf8');
+      const j = safeParse(text);
       if (Array.isArray(j)) {
         mem.config = j;
+        mem.configSha = meta.sha;
         return j;
       }
     }
   } catch {}
 
-  // 2) 有 token 再用 Contents API
+  // 3) raw GitHub
+  try {
+    const j = await fetchJson(
+      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json?t=${bust}`
+    );
+    if (Array.isArray(j)) {
+      mem.config = j;
+      return j;
+    }
+  } catch {}
+
+  // 4) token Contents API
   const file = await ghGetFile('data/events-config.json');
   if (file && Array.isArray(file.json)) {
     mem.config = file.json;
@@ -73,13 +103,13 @@ async function loadConfig() {
     return mem.config;
   }
 
-  // 3) 最後才退回記憶體（剛寫入但尚未 push 成功時）
   return mem.config || [];
 }
 
 async function saveConfig(list) {
   mem.config = list;
   const existing = await ghGetFile('data/events-config.json');
+  // 無 token 時也先試公開 Contents（會失敗）→ 回傳 no_token 讓 App 提示
   const put = await ghPutFile(
     'data/events-config.json',
     JSON.stringify(list, null, 2) + '\n',
@@ -90,21 +120,25 @@ async function saveConfig(list) {
 }
 
 async function loadTickets() {
-  // tickets 也優先從 GitHub 讀，避免冷啟動丟資料
+  const bust = Date.now();
   try {
-    const r = await fetch(
-      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/tickets.json?t=${Date.now()}`,
-      { cache: 'no-store' }
+    const j = await fetchJson(
+      `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/tickets.json?t=${bust}`
     );
-    if (r.ok) {
-      const j = await r.json();
-      if (j && typeof j === 'object') {
-        mem.tickets = j;
-        return mem.tickets;
-      }
+    if (j && typeof j === 'object' && !Array.isArray(j)) {
+      mem.tickets = j;
+      return mem.tickets;
     }
   } catch {}
-
+  try {
+    const j = await fetchJson(
+      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/tickets.json?t=${bust}`
+    );
+    if (j && typeof j === 'object') {
+      mem.tickets = j;
+      return mem.tickets;
+    }
+  } catch {}
   const file = await ghGetFile('data/tickets.json');
   if (file && file.json && typeof file.json === 'object') {
     mem.tickets = file.json;
