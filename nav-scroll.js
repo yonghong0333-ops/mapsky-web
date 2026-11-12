@@ -287,11 +287,42 @@
       if (a.textContent.trim() === '功能') a.textContent = '適用裝置';
     });
   }
+
+  // Inject 「活動」 into every main nav (homepage boot content included)
+  function ensureEventsLink() {
+    document.querySelectorAll('nav.nav-links').forEach(function (nav) {
+      if (nav.querySelector('a[href="/events"]')) return;
+      var link = document.createElement('a');
+      link.href = '/events';
+      link.textContent = '活動';
+      var news = null;
+      nav.querySelectorAll('a').forEach(function (a) {
+        var t = (a.textContent || '').trim();
+        if (t === '最新消息') news = a;
+      });
+      if (news && news.nextSibling) {
+        nav.insertBefore(link, news.nextSibling);
+      } else if (news) {
+        news.insertAdjacentElement('afterend', link);
+      } else {
+        var anchor = null;
+        nav.querySelectorAll('a').forEach(function (a) {
+          var t = (a.textContent || '').trim();
+          if (!anchor && (t === '適用裝置' || t === '功能' || t === '隱私與條款')) anchor = a;
+        });
+        if (anchor) nav.insertBefore(link, anchor);
+        else nav.appendChild(link);
+      }
+    });
+  }
+
   rename();
+  ensureEventsLink();
   var n = 0;
   var iv = setInterval(function () {
     n++;
     rename();
+    ensureEventsLink();
     measurePill();
     forceGhostAuth();
     if (n > 40) clearInterval(iv);
