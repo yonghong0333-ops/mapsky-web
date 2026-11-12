@@ -38,6 +38,4 @@
     <text x="58" y="308" font-family="Arial" font-size="14" fill="#333">26</text>
     <text x="155" y="240" font-family="Arial" font-size="26" fill="#111">✓</text>
   </g>
-  <rect x="24" y="24" width="92" height="38" rx="12" fill="#0a0a0a"/>
-  <text x="70" y="49" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17" font-weight="700" fill="#fff">Qx</text>
 </svg>
