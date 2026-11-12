@@ -48,7 +48,6 @@ async function ghPutFile(path, content, message, sha) {
   if (sha) body.sha = sha;
 
   const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
-  // 先試 Bearer（fine-grained / classic 都支援）
   let r = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -62,7 +61,6 @@ async function ghPutFile(path, content, message, sha) {
   });
   let j = await r.json().catch(() => ({}));
 
-  // 若 401，改試 token 前綴（部分 classic PAT）
   if (r.status === 401) {
     r = await fetch(url, {
       method: 'PUT',
@@ -96,20 +94,18 @@ async function fetchJson(url) {
 }
 
 async function loadConfig() {
-  const bust = Date.now();
-  try {
-    const j = await fetchJson(
-      `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/events-config.json?t=${bust}`
-    );
-    if (Array.isArray(j)) {
-      mem.config = j;
-      return j;
-    }
-  } catch {}
+  // 1) 有 token：直接打 GitHub Contents API（即時、無 CDN 快取）
+  const file = await ghGetFile('data/events-config.json');
+  if (file && Array.isArray(file.json)) {
+    mem.config = file.json;
+    mem.configSha = file.sha;
+    return mem.config;
+  }
 
+  // 2) 公開 Contents API
   try {
     const meta = await fetchJson(
-      `https://api.github.com/repos/${OWNER}/${REPO}/contents/data/events-config.json?ref=${BRANCH}&t=${bust}`
+      `https://api.github.com/repos/${OWNER}/${REPO}/contents/data/events-config.json?ref=${BRANCH}&_=${Date.now()}`
     );
     if (meta && meta.content) {
       const text = Buffer.from(meta.content, 'base64').toString('utf8');
@@ -122,9 +118,15 @@ async function loadConfig() {
     }
   } catch {}
 
+  // 3) 記憶體（剛儲存成功、尚未冷啟動）
+  if (Array.isArray(mem.config) && mem.config.length) {
+    return mem.config;
+  }
+
+  // 4) CDN / raw 備援（可能有延遲）
   try {
     const j = await fetchJson(
-      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json?t=${bust}`
+      `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/events-config.json?t=${Date.now()}`
     );
     if (Array.isArray(j)) {
       mem.config = j;
@@ -132,12 +134,15 @@ async function loadConfig() {
     }
   } catch {}
 
-  const file = await ghGetFile('data/events-config.json');
-  if (file && Array.isArray(file.json)) {
-    mem.config = file.json;
-    mem.configSha = file.sha;
-    return mem.config;
-  }
+  try {
+    const j = await fetchJson(
+      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json?t=${Date.now()}`
+    );
+    if (Array.isArray(j)) {
+      mem.config = j;
+      return j;
+    }
+  } catch {}
 
   return mem.config || [];
 }
@@ -155,30 +160,21 @@ async function saveConfig(list) {
 }
 
 async function loadTickets() {
-  const bust = Date.now();
+  const file = await ghGetFile('data/tickets.json');
+  if (file && file.json && typeof file.json === 'object') {
+    mem.tickets = file.json;
+    mem.ticketsSha = file.sha;
+    return mem.tickets;
+  }
   try {
     const j = await fetchJson(
-      `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/tickets.json?t=${bust}`
-    );
-    if (j && typeof j === 'object' && !Array.isArray(j)) {
-      mem.tickets = j;
-      return mem.tickets;
-    }
-  } catch {}
-  try {
-    const j = await fetchJson(
-      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/tickets.json?t=${bust}`
+      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/tickets.json?t=${Date.now()}`
     );
     if (j && typeof j === 'object') {
       mem.tickets = j;
       return mem.tickets;
     }
   } catch {}
-  const file = await ghGetFile('data/tickets.json');
-  if (file && file.json && typeof file.json === 'object') {
-    mem.tickets = file.json;
-    mem.ticketsSha = file.sha;
-  }
   return mem.tickets;
 }
 
