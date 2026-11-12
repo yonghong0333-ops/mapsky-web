@@ -192,7 +192,7 @@
     </div>
   </div>
 
-  <script src="auth.js"></script>
+  <script src="/auth.js"></script>
   <script>
     (function () {
       var TICKETS_KEY = 'mapsky_tickets_v1';
@@ -430,12 +430,33 @@
         goStep('session');
       }
 
-      if (window.MapSkyAuth && MapSkyAuth.session) {
+      function startAuth() {
+        if (!window.MapSkyAuth || !MapSkyAuth.session) {
+          boot({ loggedIn: false });
+          return;
+        }
         MapSkyAuth.session().then(function (res) {
           boot((res && res.body) || { loggedIn: false });
         }).catch(function () { boot({ loggedIn: false }); });
-      } else {
-        boot({ loggedIn: false });
+      }
+
+      window.MapSkyAuthOnSession = function (s) {
+        if (s && s.loggedIn) boot(s);
+      };
+
+      if (window.MapSkyAuth) startAuth();
+      else {
+        var n = 0;
+        var timer = setInterval(function () {
+          n += 1;
+          if (window.MapSkyAuth) {
+            clearInterval(timer);
+            startAuth();
+          } else if (n > 20) {
+            clearInterval(timer);
+            boot({ loggedIn: false });
+          }
+        }, 50);
       }
     })();
   </script>
