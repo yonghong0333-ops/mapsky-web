@@ -4,47 +4,20 @@
     "enabled": true,
     "badge": "定期評量",
     "title": "Qx 定期評量",
-    "description": "Qx 定期評量是 MapSky 官方線上評量活動。分場次報名、購票後資格綁定帳號，並可在 MapSky App 查詢入場與成績。",
-    "schedule": "春／夏／秋三場 · 線上進行",
+    "description": "",
+    "schedule": "",
     "price": 0,
     "currency": "TWD",
-    "priceLabel": "免費開放",
+    "priceLabel": "",
     "ticketLabel": "購買入場券",
-    "introHero": "定期評量 · 帳號綁定入場",
-    "introNote": "流程：介紹 → 選場次 → 選禮包 → 付款。基本入場可免費領取。",
-    "sessions": [
-      {
-        "id": "2026-spring",
-        "name": "2026 春季場",
-        "date": "2026/03/15（日）",
-        "place": "線上 · 14:00–16:00",
-        "note": "報名截止：3/10",
-        "subjects": "國文、英文、數學",
-        "syllabus": "閱讀理解、文法、代數與幾何基礎"
-      },
-      {
-        "id": "2026-summer",
-        "name": "2026 夏季場",
-        "date": "2026/06/21（日）",
-        "place": "線上 · 14:00–16:00",
-        "note": "報名截止：6/15",
-        "subjects": "國文、英文、數學",
-        "syllabus": "閱讀理解、文法、代數與幾何基礎"
-      },
-      {
-        "id": "2026-fall",
-        "name": "2026 秋季場",
-        "date": "2026/09/20（日）",
-        "place": "線上 · 14:00–16:00",
-        "note": "報名截止：9/14",
-        "subjects": "國文、英文、數學",
-        "syllabus": "閱讀理解、文法、代數與幾何基礎"
-      }
-    ],
-    "packages": [
-      { "id": "basic", "name": "基本入場", "price": 0, "desc": "入場資格 · 成績查詢 · App 綁定" },
-      { "id": "study", "name": "學習禮包", "price": 299, "desc": "基本入場 + 線上講義 + 複習影片 7 天" },
-      { "id": "full", "name": "完整禮包", "price": 599, "desc": "學習禮包 + 解析直播回放 + 電子證書" }
-    ]
+    "introHero": "Qx 定期評量",
+    "introNote": "",
+    "visibleFrom": null,
+    "saleStart": null,
+    "saleEnd": null,
+    "appShowFrom": null,
+    "appShowUntil": null,
+    "sessions": [],
+    "packages": []
   }
 ]
