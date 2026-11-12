@@ -170,7 +170,7 @@
     <p style="margin:16px 0 0;color:#6e6e73">Copyright © MapSky · mapskyapp@gmail.com</p>
   </footer>
 
-  <script src="/assets/qx-cover-data.js"></script>
+  <script src="/assets/qx-cover-loader.js"></script>
   <script src="/logo-icon.js"></script>
   <script src="/logo-wordmark.js"></script>
   <script src="/logo-apply.js"></script>
@@ -297,12 +297,19 @@
       }
 
       function boot() {
-        if (window.MapSkyAuth && MapSkyAuth.session) {
-          MapSkyAuth.session().then(function (res) {
-            render((res && res.body) || { loggedIn: false });
-          }).catch(function () { render({ loggedIn: false }); });
-        } else {
-          render({ loggedIn: false });
+        function go() {
+          if (window.MapSkyAuth && MapSkyAuth.session) {
+            MapSkyAuth.session().then(function (res) {
+              render((res && res.body) || { loggedIn: false });
+            }).catch(function () { render({ loggedIn: false }); });
+          } else {
+            render({ loggedIn: false });
+          }
+        }
+        if (window.QX_COVER) go();
+        else {
+          document.addEventListener('qx-cover-ready', go, { once: true });
+          setTimeout(go, 1200);
         }
       }
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
