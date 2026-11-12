@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>活動 — MapSky</title>
+  <meta name="description" content="MapSky 活動與優惠訊息。" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.page-light { background: #fff; color: #1d1d1f; }
+    body.page-light .nav {
+      background: rgba(255,255,255,0.92);
+      color: #1d1d1f;
+      border-bottom-color: rgba(0,0,0,0.06);
+    }
+    body.page-light .nav-toggle { background: rgba(0,0,0,0.06); }
+    body.page-light .nav-toggle span { background: currentColor; }
+    body.page-light .wordmark { filter: brightness(0); }
+    body.page-light:not(.nav-open) .nav .btn-primary { background: #1d1d1f; color: #fff; }
+    body.page-light.nav-open .nav { color: #f5f5f7; background: transparent; }
+    body.page-light.nav-open .wordmark { filter: none; }
+    body.page-light.nav-open .nav-toggle { background: rgba(255,255,255,0.18); }
+    body.page-light.nav-open .nav-toggle span { background: #f5f5f7; }
+    @media (max-width: 768px) {
+      body.page-light .nav-right { color: #f5f5f7; }
+    }
+    .events {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: calc(var(--nav-h, 56px) + 28px) 24px 80px;
+    }
+    .events h1 {
+      font-size: 32px;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+      color: #1d1d1f;
+    }
+    .events .meta {
+      color: #6e6e73;
+      margin: 0 0 32px;
+      font-size: 14px;
+    }
+    .event-list {
+      display: grid;
+      gap: 14px;
+    }
+    .event-card {
+      background: #f5f5f7;
+      border-radius: 18px;
+      padding: 22px 20px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .event-card h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: -0.015em;
+      color: #1d1d1f;
+    }
+    .event-card p {
+      margin: 0;
+      color: #6e6e73;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .event-empty {
+      text-align: center;
+      padding: 48px 20px;
+      border-radius: 20px;
+      background: #f5f5f7;
+      color: #6e6e73;
+    }
+    .event-empty strong {
+      display: block;
+      color: #1d1d1f;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+    .site-footer {
+      background: #f5f5f7;
+      color: #6e6e73;
+      padding: 36px 24px 28px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .site-footer a { color: #1d1d1f; text-decoration: none; margin: 0 8px; }
+    .site-footer a:hover { color: #0066cc; }
+  </style>
+</head>
+<body class="page-light">
+  <header class="nav" id="topNav">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-right" id="navRight">
+      <nav class="nav-links" aria-label="主選單">
+        <a href="/#news">最新消息</a>
+        <a href="/events">活動</a>
+        <a href="/features">適用裝置</a>
+        <a href="/privacy">隱私與條款</a>
+      </nav>
+      <div class="nav-actions">
+        <span data-auth-slot>
+          <a class="btn btn-sm btn-primary" href="/login">登入</a>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="events">
+    <h1>活動</h1>
+    <p class="meta">官方活動、限時優惠與合作訊息</p>
+
+    <div class="event-list">
+      <div class="event-empty">
+        <strong>目前沒有進行中的活動</strong>
+        有新活動時會在這裡公布，也請留意最新消息。
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a href="/#news">最新消息</a>
+      <a href="/events">活動</a>
+      <a href="/features">適用裝置</a>
+      <a href="/privacy">隱私與條款</a>
+      <a href="/login">登入</a>
+    </div>
+    <p style="margin:16px 0 0;color:#6e6e73">Copyright © MapSky · mapskyapp@gmail.com</p>
+  </footer>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script src="nav-scroll.js?v=23"></script>
+  <script>
+    (function () {
+      var toggle = document.getElementById('navToggle');
+      var panel = document.getElementById('navRight');
+      if (!toggle || !panel) return;
+      toggle.addEventListener('click', function () {
+        var open = panel.classList.toggle('open');
+        toggle.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        document.body.classList.toggle('nav-open', open);
+      });
+      panel.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          panel.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

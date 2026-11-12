@@ -5,7 +5,8 @@
     { "source": "/features", "destination": "/features.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/account", "destination": "/account.html" },
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/events", "destination": "/events.html" }
   ],
   "redirects": [
     { "source": "/privacy.html", "destination": "/privacy", "permanent": true },
@@ -13,6 +14,7 @@
     { "source": "/login.html", "destination": "/login", "permanent": true },
     { "source": "/account.html", "destination": "/account", "permanent": true },
     { "source": "/admin.html", "destination": "/admin", "permanent": true },
+    { "source": "/events.html", "destination": "/events", "permanent": true },
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "headers": [
