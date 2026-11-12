@@ -8,8 +8,14 @@ const mem = globalThis.__mapskyEventsMem || (globalThis.__mapskyEventsMem = {
   tickets: {} // email -> { eventId -> ticket }
 });
 
+function getToken() {
+  const raw = process.env.GITHUB_TOKEN || process.env.MAPSKY_GH_TOKEN || '';
+  const t = String(raw).trim();
+  return t || null;
+}
+
 async function ghHeaders() {
-  const token = process.env.GITHUB_TOKEN || process.env.MAPSKY_GH_TOKEN;
+  const token = getToken();
   if (!token) return null;
   return {
     Authorization: `Bearer ${token}`,
@@ -31,18 +37,52 @@ async function ghGetFile(path) {
 }
 
 async function ghPutFile(path, content, message, sha) {
-  const h = await ghHeaders();
-  if (!h) return { ok: false, reason: 'no_token' };
+  const token = getToken();
+  if (!token) return { ok: false, reason: 'no_token' };
+
   const body = {
     message,
     content: Buffer.from(content, 'utf8').toString('base64'),
     branch: BRANCH
   };
   if (sha) body.sha = sha;
+
   const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
-  const r = await fetch(url, { method: 'PUT', headers: { ...h, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  const j = await r.json().catch(() => ({}));
-  return { ok: r.ok, status: r.status, body: j };
+  // 先試 Bearer（fine-grained / classic 都支援）
+  let r = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'mapsky-web-events',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  let j = await r.json().catch(() => ({}));
+
+  // 若 401，改試 token 前綴（部分 classic PAT）
+  if (r.status === 401) {
+    r = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${token}`,
+        Accept: 'application/vnd.github+json',
+        'User-Agent': 'mapsky-web-events',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    j = await r.json().catch(() => ({}));
+  }
+
+  if (!r.ok) {
+    const msg = (j && (j.message || j.error)) || ('http_' + r.status);
+    return { ok: false, reason: 'github_write_failed', status: r.status, message: String(msg).slice(0, 200) };
+  }
+  return { ok: true, status: r.status, body: j, reason: 'saved' };
 }
 
 function safeParse(t) {
@@ -57,7 +97,6 @@ async function fetchJson(url) {
 
 async function loadConfig() {
   const bust = Date.now();
-  // 1) jsDelivr（比 raw.githubusercontent CDN 更新快）
   try {
     const j = await fetchJson(
       `https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${BRANCH}/data/events-config.json?t=${bust}`
@@ -68,7 +107,6 @@ async function loadConfig() {
     }
   } catch {}
 
-  // 2) GitHub Contents API（公開 repo 不需 token）
   try {
     const meta = await fetchJson(
       `https://api.github.com/repos/${OWNER}/${REPO}/contents/data/events-config.json?ref=${BRANCH}&t=${bust}`
@@ -84,7 +122,6 @@ async function loadConfig() {
     }
   } catch {}
 
-  // 3) raw GitHub
   try {
     const j = await fetchJson(
       `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json?t=${bust}`
@@ -95,7 +132,6 @@ async function loadConfig() {
     }
   } catch {}
 
-  // 4) token Contents API
   const file = await ghGetFile('data/events-config.json');
   if (file && Array.isArray(file.json)) {
     mem.config = file.json;
@@ -109,7 +145,6 @@ async function loadConfig() {
 async function saveConfig(list) {
   mem.config = list;
   const existing = await ghGetFile('data/events-config.json');
-  // 無 token 時也先試公開 Contents（會失敗）→ 回傳 no_token 讓 App 提示
   const put = await ghPutFile(
     'data/events-config.json',
     JSON.stringify(list, null, 2) + '\n',
@@ -198,5 +233,5 @@ function isAdmin(session) {
 
 module.exports = {
   loadConfig, saveConfig, loadTickets, saveTickets,
-  cors, verifySession, userKey, isAdmin, mem
+  cors, verifySession, userKey, isAdmin, mem, getToken
 };
