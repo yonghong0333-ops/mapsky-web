@@ -50,20 +50,30 @@ function safeParse(t) {
 }
 
 async function loadConfig() {
-  if (mem.config) return mem.config;
+  // 1) 永遠先從 raw GitHub 讀（不需 token、不受記憶體快取卡死）
+  try {
+    const r = await fetch(
+      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json?t=${Date.now()}`,
+      { cache: 'no-store' }
+    );
+    if (r.ok) {
+      const j = await r.json();
+      if (Array.isArray(j)) {
+        mem.config = j;
+        return j;
+      }
+    }
+  } catch {}
+
+  // 2) 有 token 再用 Contents API
   const file = await ghGetFile('data/events-config.json');
   if (file && Array.isArray(file.json)) {
     mem.config = file.json;
     mem.configSha = file.sha;
     return mem.config;
   }
-  try {
-    const r = await fetch(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/events-config.json`);
-    if (r.ok) {
-      const j = await r.json();
-      if (Array.isArray(j)) { mem.config = j; return j; }
-    }
-  } catch {}
+
+  // 3) 最後才退回記憶體（剛寫入但尚未 push 成功時）
   return mem.config || [];
 }
 
@@ -80,7 +90,21 @@ async function saveConfig(list) {
 }
 
 async function loadTickets() {
-  if (Object.keys(mem.tickets).length) return mem.tickets;
+  // tickets 也優先從 GitHub 讀，避免冷啟動丟資料
+  try {
+    const r = await fetch(
+      `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/data/tickets.json?t=${Date.now()}`,
+      { cache: 'no-store' }
+    );
+    if (r.ok) {
+      const j = await r.json();
+      if (j && typeof j === 'object') {
+        mem.tickets = j;
+        return mem.tickets;
+      }
+    }
+  } catch {}
+
   const file = await ghGetFile('data/tickets.json');
   if (file && file.json && typeof file.json === 'object') {
     mem.tickets = file.json;
@@ -103,7 +127,7 @@ async function saveTickets(tickets) {
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Cookie, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 }
