@@ -163,6 +163,40 @@
     .done-wrap p { color: var(--dim); font-size: 15px; line-height: 1.55; margin: 0 0 12px; }
     .login-gate { padding: 32px 8px; text-align: center; }
     .login-gate p { color: var(--dim); margin: 0 0 20px; line-height: 1.5; }
+    .intro-card {
+      background: linear-gradient(165deg, #1c1c24, #121218);
+      border: 1px solid rgba(10,132,255,0.22);
+      border-radius: 18px;
+      padding: 16px;
+      margin: 0 0 20px;
+      box-shadow: 0 8px 28px rgba(10,132,255,0.08);
+    }
+    .intro-hero {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 5px 11px;
+      border-radius: 980px;
+      margin-bottom: 12px;
+      color: #64d2ff;
+      background: rgba(10,132,255,0.15);
+    }
+    .intro-desc {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.78);
+    }
+    .intro-points {
+      margin: 0;
+      padding: 0 0 0 18px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .intro-points li { margin: 0 0 6px; }
+    .intro-points strong { color: #f5f5f7; font-weight: 650; }
   </style>
 </head>
 <body>
@@ -186,7 +220,17 @@
   <div class="stage screen" id="screenSession">
     <p class="eyebrow" id="eventEyebrow">Qx 定期評量</p>
     <h1>選擇場次</h1>
-    <p class="lead">請選擇要參加的評量場次。</p>
+    <p class="lead">請先了解活動內容，再選擇要參加的評量場次。</p>
+    <div class="intro-card">
+      <div class="intro-hero">定期評量 · 帳號綁定入場</div>
+      <p class="intro-desc">Qx 定期評量是 MapSky 官方線上評量活動。分場次報名、購票後資格綁定帳號，並可在 MapSky App 查詢入場與成績。</p>
+      <ul class="intro-points">
+        <li><strong>線上進行</strong>：依場次時段線上參加，免到場</li>
+        <li><strong>分季場次</strong>：春／夏／秋三場，自行選擇日期</li>
+        <li><strong>禮包加值</strong>：講義、複習影片、解析回放與證書</li>
+        <li><strong>帳號綁定</strong>：購票後同步至 MapSky App</li>
+      </ul>
+    </div>
     <div id="sessionList"></div>
   </div>
 
