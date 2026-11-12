@@ -1,5 +1,5 @@
 const {
-  loadConfig, saveConfig, cors, verifySession, isAdmin
+  loadConfig, saveConfig, cors, verifySession, isAdmin, getToken
 } = require('./_store');
 
 module.exports = async function handler(req, res) {
@@ -8,7 +8,11 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'GET') {
     const list = await loadConfig();
-    return res.status(200).json({ ok: true, events: list });
+    return res.status(200).json({
+      ok: true,
+      events: list,
+      hasToken: !!getToken()
+    });
   }
 
   if (req.method === 'POST') {
@@ -23,7 +27,7 @@ module.exports = async function handler(req, res) {
     const events = Array.isArray(body.events) ? body.events : (Array.isArray(body) ? body : null);
     if (!events) return res.status(400).json({ ok: false, reason: 'invalid_body' });
 
-    const hasToken = !!(process.env.GITHUB_TOKEN || process.env.MAPSKY_GH_TOKEN);
+    const hasToken = !!getToken();
     const put = await saveConfig(events);
     return res.status(200).json({
       ok: true,
@@ -31,6 +35,7 @@ module.exports = async function handler(req, res) {
       hasToken,
       reason: put && put.ok ? 'saved' : (put && put.reason) || (hasToken ? 'github_write_failed' : 'no_token'),
       status: put && put.status,
+      message: put && put.message,
       events
     });
   }
