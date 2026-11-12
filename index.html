@@ -4,13 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0a0a0a" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>MapSky</title>
   <link rel="icon" type="image/png" href="assets/icon.png" />
-  <script src="boot.js?v=notebook1" defer></script>
+  <link rel="apple-touch-icon" href="assets/icon.png" />
+  <style>
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      min-height: 100dvh;
+      background: #0a0a0a;
+      color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Silent first paint — same black as hero, no loading copy */
+    #boot-shell {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 24px 48px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    #boot-shell .eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      margin: 0 0 12px;
+    }
+    #boot-shell h1 {
+      font-size: clamp(28px, 7vw, 48px);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      margin: 0 0 16px;
+      color: #f5f5f7;
+    }
+    #boot-shell .lead {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.62);
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.55;
+    }
+    #boot-shell .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 22px;
+      border-radius: 980px;
+      background: #fff;
+      color: #0a0a0a;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+  </style>
+  <script src="boot.js?v=notebook2" defer></script>
   <script src="fold.js?v=11" defer></script>
   <script src="nav-scroll.js?v=22" defer></script>
 </head>
-<body style="margin:0;background:#0a0a0a;color:#f5f5f7;font-family:-apple-system,sans-serif">
-  <p style="padding:24px;color:#6e6e73">載入 MapSky…</p>
+<body>
+  <!-- First paint matches final hero so open-from-home has no loading flash -->
+  <div id="boot-shell" aria-hidden="true">
+    <p class="eyebrow">MapSky</p>
+    <h1>天空、班次、停班停課。<br />一站看清楚。</h1>
+    <p class="lead">整合氣象、捷運／台鐵／高鐵、YouBike 與停班停課，讓出門決策更簡單。</p>
+    <a class="btn" href="/features">進一步了解 ›</a>
+  </div>
 </body>
 </html>
