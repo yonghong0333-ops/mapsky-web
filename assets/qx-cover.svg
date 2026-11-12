@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a0a0a"/>
+      <stop offset="0.55" stop-color="#1a1a1e"/>
+      <stop offset="1" stop-color="#0d1b2a"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="400" y1="80" x2="400" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A84FF" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#0A84FF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <circle cx="640" cy="90" r="160" fill="url(#glow)"/>
+  <circle cx="120" cy="420" r="120" fill="#0A84FF" fill-opacity="0.12"/>
+  <g fill="#fff" fill-opacity="0.08">
+    <circle cx="80" cy="80" r="2"/><circle cx="120" cy="80" r="2"/><circle cx="160" cy="80" r="2"/>
+    <circle cx="80" cy="120" r="2"/><circle cx="120" cy="120" r="2"/><circle cx="160" cy="120" r="2"/>
+    <circle cx="640" cy="360" r="2"/><circle cx="680" cy="360" r="2"/><circle cx="720" cy="360" r="2"/>
+    <circle cx="640" cy="400" r="2"/><circle cx="680" cy="400" r="2"/><circle cx="720" cy="400" r="2"/>
+  </g>
+  <rect x="300" y="130" width="200" height="200" rx="40" fill="#fff" fill-opacity="0.06" stroke="#fff" stroke-opacity="0.18" stroke-width="2"/>
+  <text x="400" y="268" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="120" font-weight="700" fill="#fff" letter-spacing="-4">Qx</text>
+  <text x="400" y="380" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="#fff" fill-opacity="0.55" letter-spacing="6">定期評量</text>
+</svg>

@@ -6,8 +6,8 @@
   <title>活動 — MapSky</title>
   <meta name="description" content="MapSky 活動、Qx 定期評量入場券。" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="icon" type="image/png" href="assets/icon.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="/assets/icon.png" />
+  <link rel="stylesheet" href="/styles.css" />
   <style>
     body.page-light { background: #fff; color: #1d1d1f; }
     body.page-light .nav {
@@ -27,120 +27,85 @@
       body.page-light .nav-right { color: #f5f5f7; }
     }
     .events {
-      max-width: 760px;
+      max-width: 560px;
       margin: 0 auto;
-      padding: calc(var(--nav-h, 56px) + 28px) 24px 80px;
+      padding: calc(var(--nav-h, 56px) + 28px) 20px 80px;
     }
     .events h1 {
-      font-size: 32px;
-      margin: 0 0 8px;
+      font-size: 28px;
+      margin: 0 0 6px;
       letter-spacing: -0.02em;
       color: #1d1d1f;
     }
     .events .meta {
       color: #6e6e73;
-      margin: 0 0 32px;
+      margin: 0 0 24px;
       font-size: 14px;
     }
-    .event-list { display: grid; gap: 16px; }
+    .event-list { display: grid; gap: 18px; }
     .event-card {
-      background: #f5f5f7;
-      border-radius: 20px;
-      padding: 24px 22px;
-      border: 1px solid rgba(0,0,0,0.04);
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #0a0a0a;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+      padding: 0;
     }
-    .event-card.featured {
-      background: linear-gradient(165deg, #0a0a0a 0%, #1c1c1e 100%);
-      color: #f5f5f7;
-      border: 1px solid rgba(255,255,255,0.08);
+    .event-cover {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #111;
     }
-    .event-badge {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 10px;
-    }
-    .event-card h2 {
-      margin: 0 0 10px;
-      font-size: 22px;
-      letter-spacing: -0.02em;
-    }
-    .event-card.featured h2 { color: #fff; }
-    .event-card p {
-      margin: 0 0 12px;
-      color: #6e6e73;
-      font-size: 15px;
-      line-height: 1.55;
-    }
-    .event-card.featured p { color: rgba(255,255,255,0.68); }
-    .event-meta-row {
+    .event-body {
+      padding: 16px 16px 18px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px 16px;
-      margin: 16px 0 20px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.55);
-    }
-    .event-meta-row strong { color: #fff; font-weight: 600; }
-    .event-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #0a0a0a;
+    }
+    .event-body h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+      color: #fff;
+    }
+    .event-body .sub {
+      margin: 3px 0 0;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
     }
     .btn-buy {
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 22px;
+      padding: 11px 18px;
       border-radius: 980px;
       border: 0;
       background: #fff;
       color: #0a0a0a;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
       text-decoration: none;
     }
     .btn-buy:disabled { opacity: 0.45; cursor: not-allowed; }
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      padding: 11px 18px;
-      border-radius: 980px;
-      border: 1.5px solid rgba(255,255,255,0.35);
-      background: transparent;
-      color: #f5f5f7;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      text-decoration: none;
-    }
     .ticket-status {
-      margin-top: 18px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.08);
-      font-size: 14px;
-      line-height: 1.5;
-      color: rgba(255,255,255,0.85);
-    }
-    .ticket-status.ok {
+      margin: 0 16px 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
       background: rgba(52, 199, 89, 0.15);
       color: #30d158;
-    }
-    .ticket-status.ok strong { color: #30d158; }
-    .hint-sm {
-      margin: 10px 0 0;
-      font-size: 12px;
-      color: rgba(255,255,255,0.45);
+      font-size: 13px;
       line-height: 1.45;
     }
+    .ticket-status strong { color: #30d158; }
     .event-empty {
       text-align: center;
       padding: 48px 20px;
@@ -190,7 +155,7 @@
 
   <main class="events">
     <h1>活動</h1>
-    <p class="meta">官方活動、入場券與合作訊息 · 購票採帳號綁定</p>
+    <p class="meta">官方活動與入場券</p>
     <div class="event-list" id="eventList"></div>
   </main>
 
@@ -205,11 +170,11 @@
     <p style="margin:16px 0 0;color:#6e6e73">Copyright © MapSky · mapskyapp@gmail.com</p>
   </footer>
 
-  <script src="logo-icon.js"></script>
-  <script src="logo-wordmark.js"></script>
-  <script src="logo-apply.js"></script>
-  <script src="auth.js"></script>
-  <script src="nav-scroll.js?v=23"></script>
+  <script src="/logo-icon.js"></script>
+  <script src="/logo-wordmark.js"></script>
+  <script src="/logo-apply.js"></script>
+  <script src="/auth.js"></script>
+  <script src="/nav-scroll.js?v=23"></script>
   <script>
     (function () {
       var CONFIG_KEY = 'mapsky_events_config_v1';
@@ -217,13 +182,9 @@
       var DEFAULT_EVENTS = [{
         id: 'qx-exam',
         enabled: true,
-        badge: '定期評量',
         title: 'Qx 定期評量',
-        description: '參加 Qx 定期評量活動。點擊購買入場券後，可選擇場次與禮包，完成付款後資格會綁定 MapSky 帳號並同步至 App。',
-        schedule: '多場次可選',
-        price: 0,
-        currency: 'TWD',
-        priceLabel: '依禮包計價',
+        sub: '選場次 · 選禮包 · 付款',
+        cover: '/assets/qx-cover.svg',
         ticketLabel: '購買入場券'
       }];
 
@@ -232,7 +193,14 @@
           var raw = localStorage.getItem(CONFIG_KEY);
           if (raw) {
             var parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length) return parsed;
+            if (Array.isArray(parsed) && parsed.length) {
+              return parsed.map(function (e) {
+                return Object.assign({}, DEFAULT_EVENTS[0], e, {
+                  cover: e.cover || '/assets/qx-cover.svg',
+                  sub: e.sub || '選場次 · 選禮包 · 付款'
+                });
+              });
+            }
           }
         } catch (e) {}
         return DEFAULT_EVENTS.map(function (e) { return Object.assign({}, e); });
@@ -243,11 +211,6 @@
           if (raw) return JSON.parse(raw) || {};
         } catch (e) {}
         return {};
-      }
-      function formatPrice(ev) {
-        if (ev.priceLabel) return ev.priceLabel;
-        if (!ev.price || Number(ev.price) === 0) return '免費';
-        return 'NT$ ' + Number(ev.price).toLocaleString('zh-TW');
       }
       function userKey(session) {
         if (!session || !session.loggedIn) return null;
@@ -266,7 +229,7 @@
         var tickets = loadTickets();
         var uid = userKey(session);
         if (!events.length) {
-          list.innerHTML = '<div class="event-empty"><strong>目前沒有進行中的活動</strong>有新活動時會在這裡公布。</div>';
+          list.innerHTML = '<div class="event-empty"><strong>目前沒有活動</strong></div>';
           return;
         }
         list.innerHTML = events.map(function (ev) {
@@ -275,28 +238,23 @@
           var statusHtml = '';
           if (owned && t) {
             statusHtml =
-              '<div class="ticket-status ok"><strong>已持有入場券</strong><br />' +
-              '綁定帳號：' + (t.email || uid) + '<br />' +
-              (t.sessionName ? ('場次：' + t.sessionName + '<br />') : '') +
-              (t.packageName ? ('禮包：' + t.packageName + '<br />') : '') +
-              '購買時間：' + (t.at || '—') + '<br />狀態：已回報 MapSky App</div>';
+              '<div class="ticket-status"><strong>已購票</strong> · ' +
+              (t.sessionName || '') +
+              (t.packageName ? ' · ' + t.packageName : '') +
+              '</div>';
           }
           var buyLabel = owned ? '已購買' : (ev.ticketLabel || '購買入場券');
-          var buyDisabled = owned ? ' disabled' : '';
-          return '<article class="event-card featured" data-event-id="' + ev.id + '">' +
-            '<div class="event-badge">' + (ev.badge || '活動') + '</div>' +
-            '<h2>' + (ev.title || '活動') + '</h2>' +
-            '<p>' + (ev.description || '') + '</p>' +
-            '<div class="event-meta-row">' +
-            '<span>場次 <strong>' + (ev.schedule || '待公告') + '</strong></span>' +
-            '<span>費用 <strong>' + formatPrice(ev) + '</strong></span></div>' +
-            '<div class="event-actions">' +
-            '<button type="button" class="btn-buy" data-buy="' + ev.id + '"' + buyDisabled + '>' + buyLabel + '</button>' +
-            (!session || !session.loggedIn
-              ? '<a class="btn-outline" href="/login?return=' + encodeURIComponent('/events') + '">先登入帳號</a>'
-              : '') +
+          return (
+            '<article class="event-card" data-event-id="' + ev.id + '">' +
+            '<img class="event-cover" src="' + (ev.cover || '/assets/qx-cover.svg') + '" alt="' + (ev.title || '') + '" />' +
+            '<div class="event-body">' +
+            '<div><h2>' + (ev.title || '活動') + '</h2>' +
+            '<p class="sub">' + (ev.sub || '') + '</p></div>' +
+            '<button type="button" class="btn-buy" data-buy="' + ev.id + '"' +
+            (owned ? ' disabled' : '') + '>' + buyLabel + '</button>' +
             '</div>' + statusHtml +
-            '<p class="hint-sm">點擊後進入：選擇場次 → 選擇禮包 → 付款。入場券綁定 MapSky 帳號。</p></article>';
+            '</article>'
+          );
         }).join('');
         list.querySelectorAll('[data-buy]').forEach(function (btn) {
           btn.addEventListener('click', function () {
