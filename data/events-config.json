@@ -1,56 +1,57 @@
 [
   {
+    "appShowFrom": "2026-11-13 05:22:00",
+    "price": 0,
     "appShowUntil": "2027-11-26 17:00:00",
-    "saleStart": "2026-11-13 10:03:00",
-    "priceLabel": "免費開放",
-    "saleEnd": "2027-11-21 20:00:00",
-    "enabled": true,
+    "title": "Q8 定期評量",
+    "introHero": "Q8 定期評量",
     "sessions": [
       {
-        "note": "",
-        "saleEnd": "2027-11-21 20:00:00",
+        "price": 0,
+        "examDate": "2026-11-24",
+        "date": "2026/11/24",
         "examStart": "2026-11-24 08:20:00",
+        "id": "session-1794535933",
+        "name": "Test",
         "subjectList": [
           {
-            "end": "2026-11-24 09:20:00",
-            "range": "",
-            "name": "作文",
             "start": "2026-11-24 08:20:00",
-            "boss": "BossDeathKnight"
+            "name": "作文",
+            "boss": "BossDeathKnight",
+            "end": "2026-11-24 09:20:00",
+            "range": ""
           },
           {
             "range": "",
-            "start": "2026-11-24 09:40:00",
-            "end": "2026-11-24 10:40:00",
+            "boss": "BossLavaDragon2",
             "name": "自修",
-            "boss": "BossLavaDragon2"
+            "end": "2026-11-24 10:40:00",
+            "start": "2026-11-24 09:40:00"
           }
         ],
-        "date": "2026/11/24 08:20 – 10:40",
-        "id": "session-1794535933",
-        "name": "2026/11/24 08:20 – 10:40",
-        "syllabus": "作文 2026/11/24 08:20 – 09:20 \n自修 2026/11/24 09:40 – 10:40 ",
-        "capacity": 0,
-        "examEnd": "2026-11-24 10:40:00",
-        "saleStart": "2026-11-13 10:03:00",
-        "examDate": "2026-11-24",
-        "price": 0,
         "place": "線上",
-        "subjects": "作文、自修"
+        "saleEnd": "2027-11-21 20:00:00",
+        "capacity": 0,
+        "saleStart": "2026-11-13 10:03:00",
+        "examEnd": "2026-11-24 10:40:00",
+        "syllabus": "作文 2026/11/24 08:20 – 09:20 \n自修 2026/11/24 09:40 – 10:40 ",
+        "subjects": "作文、自修",
+        "note": ""
       }
     ],
-    "packages": [],
+    "badge": "定期評量",
+    "saleEnd": "2027-11-21 20:00:00",
     "currency": "TWD",
     "ticketLabel": "購買入場券",
-    "introNote": "",
     "id": "qx-exam",
-    "introHero": "Q8 定期評量",
-    "appShowFrom": "2026-11-13 05:22:00",
-    "badge": "定期評量",
-    "price": 0,
-    "title": "Q8 定期評量",
+    "priceLabel": "免費開放",
+    "bossSchedule": [],
+    "saleStart": "2026-11-13 10:03:00",
+    "enabled": true,
+    "packages": [],
     "description": "",
     "schedule": "",
-    "visibleFrom": "2026-11-13 05:22:00"
+    "visibleFrom": "2026-11-13 05:22:00",
+    "introNote": ""
   }
 ]
