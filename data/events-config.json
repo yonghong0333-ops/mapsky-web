@@ -39,7 +39,7 @@
     "visibleFrom": "2026-11-12 22:22:55",
     "title": "Q8 定期評量",
     "saleEnd": "2027-11-12 22:22:55",
-    "enabled": true,
+    "enabled": false,
     "saleStart": "2026-11-12 22:22:55",
     "appShowFrom": "2026-11-12 22:22:55",
     "ticketLabel": "購買入場券",
