@@ -26,7 +26,7 @@
       '.day-head .dh-count{font-size:12px;padding:4px 10px;border-radius:980px;background:rgba(191,90,242,.25);color:#e0aaff;font-weight:600}',
       '.slot-row{display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06)}',
       '.slot-row:last-child{border-bottom:0}',
-      '.slot-boss{flex:0 0 52px;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);overflow:hidden}',
+      '.slot-boss{flex:0 0 64px;width:64px;height:64px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);overflow:hidden}',
       '.slot-body{flex:1;min-width:0}',
       '.slot-name{font-size:16px;font-weight:700;margin:0 0 3px}',
       '.slot-meta{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45}',
@@ -138,7 +138,25 @@
         var bossEl = el('div', 'slot-boss');
         bossEl.style.background = 'linear-gradient(135deg,' + meta.color + '44,' + meta.color + '22)';
         bossEl.style.borderColor = meta.color + '66';
-        bossEl.textContent = meta.emoji;
+        var imgs = window.MAPSKY_BOSS_IMGS || {};
+        var src = imgs[bossId] || null;
+        if (!src) {
+          src = '/assets/bosses/' + bossId + '.webp';
+        }
+        if (src) {
+          var im = document.createElement('img');
+          im.src = src;
+          im.alt = meta.name;
+          im.style.width = '100%';
+          im.style.height = '100%';
+          im.style.objectFit = 'contain';
+          im.onerror = function () {
+            bossEl.textContent = meta.emoji;
+          };
+          bossEl.appendChild(im);
+        } else {
+          bossEl.textContent = meta.emoji;
+        }
         row.appendChild(bossEl);
 
         var body = el('div', 'slot-body');
