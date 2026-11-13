@@ -1,4 +1,5 @@
-/* 讓 Safari 上下工具列區域跟著畫面邊緣的顏色走（全螢幕、無黑塊） */
+/* 讓 Safari 上下工具列區域跟著畫面邊緣的顏色走（全螢幕、無黑塊）
+   效能：先量好各區塊「位置＋底色」，滑動時只用 scrollY 查表，不碰版面計算。 */
 (function () {
   var root = document.documentElement;
   var meta = document.querySelector('meta[name="theme-color"]');
@@ -16,25 +17,45 @@
     var a = p.length > 3 ? p[3] : 1;
     return a > 0.9 ? 'rgb(' + Math.round(p[0]) + ',' + Math.round(p[1]) + ',' + Math.round(p[2]) + ')' : null;
   }
-  // 取該點「實際看得到」的底色：略過 fixed 浮層，往下找第一個不透明背景
-  function colorAt(x, y) {
-    var els = document.elementsFromPoint ? document.elementsFromPoint(x, y) : [];
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i];
+
+  var segs = [], fallback = '#ffffff';
+
+  // 掃描頁面（最多 4 層）：有不透明底色的區塊記下 [top, bottom, color]，沒有就往下一層找
+  function measure() {
+    var sy = window.pageYOffset || 0, out = [];
+    function walk(el, depth) {
+      if (!el || el.nodeType !== 1 || el.id === 'boot-shell') return;
       var cs = getComputedStyle(el);
-      if (cs.position === 'fixed' || el === root) continue;
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') return;
+      var r = el.getBoundingClientRect();
+      if (r.height < 24 || r.width < window.innerWidth * 0.6) {
+        if (depth < 4) for (var j = 0; j < el.children.length; j++) walk(el.children[j], depth + 1);
+        return;
+      }
       var c = parse(cs.backgroundColor);
-      if (c) return c;
+      if (c) { out.push({ t: r.top + sy, b: r.bottom + sy, c: c }); return; }
+      if (depth < 4) for (var i = 0; i < el.children.length; i++) walk(el.children[i], depth + 1);
     }
-    return parse(getComputedStyle(document.body).backgroundColor) || '#ffffff';
+    for (var k = 0; k < document.body.children.length; k++) walk(document.body.children[k], 0);
+    segs = out;
+    fallback = parse(getComputedStyle(document.body).backgroundColor) || '#ffffff';
+    last = '';
+    queue();
+  }
+
+  function colorAtDoc(y) {
+    var hit = null;
+    for (var i = 0; i < segs.length; i++) {
+      if (y >= segs[i].t && y < segs[i].b) hit = segs[i]; // 後面的蓋在前面上
+    }
+    return hit ? hit.c : fallback;
   }
 
   var last = '', queued = false;
   function apply() {
     queued = false;
-    var w = window.innerWidth, h = window.innerHeight;
-    var top = colorAt(Math.round(w / 2), 2);
-    var bottom = colorAt(Math.round(w / 2), h - 2);
+    var sy = window.pageYOffset || 0, h = window.innerHeight;
+    var top = colorAtDoc(sy + 2), bottom = colorAtDoc(sy + h - 2);
     var key = top + '|' + bottom;
     if (key === last) return;
     last = key;
@@ -46,12 +67,19 @@
     queued = true;
     requestAnimationFrame(apply);
   }
+
+  var mt = 0;
+  function remeasureSoon(ms) {
+    clearTimeout(mt);
+    mt = setTimeout(measure, ms || 200);
+  }
+
   window.addEventListener('scroll', queue, { passive: true });
-  window.addEventListener('resize', queue);
-  window.addEventListener('pageshow', queue);
-  window.addEventListener('load', queue);
-  document.addEventListener('DOMContentLoaded', queue);
-  // 內容是 JS 後續注入的，開機後前幾秒多量幾次
-  var n = 0, t = setInterval(function () { queue(); if (++n > 30) clearInterval(t); }, 150);
-  queue();
+  window.addEventListener('resize', function () { remeasureSoon(250); });
+  window.addEventListener('load', function () { remeasureSoon(100); });
+  window.addEventListener('pageshow', function () { remeasureSoon(100); });
+  if (window.ResizeObserver) new ResizeObserver(function () { remeasureSoon(200); }).observe(document.body);
+  // 內容是 JS 後續注入的，開機後再量幾次
+  [300, 1000, 2500].forEach(function (ms) { setTimeout(measure, ms); });
+  measure();
 })();
