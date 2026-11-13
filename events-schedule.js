@@ -16,13 +16,12 @@
     BossLavaDragon2: 1,
     BossLavaDragon3: 1,
     BossCrystalSpider: 1,
+    BossDeathKnight: 1,
+    BossIceDragon: 1,
+    BossCyclops: 1,
     QxEgg: 1
   };
-  var ALIAS = {
-    BossDeathKnight: 'BossDemonLord',
-    BossIceDragon: 'BossLavaDragon2',
-    BossCyclops: 'BossCrystalSpider'
-  };
+  var ALIAS = {};
 
   function injectStyles() {
     if (document.getElementById('qx-schedule-css')) return;
@@ -39,7 +38,7 @@
       '.day-head .dh-count{font-size:12px;padding:4px 10px;border-radius:980px;background:rgba(191,90,242,.25);color:#e0aaff;font-weight:600}',
       '.slot-row{display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06)}',
       '.slot-row:last-child{border-bottom:0}',
-      '.slot-boss{flex:0 0 64px;width:64px;height:64px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);overflow:hidden}',
+      '.slot-boss{flex:0 0 72px;width:72px;height:72px;border-radius:16px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);overflow:hidden}',
       '.slot-body{flex:1;min-width:0}',
       '.slot-name{font-size:16px;font-weight:700;margin:0 0 3px;color:#fff}',
       '.slot-meta{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45}',
@@ -71,7 +70,7 @@
   }
 
   function eventKey(ev) {
-    try { return JSON.stringify(ev && ev.sessions); } catch (e) { return String(Date.now()); }
+    try { return JSON.stringify({s: ev && ev.sessions, b: ev && ev.bossSchedule}); } catch (e) { return String(Date.now()); }
   }
 
   window.MapSkyRenderSchedule = function (ev, stage) {
@@ -84,28 +83,45 @@
     if (existing) existing.remove();
     lastKey = key;
 
-    var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
     var slots = [];
-    ss.forEach(function (s) {
-      var list = Array.isArray(s.subjectList) ? s.subjectList : [];
-      list.forEach(function (sub) {
-        var st = parseTW(sub.start);
-        var en = parseTW(sub.end);
-        var bst = parseTW(sub.bossStart);
-        var ben = parseTW(sub.bossEnd);
-        if (!st && !bst) return;
+    // 優先活動層級 bossSchedule
+    var bs = Array.isArray(ev.bossSchedule) ? ev.bossSchedule : [];
+    if (bs.length) {
+      bs.forEach(function (bt, i) {
+        var st = parseTW(bt.start);
+        if (!st) return;
         slots.push({
-          name: sub.name || '科目',
-          start: st || bst,
-          end: en || ben,
-          bossStart: bst,
-          bossEnd: ben,
-          range: sub.range || '',
-          boss: (sub.boss || '').trim(),
-          autoIndex: slots.length
+          name: (bt.boss && BOSS_META[bt.boss]) ? BOSS_META[bt.boss].name : (bt.boss || '頭目'),
+          start: st,
+          end: parseTW(bt.end),
+          bossStart: st,
+          bossEnd: parseTW(bt.end),
+          range: '',
+          boss: (bt.boss || '').trim(),
+          autoIndex: i
         });
       });
-    });
+    } else {
+      var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
+      ss.forEach(function (s) {
+        var list = Array.isArray(s.subjectList) ? s.subjectList : [];
+        list.forEach(function (sub) {
+          var st = parseTW(sub.start);
+          var en = parseTW(sub.end);
+          if (!st) return;
+          slots.push({
+            name: sub.name || '科目',
+            start: st,
+            end: en,
+            bossStart: parseTW(sub.bossStart),
+            bossEnd: parseTW(sub.bossEnd),
+            range: sub.range || '',
+            boss: (sub.boss || '').trim(),
+            autoIndex: slots.length
+          });
+        });
+      });
+    }
     if (!slots.length) return;
     slots.sort(function (a, b) { return a.start - b.start; });
 
@@ -137,7 +153,7 @@
       var d = day.date;
       head.appendChild(el('div', 'dh-date',
         (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日（' + WEEK_FULL[d.getDay()] + '）'));
-      head.appendChild(el('div', 'dh-count', day.items.length + ' 科'));
+      head.appendChild(el('div', 'dh-count', day.items.length + ' 場'));
       block.appendChild(head);
 
       day.items.forEach(function (sl) {
@@ -152,8 +168,8 @@
         bossEl.style.background = 'linear-gradient(135deg,' + meta.color + '44,' + meta.color + '22)';
         bossEl.style.borderColor = meta.color + '66';
         var imgs = window.MAPSKY_BOSS_IMGS || {};
-        var imgId = HAS_IMG[bossId] ? bossId : (ALIAS[bossId] || null);
-        var src = imgs[bossId] || imgs[imgId] || (imgId ? ('/assets/bosses/' + imgId + '.webp') : null);
+        var imgId = HAS_IMG[bossId] ? bossId : null;
+        var src = imgs[bossId] || (imgId ? ('/assets/bosses/' + imgId + '.webp') : null);
         if (src) {
           var im = document.createElement('img');
           im.src = src;
@@ -175,7 +191,7 @@
 
         var body = el('div', 'slot-body');
         body.appendChild(el('div', 'slot-name', sl.name));
-        body.appendChild(el('div', 'slot-meta', sl.range ? ('範圍：' + sl.range) : ' '));
+        if (sl.range) body.appendChild(el('div', 'slot-meta', '範圍：' + sl.range));
         var bn = el('div', 'slot-boss-name');
         bn.textContent = '頭目 · ' + meta.name;
         body.appendChild(bn);
@@ -187,9 +203,6 @@
         var main = hm(tStart);
         if (tEnd) main += ' – ' + hm(tEnd);
         timeBox.appendChild(document.createTextNode(main));
-        if (sl.bossStart || sl.bossEnd) {
-          timeBox.appendChild(el('span', 'sub', '頭目時間'));
-        }
         row.appendChild(timeBox);
         block.appendChild(row);
       });
