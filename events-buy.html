@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>購買入場券 — MapSky</title>
-  <meta name="theme-color" content="#07070a" />
+  <meta name="theme-color" content="#f6f4ee" />
   <link rel="icon" type="image/png" href="/assets/icon.png" />
   <style>
     :root { --bg:#07070a; --text:#f5f5f7; --dim:rgba(255,255,255,0.55); --blue:#0A84FF; }
@@ -90,6 +90,48 @@
     @keyframes stepUp { from { opacity:0; transform:translate3d(0,16px,0); } }
     @media (prefers-reduced-motion:reduce) { .bg .drift { animation:none; } .stage.enter * { animation:none !important; } }
     .pay-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px; }
+
+    /* ================= 淺色系(紙張筆記本) ================= */
+    :root { --bg:#f6f4ee; --text:#1d1d1f; --dim:rgba(60,60,67,.62); }
+    html,body { background:#f6f4ee; color:#1d1d1f; }
+    .topbar { background:rgba(246,244,238,.82); border-bottom:1px solid rgba(0,0,0,.08); }
+    .back-btn { background:rgba(0,0,0,.07); color:#1d1d1f; }
+    .footer-bar { background:linear-gradient(180deg,rgba(246,244,238,0),rgba(246,244,238,.94) 45%); }
+    .btn:disabled { background:#d6d6db; color:#8e8e93; opacity:1; box-shadow:none; }
+    .option { background:#fff; border:1.5px solid rgba(0,0,0,.09); box-shadow:0 6px 16px -10px rgba(40,60,120,.28); }
+    .option.selected { background:#eef4ff; border-color:var(--blue); box-shadow:0 0 0 1px var(--blue), 0 8px 20px -10px rgba(10,132,255,.45); }
+    .option .price { color:#0a6cff; }
+    .pay-row { border-bottom:1px solid rgba(0,0,0,.08); }
+    h1.is-loading::before { border-color:rgba(0,0,0,.1); border-top-color:#0A84FF; border-right-color:#5e5ce6; }
+    h1.is-loading::after { color:rgba(60,60,67,.6); }
+    .bg .drift { background:radial-gradient(circle,rgba(10,132,255,.12),transparent 68%); }
+    .bg i { -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 60%,rgba(0,0,0,.4) 100%); mask-image:linear-gradient(180deg,#000 0%,#000 60%,rgba(0,0,0,.4) 100%); }
+    .bg .l1 { background:
+      linear-gradient(rgba(40,100,210,.26) 1px, transparent 1px) 0 0/112px 112px,
+      linear-gradient(90deg, rgba(40,100,210,.26) 1px, transparent 1px) 0 0/112px 112px,
+      linear-gradient(rgba(40,100,210,.11) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg, rgba(40,100,210,.11) 1px, transparent 1px) 0 0/28px 28px,
+      radial-gradient(70% 40% at 10% 4%, rgba(10,132,255,.2), transparent 70%),
+      radial-gradient(60% 40% at 100% 30%, rgba(94,92,230,.16), transparent 70%); }
+    .bg .l2 { background:
+      radial-gradient(circle at 14px 50%, #d9d5c9 0 6px, rgba(0,0,0,.3) 6.5px 8px, transparent 8.5px) 0 0/40px 44px repeat-y,
+      linear-gradient(90deg, transparent 46px, rgba(235,70,85,.5) 46px 48px, transparent 48px),
+      repeating-linear-gradient(180deg, transparent 0 35px, rgba(50,140,210,.28) 35px 36px),
+      radial-gradient(65% 40% at 92% 4%, rgba(100,210,255,.28), transparent 70%),
+      radial-gradient(60% 45% at 10% 60%, rgba(48,209,168,.16), transparent 70%); }
+    .bg .l3 { background:
+      radial-gradient(circle, rgba(60,60,90,.34) 1.3px, transparent 1.8px) 0 0/24px 24px,
+      radial-gradient(60% 40% at 10% 6%, rgba(191,90,242,.2), transparent 70%),
+      radial-gradient(60% 45% at 100% 40%, rgba(255,55,95,.14), transparent 70%); }
+    .bg .l4 { background:
+      radial-gradient(circle, transparent 5.5px, rgba(40,60,90,.13) 6px 7px, transparent 7.5px) 0 0/38px 46px,
+      radial-gradient(60% 40% at 50% 0%, rgba(48,209,88,.24), transparent 70%),
+      radial-gradient(60% 45% at 0% 60%, rgba(100,210,255,.18), transparent 70%); }
+    #doneBox { display:inline-block; background:rgba(246,244,238,.92); padding:10px 14px; border-radius:12px; }
+    .dd.d1 { color:rgba(30,70,170,.6); }
+    .dd.d2 { color:rgba(0,140,120,.65); }
+    .dd.d3 { color:rgba(210,50,120,.62); }
+    .dd.d4 { color:rgba(30,160,70,.75); }
   </style>
   <script src="/page-transition.js"></script>
 </head>
