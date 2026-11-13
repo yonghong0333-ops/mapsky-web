@@ -1,48 +1,48 @@
 [
   {
+    "description": "",
+    "packages": [],
+    "schedule": "",
+    "appShowUntil": "2027-11-12 22:22:55",
+    "introNote": "",
+    "priceLabel": "免費開放",
     "currency": "TWD",
-    "appShowFrom": "2026-11-12 22:22:55",
-    "saleEnd": "2027-11-12 22:22:55",
-    "id": "qx-exam",
+    "introHero": "Q8 定期評量",
+    "badge": "定期評量",
     "sessions": [
       {
-        "saleEnd": "2027-11-12 22:22:55",
         "note": "",
-        "id": "session-1794493658",
-        "price": 0,
         "saleStart": "2026-11-12 22:22:55",
+        "name": "Test",
+        "examEnd": "2026-11-19 15:00:00",
         "subjects": "test",
+        "id": "session-1794493658",
+        "syllabus": "test 2026/11/19 14:00 – 15:00 ",
+        "saleEnd": "2027-11-12 22:22:55",
+        "price": 0,
+        "place": "線上",
+        "examStart": "2026-11-19 14:00:00",
+        "date": "2026/11/19 14:00 – 15:00",
+        "examDate": "2026-11-19",
         "subjectList": [
           {
             "name": "test",
-            "range": "",
             "end": "2026-11-19 15:00:00",
+            "range": "",
             "start": "2026-11-19 14:00:00"
           }
         ],
-        "capacity": 0,
-        "examDate": "2026-11-19",
-        "date": "2026/11/19 14:00 – 15:00",
-        "syllabus": "test 2026/11/19 14:00 – 15:00 ",
-        "name": "Test",
-        "place": "線上",
-        "examStart": "2026-11-19 14:00:00",
-        "examEnd": "2026-11-19 15:00:00"
+        "capacity": 0
       }
     ],
-    "price": 0,
-    "enabled": true,
-    "packages": [],
+    "id": "qx-exam",
     "visibleFrom": "2026-11-12 22:22:55",
-    "introHero": "Qx 定期評量",
-    "badge": "定期評量",
-    "schedule": "",
+    "title": "Q8 定期評量",
+    "saleEnd": "2027-11-12 22:22:55",
+    "enabled": true,
+    "saleStart": "2026-11-12 22:22:55",
+    "appShowFrom": "2026-11-12 22:22:55",
     "ticketLabel": "購買入場券",
-    "priceLabel": "免費開放",
-    "description": "",
-    "introNote": "",
-    "appShowUntil": "2027-11-12 22:22:55",
-    "title": "Qx 定期評量",
-    "saleStart": "2026-11-12 22:22:55"
+    "price": 0
   }
 ]
