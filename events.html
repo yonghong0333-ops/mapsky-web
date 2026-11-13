@@ -206,12 +206,39 @@
         } catch (e) {}
         return DEFAULT_EVENTS.map(function (e) { return Object.assign({}, e); });
       }
-      function loadTickets() {
+      function loadTicketsLocal() {
         try {
           var raw = localStorage.getItem(TICKETS_KEY);
           if (raw) return JSON.parse(raw) || {};
         } catch (e) {}
         return {};
+      }
+      function saveTicketsLocal(all) {
+        try { localStorage.setItem(TICKETS_KEY, JSON.stringify(all || {})); } catch (e) {}
+      }
+      // 以 API 為準：管理員抽走票後，本機也要清掉，才能重買
+      function syncTicketsFromApi(session) {
+        var uid = userKey(session);
+        if (!uid) return Promise.resolve(loadTicketsLocal());
+        return fetch('/api/events/tickets', { credentials: 'include', headers: { Accept: 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            var all = loadTicketsLocal();
+            if (!j || !j.ok) return all;
+            var list = Array.isArray(j.tickets) ? j.tickets : [];
+            var mine = {};
+            list.forEach(function (t) {
+              var eid = t.eventId || 'qx-exam';
+              mine[eid] = t;
+            });
+            all[uid] = mine;
+            if (!list.length) {
+              delete all[uid];
+            }
+            saveTicketsLocal(all);
+            return all;
+          })
+          .catch(function () { return loadTicketsLocal(); });
       }
       function userKey(session) {
         if (!session || !session.loggedIn) return null;
@@ -252,11 +279,11 @@
         return '';
       }
 
-      function render(session) {
+      function render(session, ticketsOverride) {
         var list = document.getElementById('eventList');
         if (!list) return;
         var events = loadConfig().filter(function (e) { return e.enabled !== false; });
-        var tickets = loadTickets();
+        var tickets = ticketsOverride || loadTicketsLocal();
         var uid = userKey(session);
         if (!events.length) {
           list.innerHTML = '<div class="event-empty"><strong>目前沒有活動</strong></div>';
@@ -302,7 +329,7 @@
       }
 
       function onBuyClick(eventId, session) {
-        var tickets = loadTickets();
+        var tickets = loadTicketsLocal();
         var uid = userKey(session);
         if (uid && hasTicket(tickets, uid, eventId)) return;
         var events = loadConfig();
@@ -353,7 +380,10 @@
               return null;
             });
         }
-        return p.then(function () { render(session); }).catch(function () { render(session); });
+        return p
+          .then(function () { return syncTicketsFromApi(session); })
+          .then(function (tickets) { render(session, tickets); })
+          .catch(function () { render(session); });
       }
       function boot() {
         if (window.MapSkyAuth && MapSkyAuth.session) {
