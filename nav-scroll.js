@@ -151,7 +151,14 @@
     'body.nav-open .nav-links a{',
     'padding:0!important;opacity:1!important;background:transparent!important;border-radius:0!important;}',
     'body.nav-open .nav-actions{margin-top:16px!important;align-self:flex-start!important;}',
-    '}'
+    '}',
+
+    /* 手機選單關閉時，全螢幕黑色浮層整個拿掉：iOS 26 Safari 會把貼邊的 fixed 元素當成上下工具列的顏色，造成黑塊 */
+    '@media (max-width:768px){',
+    'body:not(.nav-open) .nav-right:not(.open){display:none!important;}',
+    'body.nav-open .nav-right,.nav-right.open{animation:msNavIn .25s ease both;}',
+    '}',
+    '@keyframes msNavIn{from{opacity:0;}}'
   ].join('');
 
   function inject() {

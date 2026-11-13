@@ -84,7 +84,9 @@ img { max-width: 100%; height: auto; display: block; }
     box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch;
   }
   body.nav-open .nav-right,
-  .nav-right.open { opacity: 1; pointer-events: auto; }
+  .nav-right.open { opacity: 1; pointer-events: auto; animation: msNavIn .25s ease both; }
+  /* 選單關閉時整個拿掉全螢幕 fixed 浮層，避免 iOS 26 Safari 把上下工具列染黑 */
+  body:not(.nav-open) .nav-right:not(.open) { display: none; }
   body.nav-open .nav-toggle span:nth-child(1),
   .nav-toggle.open span:nth-child(1) { transform: translateY(3.25px) rotate(45deg); }
   body.nav-open .nav-toggle span:nth-child(2),
@@ -107,3 +109,4 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* 淺色頁：html 也要明確上色，Safari 上下工具列才不會用黑色填 */
 html:has(body.page-light) { background: #fff; color-scheme: light; }
+@keyframes msNavIn { from { opacity: 0; } }
