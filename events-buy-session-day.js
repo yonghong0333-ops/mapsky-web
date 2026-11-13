@@ -1,5 +1,6 @@
 /* 購票頁：場次名稱後台決定；下方時間只寫到日 */
 (function () {
+  var cfgCache = null;
   function dayText(s) {
     if (!s) return '';
     var raw = s.examDate || s.date || s.examStart || '';
@@ -11,22 +12,30 @@
     }
     return String(raw).split(/[ T]/)[0] || '';
   }
-  function fix() {
-    var list = document.getElementById('sessionList');
-    if (!list) return;
-    var btns = list.querySelectorAll('button.option[data-s]');
-    if (!btns.length) return;
-    var cfg = null;
+  function loadCfg(cb) {
+    if (cfgCache) return cb(cfgCache);
     try {
       var raw = localStorage.getItem('mapsky_events_config_v1');
       if (raw) {
         var j = JSON.parse(raw);
         var arr = j.events || j;
-        if (Array.isArray(arr)) cfg = arr.find(function (e) { return e.id === 'qx-exam'; }) || arr[0];
+        if (Array.isArray(arr) && arr.length) {
+          cfgCache = arr.find(function (e) { return e.id === 'qx-exam'; }) || arr[0];
+          return cb(cfgCache);
+        }
       }
     } catch (e) {}
+    fetch('/api/events/config').then(function (r) { return r.json(); }).then(function (j) {
+      var arr = (j && j.events) || [];
+      cfgCache = arr.find(function (e) { return e.id === 'qx-exam'; }) || arr[0] || null;
+      cb(cfgCache);
+    }).catch(function () { cb(null); });
+  }
+  function apply(cfg) {
     if (!cfg || !Array.isArray(cfg.sessions)) return;
-    btns.forEach(function (btn) {
+    var list = document.getElementById('sessionList');
+    if (!list) return;
+    list.querySelectorAll('button.option[data-s]').forEach(function (btn) {
       var id = btn.getAttribute('data-s');
       var s = cfg.sessions.find(function (x) { return x.id === id; });
       if (!s) return;
@@ -41,5 +50,8 @@
       if (m) m.textContent = meta;
     });
   }
-  setInterval(fix, 300);
+  function tick() { loadCfg(apply); }
+  setInterval(tick, 400);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick);
+  else tick();
 })();
