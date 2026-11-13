@@ -33,11 +33,35 @@
     h1.is-loading { font-size:0; line-height:0; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:55vh; }
     h1.is-loading::before { content:""; width:38px; height:38px; border-radius:50%; border:3.5px solid rgba(255,255,255,.14); border-top-color:#64d2ff; border-right-color:#5e5ce6; animation:mskSpin .8s linear infinite; }
     h1.is-loading::after { content:"載入中"; font-size:14px; line-height:1.4; font-weight:400; letter-spacing:.08em; color:rgba(255,255,255,.6); }
+
+    /* ---- multi-layer background (cheap: gradients only, no blur filters) ---- */
+    html,body { background:#07070a; }
+    .bg { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .bg i { position:absolute; inset:-10%; opacity:0; transition:opacity .9s ease; will-change:opacity; }
+    .bg .l1 { background:radial-gradient(60% 45% at 15% 8%, rgba(10,132,255,.55), transparent 70%), radial-gradient(55% 45% at 95% 30%, rgba(94,92,230,.5), transparent 70%), radial-gradient(70% 50% at 40% 100%, rgba(191,90,242,.35), transparent 70%); }
+    .bg .l2 { background:radial-gradient(60% 45% at 90% 6%, rgba(100,210,255,.5), transparent 70%), radial-gradient(60% 50% at 5% 45%, rgba(48,209,168,.4), transparent 70%), radial-gradient(70% 50% at 60% 100%, rgba(10,132,255,.4), transparent 70%); }
+    .bg .l3 { background:radial-gradient(60% 45% at 10% 10%, rgba(191,90,242,.55), transparent 70%), radial-gradient(60% 50% at 95% 40%, rgba(255,55,95,.4), transparent 70%), radial-gradient(70% 50% at 35% 100%, rgba(94,92,230,.45), transparent 70%); }
+    .bg .l4 { background:radial-gradient(60% 45% at 50% 0%, rgba(48,209,88,.5), transparent 70%), radial-gradient(60% 50% at 0% 60%, rgba(100,210,255,.4), transparent 70%), radial-gradient(70% 50% at 90% 100%, rgba(10,132,255,.4), transparent 70%); }
+    body[data-step="session"] .l1, body[data-step="package"] .l2, body[data-step="pay"] .l3, body[data-step="done"] .l4 { opacity:1; }
+    body:not([data-step]) .l1 { opacity:1; }
+    .bg .drift { position:absolute; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.1),transparent 68%); top:35%; left:-120px; will-change:transform; animation:bgDrift 18s ease-in-out infinite; }
+    @keyframes bgDrift { 0%,100% { transform:translate3d(0,0,0); } 50% { transform:translate3d(240px,120px,0); } }
+    .topbar, .stage, .footer-bar { position:relative; z-index:2; }
+    .topbar { position:sticky; background:rgba(7,7,10,.55); }
+    .footer-bar { position:fixed; padding-top:28px; background:linear-gradient(180deg,rgba(7,7,10,0),rgba(7,7,10,.85) 45%); pointer-events:none; }
+    .footer-bar .btn { pointer-events:auto; box-shadow:0 8px 20px -8px rgba(94,92,230,.8); }
+    .option { background:rgba(22,22,28,.78); }
+    .option.selected { background:rgba(30,40,80,.85); }
+    .stage.enter .option, .stage.enter .lead, .stage.enter #orderSummary, .stage.enter .empty { animation:stepUp .5s cubic-bezier(.2,.8,.2,1) both; }
+    .stage.enter .option:nth-child(2) { animation-delay:.06s; } .stage.enter .option:nth-child(3) { animation-delay:.12s; } .stage.enter .option:nth-child(n+4) { animation-delay:.18s; }
+    @keyframes stepUp { from { opacity:0; transform:translate3d(0,16px,0); } }
+    @media (prefers-reduced-motion:reduce) { .bg .drift { animation:none; } .stage.enter * { animation:none !important; } }
     .pay-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px; }
   </style>
   <script src="/page-transition.js"></script>
 </head>
 <body>
+  <div class="bg" aria-hidden="true"><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><span class="drift"></span></div>
   <header class="topbar">
     <button type="button" class="back-btn" id="backBtn" aria-label="返回">‹</button>
     <div class="topbar-title" id="topTitle">購買入場券</div>
@@ -101,6 +125,12 @@
     function sessions() { return (state.config && state.config.sessions) || []; }
     function packages() { return (state.config && state.config.packages) || []; }
     function render() {
+      document.body.setAttribute('data-step', state.step);
+      if (state._last !== state.step) {
+        state._last = state.step;
+        var stg = document.getElementById('screenMain');
+        stg.classList.remove('enter'); void stg.offsetWidth; stg.classList.add('enter');
+      }
       var ev = state.config || {};
       els.title.textContent = ev.title || '購買入場券';
       if (state.step === 'session') {
