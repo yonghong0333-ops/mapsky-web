@@ -1,1 +1,483 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>後台管理 — MapSky</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body.admin-page { min-height: 100vh; min-height: 100dvh; background: #0a0a0a; color: #f5f5f7; }
+    .admin-stage { max-width: 720px; margin: 0 auto; padding: calc(var(--nav-h, 52px) + env(safe-area-inset-top, 0px) + 36px) 20px 80px; }
+    .admin-stage h1 { font-size: 26px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .admin-stage .sub { color: #a1a1a6; font-size: 14px; margin: 0 0 28px; }
+    .gate, .panel { background: #1c1c1e; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
+    .gate h2, .panel h2 { font-size: 16px; font-weight: 650; margin: 0 0 12px; }
+    .gate p, .panel p { color: #a1a1a6; font-size: 14px; margin: 0 0 12px; line-height: 1.5; }
+    .gate .btn, .panel .btn, .admin-actions .btn { display: inline-block; border-radius: 980px; padding: 11px 20px; font-size: 14px; font-weight: 600; text-decoration: none; border: 0; cursor: pointer; font-family: inherit; }
+    .btn-primary { background: #f5f5f7; color: #0a0a0a; }
+    .btn-ghost { background: transparent; color: #f5f5f7; border: 2px solid rgba(255,255,255,0.3) !important; }
+    .btn-danger { background: transparent; color: #ff453a; border: 2px solid rgba(255,69,58,0.4) !important; }
+    .kv { display: grid; gap: 10px; }
+    .kv-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 14px; }
+    .kv-row:last-child { border-bottom: 0; }
+    .kv-label { color: #8e8e93; }
+    .kv-value { font-weight: 600; text-align: right; word-break: break-all; }
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+    textarea.admin-notes { width: 100%; min-height: 140px; background: #121214; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; resize: vertical; box-sizing: border-box; }
+    input.admin-notes { width: 100%; background: #121214; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; font-size: 14px; font-family: inherit; box-sizing: border-box; }
+    .hint { font-size: 12px; color: #6e6e73; margin-top: 8px; }
+    .status-ok { color: #30d158; font-weight: 600; }
+    .status-no { color: #ff9f0a; font-weight: 600; }
+    .sess-card { border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; margin: 0 0 12px; background: rgba(255,255,255,0.03); }
+    .sess-card .row { display: grid; gap: 8px; margin-bottom: 8px; }
+    @media (min-width: 640px) { .sess-card .row-2 { grid-template-columns: 1fr 1fr; } }
+    .sess-card label { display: block; font-size: 12px; color: #a1a1a6; margin-bottom: 4px; }
+    .sess-card input, .sess-card textarea { width: 100%; box-sizing: border-box; background: #0a0a0a; color: #f5f5f7; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 12px; font: inherit; font-size: 14px; }
+    .sess-card textarea { min-height: 64px; resize: vertical; }
+    .sess-card .sess-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 650; font-size: 14px; }
+    .sess-card .sess-del { border: 0; background: rgba(255,59,48,0.15); color: #ff6961; border-radius: 8px; padding: 6px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+    #adminApp { display: none; }
+    #adminGate { display: none; }
+  </style>
+</head>
+<body class="admin-page">
+  <header class="nav" id="topNav">
+    <a class="brand" href="/">
+      <img class="logo-img" data-logo="icon" width="36" height="36" alt="MapSky" />
+      <img class="wordmark" data-logo="wordmark" height="22" alt="MapSky" />
+    </a>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+    <div class="nav-right" id="navRight">
+      <nav class="nav-links" aria-label="主選單">
+        <a href="/">首頁</a>
+        <a href="/account">帳號</a>
+        <a href="/privacy">隱私與條款</a>
+      </nav>
+      <div class="nav-actions">
+        <span data-auth-slot>
+          <a class="btn btn-sm btn-primary" href="/login">登入</a>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-stage">
+    <h1>後台管理</h1>
+    <p class="sub">僅限 MapSky 管理員</p>
+    <div class="gate" id="adminLoading"><p>正在驗證身分…</p></div>
+    <div class="gate" id="adminGate">
+      <h2>無法進入</h2>
+      <p id="gateMsg">此頁面僅限管理員。請使用管理員帳號登入。</p>
+      <div class="admin-actions">
+        <a class="btn btn-primary" href="/login">登入</a>
+        <a class="btn btn-ghost" href="/">回首頁</a>
+      </div>
+    </div>
+
+    <div id="adminApp">
+      <div class="panel">
+        <h2>目前身分 <span class="status-ok">管理員</span></h2>
+        <div class="kv">
+          <div class="kv-row"><span class="kv-label">暱稱</span><span class="kv-value" id="aName">—</span></div>
+          <div class="kv-row"><span class="kv-label">Email</span><span class="kv-value" id="aEmail">—</span></div>
+          <div class="kv-row"><span class="kv-label">登入方式</span><span class="kv-value" id="aProvider">—</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>網站快捷</h2>
+        <div class="admin-actions">
+          <a class="btn btn-ghost" href="/" target="_blank">預覽首頁</a>
+          <a class="btn btn-ghost" href="/features" target="_blank">適用裝置</a>
+          <a class="btn btn-ghost" href="/events" target="_blank">活動頁</a>
+          <a class="btn btn-ghost" href="/privacy" target="_blank">隱私條款</a>
+          <a class="btn btn-ghost" href="/account">帳號設定</a>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>活動設定 · Qx 定期評量</h2>
+        <p>前台活動與購票頁會讀取此設定。之後可改接 MapSky 後端 API；目前存在本機方便測試。</p>
+        <div class="kv" style="margin-bottom:14px">
+          <div class="kv-row"><span class="kv-label">啟用活動</span><span class="kv-value"><label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="evEnabled" /><span id="evEnabledLabel">開啟</span></label></span></div>
+        </div>
+        <label class="kv-label" for="evTitle">標題</label>
+        <input type="text" id="evTitle" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" />
+        <label class="kv-label" for="evDesc">說明（介紹頁主文）</label>
+        <textarea id="evDesc" class="admin-notes" style="min-height:88px;margin:6px 0 12px"></textarea>
+        <label class="kv-label" for="evSchedule">場次總說明</label>
+        <input type="text" id="evSchedule" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" />
+        <label class="kv-label" for="evPrice">價格（數字，0 = 免費）</label>
+        <input type="number" id="evPrice" min="0" step="1" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" />
+        <label class="kv-label" for="evPriceLabel">價格顯示文字</label>
+        <input type="text" id="evPriceLabel" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" placeholder="例如：免費開放 / NT$ 300" />
+        <label class="kv-label" for="evTicketLabel">按鈕文字</label>
+        <input type="text" id="evTicketLabel" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" />
+        <label class="kv-label" for="evIntroHero">介紹頁標籤</label>
+        <input type="text" id="evIntroHero" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" placeholder="定期評量 · 帳號綁定入場" />
+        <label class="kv-label" for="evIntroNote">介紹頁底部備註</label>
+        <input type="text" id="evIntroNote" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" />
+
+        <h3 style="margin:20px 0 8px;font-size:16px">場次時間表與考科</h3>
+        <p style="color:#a1a1a6;font-size:13px;margin:0 0 12px">每一場可寫時間、考哪些科目、考什麼內容。前台購票頁會直接讀這裡（之後可改接 API）。</p>
+        <div id="sessionEditor"></div>
+        <div class="admin-actions" style="margin-top:8px;margin-bottom:12px">
+          <button type="button" class="btn btn-ghost" id="evAddSession">＋ 新增場次</button>
+        </div>
+
+        <p class="hint" id="evHint">修改後按儲存，前台會立即套用（同瀏覽器）。</p>
+        <div class="admin-actions" style="margin-top:12px">
+          <button type="button" class="btn btn-primary" id="evSave">儲存活動設定</button>
+          <button type="button" class="btn btn-ghost" id="evReset">回復預設</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>票券管理 · 抽票 / 讓使用者重買</h2>
+        <p>從後台把指定使用者的入場券拿掉後，對方就可以重新購買。適用於誤購、違規或測試清票。</p>
+        <div class="admin-actions" style="margin-bottom:12px">
+          <button type="button" class="btn btn-ghost" id="tkRefresh">重新載入票券列表</button>
+        </div>
+        <div id="tkList" style="margin-bottom:14px;font-size:13px;color:#a1a1a6">尚未載入</div>
+        <label class="kv-label" for="tkEmail">要抽走的 Email</label>
+        <input type="email" id="tkEmail" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" placeholder="user@example.com" />
+        <label class="kv-label" for="tkEventId">活動 ID（預設 qx-exam）</label>
+        <input type="text" id="tkEventId" class="admin-notes" style="min-height:0;height:42px;margin:6px 0 12px;padding:10px 12px" value="qx-exam" />
+        <p class="hint" id="tkHint">輸入 email 後按「抽走票券」</p>
+        <div class="admin-actions" style="margin-top:12px">
+          <button type="button" class="btn btn-danger" id="tkRevoke">抽走票券</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>管理備註</h2>
+        <p>只存在這個瀏覽器本機，方便你記下待改事項（不會上傳到伺服器）。</p>
+        <textarea class="admin-notes" id="adminNotes" placeholder="例如：首頁文案要改、OG 圖要換…"></textarea>
+        <p class="hint" id="notesHint">自動儲存於本機</p>
+        <div class="admin-actions" style="margin-top:12px">
+          <button type="button" class="btn btn-ghost" id="clearNotes">清空備註</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>登出</h2>
+        <div class="admin-actions">
+          <button type="button" class="btn btn-danger" id="logoutBtn">登出管理員</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="logo-icon.js"></script>
+  <script src="logo-wordmark.js"></script>
+  <script src="logo-apply.js"></script>
+  <script src="auth.js"></script>
+  <script src="nav-scroll.js?v=23"></script>
+  <script>
+    (function () {
+      var ADMIN_EMAILS = ['mapskyapp@gmail.com','yonghong0333@gmail.com'].map(function (e) { return String(e).trim().toLowerCase(); });
+      function isAdmin(session) {
+        if (!session || !session.loggedIn) return false;
+        var p = session.profile || {};
+        var email = String(p.email || '').trim().toLowerCase();
+        if (email && ADMIN_EMAILS.indexOf(email) !== -1) return true;
+        if (p.role === 'admin' || p.isAdmin === true) return true;
+        return false;
+      }
+      var toggle = document.getElementById('navToggle');
+      var panel = document.getElementById('navRight');
+      if (toggle && panel) {
+        toggle.addEventListener('click', function () {
+          var open = panel.classList.toggle('open');
+          toggle.classList.toggle('open', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          document.body.classList.toggle('nav-open', open);
+        });
+      }
+      var NOTES_KEY = 'mapsky_admin_notes_v1';
+      var notesEl = document.getElementById('adminNotes');
+      var notesHint = document.getElementById('notesHint');
+      try { var saved = localStorage.getItem(NOTES_KEY); if (saved && notesEl) notesEl.value = saved; } catch (e) {}
+      if (notesEl) {
+        var t;
+        notesEl.addEventListener('input', function () {
+          clearTimeout(t);
+          t = setTimeout(function () {
+            try { localStorage.setItem(NOTES_KEY, notesEl.value); if (notesHint) notesHint.textContent = '已儲存 · ' + new Date().toLocaleTimeString(); }
+            catch (err) { if (notesHint) notesHint.textContent = '無法寫入本機儲存'; }
+          }, 300);
+        });
+      }
+      var clearNotes = document.getElementById('clearNotes');
+      if (clearNotes) {
+        clearNotes.addEventListener('click', function () {
+          if (notesEl) notesEl.value = '';
+          try { localStorage.removeItem(NOTES_KEY); } catch (e) {}
+          if (notesHint) notesHint.textContent = '已清空';
+        });
+      }
+      function show(view) {
+        document.getElementById('adminLoading').style.display = view === 'loading' ? 'block' : 'none';
+        document.getElementById('adminGate').style.display = view === 'gate' ? 'block' : 'none';
+        document.getElementById('adminApp').style.display = view === 'app' ? 'block' : 'none';
+      }
+      function fillAdmin(s) {
+        var p = (s && s.profile) || {};
+        document.getElementById('aName').textContent = p.nickname || p.name || '—';
+        document.getElementById('aEmail').textContent = p.email || '—';
+        document.getElementById('aProvider').textContent = p.provider || p.authProvider || '—';
+      }
+      function applySession(s) {
+        if (!s || !s.loggedIn) { document.getElementById('gateMsg').textContent = '請先登入管理員帳號。'; show('gate'); return; }
+        if (!isAdmin(s)) {
+          document.getElementById('gateMsg').textContent = '目前登入的帳號沒有後台權限（' + ((s.profile && s.profile.email) || '未知') + '）。';
+          show('gate'); return;
+        }
+        fillAdmin(s); show('app');
+      }
+      window.MapSkyAuthOnSession = applySession;
+      if (window.MapSkyAuth && window.MapSkyAuth.session) {
+        window.MapSkyAuth.session().then(function (res) { applySession(res.body); }).catch(function () {
+          document.getElementById('gateMsg').textContent = '無法驗證登入狀態，請重新登入。'; show('gate');
+        });
+      } else {
+        setTimeout(function () {
+          if (window.MapSkyAuth && window.MapSkyAuth.session) {
+            window.MapSkyAuth.session().then(function (res) { applySession(res.body); });
+          } else { show('gate'); }
+        }, 400);
+      }
+
+      var EV_KEY = 'mapsky_events_config_v1';
+      var EV_DEFAULT = [{
+        id: 'qx-exam', enabled: true, badge: '定期評量', title: 'Qx 定期評量',
+        description: 'Qx 定期評量是 MapSky 官方線上評量活動。分場次報名、購票後資格綁定帳號，並可在 MapSky App 查詢入場與成績。',
+        schedule: '春／夏／秋三場 · 線上進行', price: 0, currency: 'TWD', priceLabel: '免費開放', ticketLabel: '購買入場券',
+        introHero: '定期評量 · 帳號綁定入場',
+        introNote: '流程：介紹 → 選場次 → 選禮包 → 付款。基本入場可免費領取。',
+        sessions: [
+          { id: '2026-spring', name: '2026 春季場', date: '2026/03/15（日）', place: '線上 · 14:00–16:00', note: '報名截止：3/10', subjects: '國文、英文、數學', syllabus: '閱讀理解、文法、代數與幾何基礎' },
+          { id: '2026-summer', name: '2026 夏季場', date: '2026/06/21（日）', place: '線上 · 14:00–16:00', note: '報名截止：6/15', subjects: '國文、英文、數學', syllabus: '閱讀理解、文法、代數與幾何基礎' },
+          { id: '2026-fall', name: '2026 秋季場', date: '2026/09/20（日）', place: '線上 · 14:00–16:00', note: '報名截止：9/14', subjects: '國文、英文、數學', syllabus: '閱讀理解、文法、代數與幾何基礎' }
+        ],
+        packages: [
+          { id: 'basic', name: '基本入場', price: 0, desc: '入場資格 · 成績查詢 · App 綁定' },
+          { id: 'study', name: '學習禮包', price: 299, desc: '基本入場 + 線上講義 + 複習影片 7 天' },
+          { id: 'full', name: '完整禮包', price: 599, desc: '學習禮包 + 解析直播回放 + 電子證書' }
+        ]
+      }];
+
+      function loadEvConfig() {
+        try {
+          var raw = localStorage.getItem(EV_KEY);
+          if (raw) { var p = JSON.parse(raw); if (Array.isArray(p) && p[0]) return p; }
+        } catch (e) {}
+        return EV_DEFAULT.map(function (x) { return Object.assign({}, x); });
+      }
+      function defaultSessions() {
+        return (EV_DEFAULT[0].sessions || []).map(function (s) { return Object.assign({}, s); });
+      }
+      function renderSessionEditor(sessions) {
+        var box = document.getElementById('sessionEditor');
+        if (!box) return;
+        if (!sessions || !sessions.length) {
+          box.innerHTML = '<p style="color:#a1a1a6;font-size:13px">尚無場次，請按「新增場次」。</p>';
+          return;
+        }
+        box.innerHTML = sessions.map(function (s, i) {
+          return '<div class="sess-card" data-i="' + i + '">' +
+            '<div class="sess-head"><span>場次 ' + (i + 1) + '</span>' +
+            '<button type="button" class="sess-del" data-del="' + i + '">刪除</button></div>' +
+            '<div class="row row-2">' +
+            '<div><label>名稱</label><input data-f="name" data-i="' + i + '" value="' + (s.name || '').replace(/"/g, '"') + '" /></div>' +
+            '<div><label>ID（英文代碼）</label><input data-f="id" data-i="' + i + '" value="' + (s.id || '').replace(/"/g, '"') + '" /></div>' +
+            '</div>' +
+            '<div class="row row-2">' +
+            '<div><label>日期</label><input data-f="date" data-i="' + i + '" value="' + (s.date || '').replace(/"/g, '"') + '" placeholder="2026/03/15（日）" /></div>' +
+            '<div><label>時間 / 地點</label><input data-f="place" data-i="' + i + '" value="' + (s.place || '').replace(/"/g, '"') + '" placeholder="線上 · 14:00–16:00" /></div>' +
+            '</div>' +
+            '<div class="row"><label>報名截止 / 備註</label><input data-f="note" data-i="' + i + '" value="' + (s.note || '').replace(/"/g, '"') + '" placeholder="報名截止：3/10" /></div>' +
+            '<div class="row"><label>考科（科目）</label><input data-f="subjects" data-i="' + i + '" value="' + (s.subjects || '').replace(/"/g, '"') + '" placeholder="國文、英文、數學" /></div>' +
+            '<div class="row"><label>考什麼（大綱 / 範圍）</label><textarea data-f="syllabus" data-i="' + i + '">' + (s.syllabus || '').replace(/</g, '<') + '</textarea></div>' +
+            '</div>';
+        }).join('');
+        box.querySelectorAll('[data-del]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var list = readSessionsFromDom();
+            list.splice(Number(btn.getAttribute('data-del')), 1);
+            renderSessionEditor(list);
+          });
+        });
+      }
+      function readSessionsFromDom() {
+        var box = document.getElementById('sessionEditor');
+        if (!box) return [];
+        var cards = box.querySelectorAll('.sess-card');
+        var out = [];
+        cards.forEach(function (card) {
+          var i = card.getAttribute('data-i');
+          var o = {};
+          card.querySelectorAll('[data-f]').forEach(function (inp) {
+            o[inp.getAttribute('data-f')] = inp.value;
+          });
+          if (!o.id) o.id = 'session-' + Date.now() + '-' + i;
+          out.push(o);
+        });
+        return out;
+      }
+      function fillEvForm() {
+        var list = loadEvConfig();
+        var ev = list[0] || EV_DEFAULT[0];
+        document.getElementById('evEnabled').checked = ev.enabled !== false;
+        document.getElementById('evEnabledLabel').textContent = ev.enabled !== false ? '開啟' : '關閉';
+        document.getElementById('evTitle').value = ev.title || '';
+        document.getElementById('evDesc').value = ev.description || '';
+        document.getElementById('evSchedule').value = ev.schedule || '';
+        document.getElementById('evPrice').value = ev.price != null ? ev.price : 0;
+        document.getElementById('evPriceLabel').value = ev.priceLabel || '';
+        document.getElementById('evTicketLabel').value = ev.ticketLabel || '';
+        document.getElementById('evIntroHero').value = ev.introHero || '';
+        document.getElementById('evIntroNote').value = ev.introNote || '';
+        renderSessionEditor(ev.sessions || defaultSessions());
+      }
+      document.getElementById('evEnabled').addEventListener('change', function () {
+        document.getElementById('evEnabledLabel').textContent = this.checked ? '開啟' : '關閉';
+      });
+      document.getElementById('evSave').addEventListener('click', function () {
+        var list = loadEvConfig();
+        var ev = list[0] || Object.assign({}, EV_DEFAULT[0]);
+        ev.enabled = document.getElementById('evEnabled').checked;
+        ev.title = document.getElementById('evTitle').value.trim() || 'Qx 定期評量';
+        ev.description = document.getElementById('evDesc').value.trim();
+        ev.schedule = document.getElementById('evSchedule').value.trim();
+        ev.price = Number(document.getElementById('evPrice').value) || 0;
+        ev.priceLabel = document.getElementById('evPriceLabel').value.trim() || (ev.price === 0 ? '免費開放' : 'NT$ ' + ev.price);
+        ev.ticketLabel = document.getElementById('evTicketLabel').value.trim() || '購買入場券';
+        ev.introHero = (document.getElementById('evIntroHero').value || '').trim();
+        ev.introNote = (document.getElementById('evIntroNote').value || '').trim();
+        ev.sessions = readSessionsFromDom();
+        if (!ev.packages || !ev.packages.length) ev.packages = (EV_DEFAULT[0].packages || []).map(function (p) { return Object.assign({}, p); });
+        ev.id = 'qx-exam';
+        ev.badge = ev.badge || '定期評量';
+        list[0] = ev;
+        try {
+          localStorage.setItem(EV_KEY, JSON.stringify(list));
+          document.getElementById('evHint').textContent = '已儲存 · ' + new Date().toLocaleTimeString('zh-TW') + ' · 場次 ' + ev.sessions.length + ' 筆';
+        } catch (e) {
+          document.getElementById('evHint').textContent = '儲存失敗：' + e;
+        }
+      });
+      var addBtn = document.getElementById('evAddSession');
+      if (addBtn) {
+        addBtn.addEventListener('click', function () {
+          var list = readSessionsFromDom();
+          list.push({ id: 'session-' + Date.now(), name: '新場次', date: '', place: '線上 · 14:00–16:00', note: '', subjects: '', syllabus: '' });
+          renderSessionEditor(list);
+        });
+      }
+      document.getElementById('evReset').addEventListener('click', function () {
+        try { localStorage.removeItem(EV_KEY); } catch (e) {}
+        fillEvForm();
+        document.getElementById('evHint').textContent = '已回復預設';
+      });
+      var _fillAdmin = fillAdmin;
+      fillAdmin = function (s) { _fillAdmin(s); try { fillEvForm(); } catch (e) {} };
+
+      // ---- 票券管理 ----
+      var tkListEl = document.getElementById('tkList');
+      var tkHint = document.getElementById('tkHint');
+      function renderTickets(flat) {
+        if (!tkListEl) return;
+        if (!flat || !flat.length) {
+          tkListEl.innerHTML = '<p style="margin:0;color:#6e6e73">目前沒有任何票券紀錄</p>';
+          return;
+        }
+        tkListEl.innerHTML = flat.map(function (t) {
+          var email = t.email || '—';
+          var name = t.name || t.sessionName || '';
+          var pkg = t.packageName || t.packageId || '';
+          var at = t.at ? new Date(t.at).toLocaleString('zh-TW') : '';
+          return '<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06)">' +
+            '<div style="font-weight:600;color:#f5f5f7">' + email + '</div>' +
+            '<div style="color:#a1a1a6;margin-top:2px">' + (t.eventId || 'qx-exam') +
+            (name ? ' · ' + name : '') + (pkg ? ' · ' + pkg : '') +
+            (at ? ' · ' + at : '') + '</div></div>';
+        }).join('');
+      }
+      function loadTicketsAdmin() {
+        if (!tkListEl) return;
+        tkListEl.textContent = '載入中…';
+        fetch('/api/events/tickets?all=1', { credentials: 'include', headers: { Accept: 'application/json' } })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (j && j.ok && Array.isArray(j.tickets)) {
+              renderTickets(j.tickets);
+              if (tkHint) tkHint.textContent = '共 ' + j.tickets.length + ' 張票券 · ' + new Date().toLocaleTimeString('zh-TW');
+            } else {
+              tkListEl.textContent = '無法載入（' + ((j && j.reason) || 'unknown') + '）';
+            }
+          })
+          .catch(function (e) {
+            tkListEl.textContent = '載入失敗：' + e;
+          });
+      }
+      var tkRefresh = document.getElementById('tkRefresh');
+      if (tkRefresh) tkRefresh.addEventListener('click', loadTicketsAdmin);
+      var tkRevoke = document.getElementById('tkRevoke');
+      if (tkRevoke) {
+        tkRevoke.addEventListener('click', function () {
+          var email = (document.getElementById('tkEmail').value || '').trim().toLowerCase();
+          var eventId = (document.getElementById('tkEventId').value || 'qx-exam').trim() || 'qx-exam';
+          if (!email) {
+            if (tkHint) tkHint.textContent = '請輸入 email';
+            return;
+          }
+          if (!confirm('確定要抽走「' + email + '」的「' + eventId + '」票券？\n抽走後對方可以重新購買。')) return;
+          tkRevoke.disabled = true;
+          if (tkHint) tkHint.textContent = '處理中…';
+          fetch('/api/events/tickets', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ action: 'revoke', email: email, eventId: eventId })
+          })
+            .then(function (r) { return r.json(); })
+            .then(function (j) {
+              tkRevoke.disabled = false;
+              if (j && j.ok && j.revoked) {
+                if (tkHint) tkHint.textContent = '已抽走 ' + email + ' 的票券' + (j.persisted ? '（已寫入）' : '（僅記憶體）');
+                document.getElementById('tkEmail').value = '';
+                loadTicketsAdmin();
+              } else {
+                if (tkHint) tkHint.textContent = '失敗：' + ((j && j.reason) || 'unknown');
+              }
+            })
+            .catch(function (e) {
+              tkRevoke.disabled = false;
+              if (tkHint) tkHint.textContent = '請求失敗：' + e;
+            });
+        });
+      }
+      var _fillAdmin2 = fillAdmin;
+      fillAdmin = function (s) {
+        _fillAdmin2(s);
+        try { loadTicketsAdmin(); } catch (e) {}
+      };
+
+      var logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          if (!window.MapSkyAuth) return;
+          logoutBtn.disabled = true;
+          window.MapSkyAuth.logout().then(function () { location.href = '/'; }).catch(function () { logoutBtn.disabled = false; });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
