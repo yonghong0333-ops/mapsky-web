@@ -1,3 +1,38 @@
+// 開機畫面（boot-shell）要等 CSS、字型、首屏圖片都就緒才淡出，避免閃出沒樣式／破圖的畫面
+window.__msBootReveal = function () {
+  var shell = document.getElementById('boot-shell');
+  if (!shell) return;
+  var start = Date.now(), MIN = 250, MAX = 2500, done = false;
+  function ready() {
+    var links = document.querySelectorAll('link[rel~="stylesheet"]');
+    for (var i = 0; i < links.length; i++) { if (!links[i].sheet) return false; }
+    if (document.fonts && document.fonts.status === 'loading') return false;
+    var imgs = document.images;
+    for (var j = 0; j < imgs.length; j++) {
+      var im = imgs[j];
+      if (shell.contains(im) || im.loading === 'lazy') continue;
+      if (!im.complete) return false;
+    }
+    return true;
+  }
+  function finish() {
+    if (done) return;
+    done = true;
+    shell.style.transition = 'opacity .25s ease';
+    shell.style.opacity = '0';
+    setTimeout(function () { if (shell.parentNode) shell.parentNode.removeChild(shell); }, 300);
+  }
+  function tick() {
+    var t = Date.now() - start;
+    if (t >= MAX || (t >= MIN && ready())) {
+      requestAnimationFrame(function () { requestAnimationFrame(finish); });
+      return;
+    }
+    setTimeout(tick, 40);
+  }
+  tick();
+};
+
 (async function () {
   try {
     var res = await fetch(
@@ -24,18 +59,22 @@
         "  if (shell) {",
         "    shell.style.position = 'fixed';",
         "    shell.style.inset = '0';",
-        "    shell.style.zIndex = '50';",
+        "    shell.style.zIndex = '2147483647';",
+        "    shell.style.background = '#0a0a0a';",
         "    shell.style.pointerEvents = 'none';",
         "  }",
         "  var frag = document.createDocumentFragment();",
         "  while (tmp.firstChild) frag.appendChild(tmp.firstChild);",
         "  document.body.appendChild(frag);",
-        "  requestAnimationFrame(function () {",
+        "  if (window.__msBootReveal) { window.__msBootReveal(); }",
+        "  else {",
         "    requestAnimationFrame(function () {",
-        "      var s = document.getElementById('boot-shell');",
-        "      if (s) s.remove();",
+        "      requestAnimationFrame(function () {",
+        "        var s = document.getElementById('boot-shell');",
+        "        if (s) s.remove();",
+        "      });",
         "    });",
-        "  });",
+        "  }",
         "})();"
       ].join("\n      ");
       if (code.indexOf(oldBody) === -1) throw new Error('body replace missing');
