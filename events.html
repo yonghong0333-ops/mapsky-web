@@ -332,18 +332,7 @@
         var tickets = loadTicketsLocal();
         var uid = userKey(session);
         if (uid && hasTicket(tickets, uid, eventId)) return;
-        var events = loadConfig();
-        var ev = events.find(function (e) { return e.id === eventId; }) || events[0];
-        if (ev && !isOnSale(ev)) {
-          alert(saleStatusLabel(ev) || '目前不在販售時間');
-          return;
-        }
-        var url = '/events/buy?event=' + encodeURIComponent(eventId || 'qx-exam');
-        if (!session || !session.loggedIn) {
-          location.href = '/login?return=' + encodeURIComponent(url);
-          return;
-        }
-        location.href = url;
+        location.href = '/events/detail?event=' + encodeURIComponent(eventId || 'qx-exam');
       }
 
       var toggle = document.getElementById('navToggle');

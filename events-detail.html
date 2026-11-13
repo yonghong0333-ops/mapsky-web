@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>活動介紹 — MapSky</title>
+  <meta name="theme-color" content="#07070a" />
+  <link rel="icon" type="image/png" href="/assets/icon.png" />
+  <style>
+    :root { --bg:#07070a; --text:#f5f5f7; --dim:rgba(255,255,255,0.6); --blue:#0A84FF; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+    .topbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:12px; padding:calc(10px + env(safe-area-inset-top,0px)) 16px 12px; background:rgba(7,7,10,0.9); border-bottom:1px solid rgba(255,255,255,0.08); }
+    .back-btn { width:36px; height:36px; border:0; border-radius:50%; background:rgba(255,255,255,0.1); color:#fff; font-size:18px; cursor:pointer; }
+    .topbar-title { flex:1; font-size:16px; font-weight:600; }
+    .stage { max-width:480px; margin:0 auto; padding:0 20px calc(110px + env(safe-area-inset-bottom,0px)); }
+    .cover { display:block; width:calc(100% + 40px); margin:0 -20px 18px; max-height:260px; object-fit:cover; background:#16161a; }
+    .badge { display:inline-block; font-size:12px; font-weight:600; color:#64d2ff; background:rgba(100,210,255,0.12); padding:4px 10px; border-radius:980px; margin-bottom:10px; }
+    h1 { font-size:26px; line-height:1.25; margin:0 0 6px; }
+    .hero { color:var(--dim); font-size:15px; margin:0 0 18px; }
+    .card { background:#16161a; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:16px; margin:0 0 14px; }
+    .card h2 { font-size:14px; color:var(--dim); font-weight:600; margin:0 0 8px; }
+    .card p { margin:0; font-size:15px; line-height:1.6; white-space:pre-wrap; }
+    .row { display:flex; justify-content:space-between; gap:12px; padding:8px 0; font-size:14px; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .row:last-child { border-bottom:0; }
+    .row span:first-child { color:var(--dim); }
+    .row span:last-child { text-align:right; }
+    .sess { padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .sess:last-child { border-bottom:0; }
+    .sess .n { font-size:15px; font-weight:650; }
+    .sess .m { font-size:13px; color:var(--dim); margin-top:3px; line-height:1.5; }
+    .footer-bar { position:fixed; left:0; right:0; bottom:0; padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px)); background:rgba(7,7,10,0.95); }
+    .btn { width:100%; max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:center; padding:14px 18px; border-radius:980px; border:0; font-size:16px; font-weight:650; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); }
+    .btn:disabled { opacity:0.45; cursor:not-allowed; background:#3a3a3c; }
+    .empty { color:var(--dim); padding:40px 0; text-align:center; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button type="button" class="back-btn" id="backBtn" aria-label="返回">‹</button>
+    <div class="topbar-title">活動介紹</div>
+  </header>
+  <div class="stage" id="stage"><p class="empty">載入中…</p></div>
+  <div class="footer-bar"><button type="button" class="btn" id="buyBtn" disabled>購買入場券</button></div>
+  <script src="/auth.js"></script>
+  <script>
+  (function () {
+    var EV_KEY = 'mapsky_events_config_v1';
+    var TICKETS_KEY = 'mapsky_tickets_v1';
+    var eventId = new URLSearchParams(location.search).get('event') || 'qx-exam';
+    var stage = document.getElementById('stage');
+    var buyBtn = document.getElementById('buyBtn');
+    var ev = null, session = { loggedIn: false }, owned = false;
+
+    document.getElementById('backBtn').onclick = function () {
+      if (history.length > 1) history.back(); else location.href = '/events';
+    };
+    function parseTW(s) {
+      if (!s) return null;
+      var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?/);
+      if (!m) return null;
+      return new Date(+m[1], +m[2]-1, +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0));
+    }
+    function saleStatus(e) {
+      if (!e || e.enabled === false) return '目前無法購買';
+      var now = new Date(), a = parseTW(e.saleStart), b = parseTW(e.saleEnd);
+      if (a && now < a) return '尚未開賣';
+      if (b && now > b) return '販售結束';
+      return '';
+    }
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function card(title, bodyNode) {
+      var c = el('div', 'card');
+      c.appendChild(el('h2', null, title));
+      c.appendChild(bodyNode);
+      return c;
+    }
+    function render() {
+      stage.innerHTML = '';
+      if (!ev) { stage.appendChild(el('p', 'empty', '找不到這個活動')); return; }
+      document.title = (ev.title || '活動介紹') + ' — MapSky';
+      var img = el('img', 'cover');
+      img.src = ev.cover || '/assets/qx-cover.svg';
+      img.alt = ev.title || '';
+      stage.appendChild(img);
+      if (ev.badge) stage.appendChild(el('div', 'badge', ev.badge));
+      stage.appendChild(el('h1', null, ev.title || '活動'));
+      if (ev.introHero && ev.introHero !== ev.title) stage.appendChild(el('p', 'hero', ev.introHero));
+      if (ev.description) stage.appendChild(card('活動介紹', el('p', null, ev.description)));
+      if (ev.introNote) stage.appendChild(card('注意事項', el('p', null, ev.introNote)));
+
+      var info = el('div');
+      function row(k, v) {
+        if (!v) return;
+        var r = el('div', 'row');
+        r.appendChild(el('span', null, k));
+        r.appendChild(el('span', null, v));
+        info.appendChild(r);
+      }
+      row('時程', ev.schedule);
+      row('費用', ev.priceLabel || (ev.price ? 'NT$ ' + Number(ev.price).toLocaleString('zh-TW') : '免費'));
+      var a = parseTW(ev.saleStart), b = parseTW(ev.saleEnd);
+      if (a && b) row('販售期間', ev.saleStart.slice(0, 10) + ' ~ ' + ev.saleEnd.slice(0, 10));
+      if (info.children.length) stage.appendChild(card('活動資訊', info));
+
+      var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
+      if (ss.length) {
+        var sl = el('div');
+        ss.forEach(function (s) {
+          var d = el('div', 'sess');
+          d.appendChild(el('div', 'n', (s.name || '').trim() || s.date || '場次'));
+          var meta = [s.date, s.place].filter(Boolean).join(' · ');
+          if (meta) d.appendChild(el('div', 'm', meta));
+          if (s.subjects) d.appendChild(el('div', 'm', '科目:' + s.subjects));
+          if (s.note) d.appendChild(el('div', 'm', s.note));
+          sl.appendChild(d);
+        });
+        stage.appendChild(card('場次', sl));
+      }
+
+      var st = saleStatus(ev);
+      if (owned) { buyBtn.textContent = '已購買'; buyBtn.disabled = true; }
+      else if (st) { buyBtn.textContent = st; buyBtn.disabled = true; }
+      else { buyBtn.textContent = '購買入場券'; buyBtn.disabled = false; }
+    }
+    function userKey(s) {
+      if (!s || !s.loggedIn) return null;
+      var p = s.profile || s.user || s;
+      return String(p.email || p.id || p.name || '').trim().toLowerCase() || null;
+    }
+    buyBtn.onclick = function () {
+      if (buyBtn.disabled) return;
+      var url = '/events/buy?event=' + encodeURIComponent(eventId);
+      if (!session || !session.loggedIn) location.href = '/login?return=' + encodeURIComponent(url);
+      else location.href = url;
+    };
+    function pick(list) {
+      if (!Array.isArray(list)) return null;
+      return list.find(function (e) { return e.id === eventId; }) || list[0] || null;
+    }
+    function loadLocal() {
+      try { ev = pick(JSON.parse(localStorage.getItem(EV_KEY))); } catch (e) {}
+    }
+    function boot(s) {
+      session = s || { loggedIn: false };
+      loadLocal();
+      if (ev) render();
+      fetch('/api/events/config', { credentials: 'include', headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (j && j.ok && Array.isArray(j.events)) {
+            try { localStorage.setItem(EV_KEY, JSON.stringify(j.events)); } catch (e) {}
+            ev = pick(j.events);
+          }
+        })
+        .catch(function () {})
+        .then(function () {
+          var uid = userKey(session);
+          if (!uid) return;
+          return fetch('/api/events/tickets', { credentials: 'include', headers: { Accept: 'application/json' } })
+            .then(function (r) { return r.json(); })
+            .then(function (j) {
+              if (j && j.ok && Array.isArray(j.tickets)) {
+                owned = j.tickets.some(function (t) { return (t.eventId || 'qx-exam') === eventId; });
+              }
+            }).catch(function () {});
+        })
+        .then(render);
+    }
+    if (window.MapSkyAuth && MapSkyAuth.session) {
+      MapSkyAuth.session().then(function (res) { boot((res && res.body) || { loggedIn: false }); })
+        .catch(function () { boot({ loggedIn: false }); });
+    } else boot({ loggedIn: false });
+  })();
+  </script>
+</body>
+</html>
