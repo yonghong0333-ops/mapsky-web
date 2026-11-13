@@ -11,6 +11,18 @@
   var AUTO_BOSSES = Object.keys(BOSS_META);
   var WEEK_FULL = ['日','一','二','三','四','五','六'];
   var lastKey = '';
+  var HAS_IMG = {
+    BossDemonLord: 1,
+    BossLavaDragon2: 1,
+    BossLavaDragon3: 1,
+    BossCrystalSpider: 1,
+    QxEgg: 1
+  };
+  var ALIAS = {
+    BossDeathKnight: 'BossDemonLord',
+    BossIceDragon: 'BossLavaDragon2',
+    BossCyclops: 'BossCrystalSpider'
+  };
 
   function injectStyles() {
     if (document.getElementById('qx-schedule-css')) return;
@@ -140,18 +152,25 @@
         bossEl.style.background = 'linear-gradient(135deg,' + meta.color + '44,' + meta.color + '22)';
         bossEl.style.borderColor = meta.color + '66';
         var imgs = window.MAPSKY_BOSS_IMGS || {};
-        var src = imgs[bossId] || ('/assets/bosses/' + bossId + '.webp');
-        var im = document.createElement('img');
-        im.src = src;
-        im.alt = meta.name;
-        im.style.width = '100%';
-        im.style.height = '100%';
-        im.style.objectFit = 'contain';
-        im.onerror = function () {
-          bossEl.innerHTML = '';
+        var imgId = HAS_IMG[bossId] ? bossId : (ALIAS[bossId] || null);
+        var src = imgs[bossId] || imgs[imgId] || (imgId ? ('/assets/bosses/' + imgId + '.webp') : null);
+        if (src) {
+          var im = document.createElement('img');
+          im.src = src;
+          im.alt = meta.name;
+          im.loading = 'lazy';
+          im.decoding = 'async';
+          im.style.width = '100%';
+          im.style.height = '100%';
+          im.style.objectFit = 'contain';
+          im.onerror = function () {
+            bossEl.innerHTML = '';
+            bossEl.textContent = meta.emoji;
+          };
+          bossEl.appendChild(im);
+        } else {
           bossEl.textContent = meta.emoji;
-        };
-        bossEl.appendChild(im);
+        }
         row.appendChild(bossEl);
 
         var body = el('div', 'slot-body');
