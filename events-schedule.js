@@ -20,15 +20,16 @@
       '.schedule{background:linear-gradient(165deg,#0a0a12 0%,#1a1030 45%,#2a1848 100%);padding:64px 0;position:relative;overflow:hidden}',
       '.schedule::before{content:"";position:absolute;width:280px;height:280px;left:-80px;bottom:-60px;background:radial-gradient(circle,rgba(191,90,242,.28),transparent 70%);pointer-events:none}',
       '.schedule .eyebrow{color:#e0aaff}',
+      '.schedule h2{color:#fff}',
       '.day-block{margin-bottom:22px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);overflow:hidden}',
       '.day-head{display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.1)}',
-      '.day-head .dh-date{font-size:17px;font-weight:750;letter-spacing:-.01em}',
+      '.day-head .dh-date{font-size:17px;font-weight:750;letter-spacing:-.01em;color:#fff}',
       '.day-head .dh-count{font-size:12px;padding:4px 10px;border-radius:980px;background:rgba(191,90,242,.25);color:#e0aaff;font-weight:600}',
       '.slot-row{display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06)}',
       '.slot-row:last-child{border-bottom:0}',
       '.slot-boss{flex:0 0 64px;width:64px;height:64px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);overflow:hidden}',
       '.slot-body{flex:1;min-width:0}',
-      '.slot-name{font-size:16px;font-weight:700;margin:0 0 3px}',
+      '.slot-name{font-size:16px;font-weight:700;margin:0 0 3px;color:#fff}',
       '.slot-meta{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45}',
       '.slot-boss-name{font-size:12px;color:#c9a0ff;margin-top:4px;font-weight:600}',
       '.slot-time{flex:0 0 auto;text-align:right;font-size:13px;font-weight:650;color:rgba(255,255,255,.85);white-space:nowrap}',
@@ -113,7 +114,7 @@
                  stage.querySelector('section.article') ||
                  stage.querySelector('section.perks');
     var sec = el('section', 'schedule');
-    var wrap = el('div', 'wrap reveal');
+    var wrap = el('div', 'wrap');
     wrap.appendChild(el('p', 'eyebrow', 'SCHEDULE'));
     wrap.appendChild(el('h2', null, '頭目時刻表'));
 
@@ -139,24 +140,18 @@
         bossEl.style.background = 'linear-gradient(135deg,' + meta.color + '44,' + meta.color + '22)';
         bossEl.style.borderColor = meta.color + '66';
         var imgs = window.MAPSKY_BOSS_IMGS || {};
-        var src = imgs[bossId] || null;
-        if (!src) {
-          src = '/assets/bosses/' + bossId + '.webp';
-        }
-        if (src) {
-          var im = document.createElement('img');
-          im.src = src;
-          im.alt = meta.name;
-          im.style.width = '100%';
-          im.style.height = '100%';
-          im.style.objectFit = 'contain';
-          im.onerror = function () {
-            bossEl.textContent = meta.emoji;
-          };
-          bossEl.appendChild(im);
-        } else {
+        var src = imgs[bossId] || ('/assets/bosses/' + bossId + '.webp');
+        var im = document.createElement('img');
+        im.src = src;
+        im.alt = meta.name;
+        im.style.width = '100%';
+        im.style.height = '100%';
+        im.style.objectFit = 'contain';
+        im.onerror = function () {
+          bossEl.innerHTML = '';
           bossEl.textContent = meta.emoji;
-        }
+        };
+        bossEl.appendChild(im);
         row.appendChild(bossEl);
 
         var body = el('div', 'slot-body');
