@@ -1,4 +1,4 @@
-/* Qx 日程表 + 頭目（1 天 1 區）— 掛在 events-detail 頁 */
+/* Qx 日程表 + 頭目時刻表（1 天 1 區）*/
 (function () {
   var BOSS_META = {
     BossDemonLord:     { name: '惡魔領主', emoji: '😈', color: '#ff3b30' },
@@ -10,6 +10,7 @@
   };
   var AUTO_BOSSES = Object.keys(BOSS_META);
   var WEEK_FULL = ['日','一','二','三','四','五','六'];
+  var lastKey = '';
 
   function injectStyles() {
     if (document.getElementById('qx-schedule-css')) return;
@@ -30,7 +31,8 @@
       '.slot-name{font-size:16px;font-weight:700;margin:0 0 3px}',
       '.slot-meta{font-size:13px;color:rgba(255,255,255,.65);line-height:1.45}',
       '.slot-boss-name{font-size:12px;color:#c9a0ff;margin-top:4px;font-weight:600}',
-      '.slot-time{flex:0 0 auto;text-align:right;font-size:13px;font-weight:650;color:rgba(255,255,255,.85);white-space:nowrap}'
+      '.slot-time{flex:0 0 auto;text-align:right;font-size:13px;font-weight:650;color:rgba(255,255,255,.85);white-space:nowrap}',
+      '.slot-time .sub{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);margin-top:2px}'
     ].join('');
     document.head.appendChild(s);
   }
@@ -43,7 +45,10 @@
     return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
   }
   function hm(d) {
-    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    if (!d) return '';
+    return String(d.getHours()).padStart(2, '0') + ':' +
+      String(d.getMinutes()).padStart(2, '0') + ':' +
+      String(d.getSeconds()).padStart(2, '0');
   }
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -52,20 +57,36 @@
     return n;
   }
 
+  function eventKey(ev) {
+    try { return JSON.stringify(ev && ev.sessions); } catch (e) { return String(Date.now()); }
+  }
+
   window.MapSkyRenderSchedule = function (ev, stage) {
     if (!ev || !stage) return;
     injectStyles();
+
+    var key = eventKey(ev);
+    var existing = stage.querySelector('section.schedule');
+    if (existing && key === lastKey) return;
+    if (existing) existing.remove();
+    lastKey = key;
+
     var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
     var slots = [];
     ss.forEach(function (s) {
       var list = Array.isArray(s.subjectList) ? s.subjectList : [];
       list.forEach(function (sub) {
         var st = parseTW(sub.start);
-        if (!st) return;
+        var en = parseTW(sub.end);
+        var bst = parseTW(sub.bossStart);
+        var ben = parseTW(sub.bossEnd);
+        if (!st && !bst) return;
         slots.push({
           name: sub.name || '科目',
-          start: st,
-          end: parseTW(sub.end),
+          start: st || bst,
+          end: en || ben,
+          bossStart: bst,
+          bossEnd: ben,
           range: sub.range || '',
           boss: (sub.boss || '').trim(),
           autoIndex: slots.length
@@ -77,14 +98,15 @@
 
     var dayMap = {}, dayOrder = [];
     slots.forEach(function (sl) {
-      var key = sl.start.getFullYear() + '-' +
-        String(sl.start.getMonth() + 1).padStart(2, '0') + '-' +
-        String(sl.start.getDate()).padStart(2, '0');
-      if (!dayMap[key]) {
-        dayMap[key] = { date: sl.start, items: [] };
-        dayOrder.push(key);
+      var d0 = sl.start;
+      var dkey = d0.getFullYear() + '-' +
+        String(d0.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d0.getDate()).padStart(2, '0');
+      if (!dayMap[dkey]) {
+        dayMap[dkey] = { date: d0, items: [] };
+        dayOrder.push(dkey);
       }
-      dayMap[key].items.push(sl);
+      dayMap[dkey].items.push(sl);
     });
 
     var anchor = stage.querySelector('section.sessions') ||
@@ -93,10 +115,10 @@
     var sec = el('section', 'schedule');
     var wrap = el('div', 'wrap reveal');
     wrap.appendChild(el('p', 'eyebrow', 'SCHEDULE'));
-    wrap.appendChild(el('h2', null, '日程表'));
+    wrap.appendChild(el('h2', null, '頭目時刻表'));
 
-    dayOrder.forEach(function (key) {
-      var day = dayMap[key];
+    dayOrder.forEach(function (dkey) {
+      var day = dayMap[dkey];
       var block = el('div', 'day-block');
       var head = el('div', 'day-head');
       var d = day.date;
@@ -127,9 +149,16 @@
         body.appendChild(bn);
         row.appendChild(body);
 
-        var timeStr = hm(sl.start);
-        if (sl.end) timeStr += ' – ' + hm(sl.end);
-        row.appendChild(el('div', 'slot-time', timeStr));
+        var tStart = sl.bossStart || sl.start;
+        var tEnd = sl.bossEnd || sl.end;
+        var timeBox = el('div', 'slot-time');
+        var main = hm(tStart);
+        if (tEnd) main += ' – ' + hm(tEnd);
+        timeBox.appendChild(document.createTextNode(main));
+        if (sl.bossStart || sl.bossEnd) {
+          timeBox.appendChild(el('span', 'sub', '頭目時間'));
+        }
+        row.appendChild(timeBox);
         block.appendChild(row);
       });
       wrap.appendChild(block);
@@ -144,14 +173,19 @@
     }
   };
 
-  var tries = 0;
-  var timer = setInterval(function () {
-    tries++;
+  function tryRender() {
     var stage = document.getElementById('stage');
-    if (stage && stage.children.length && window.__MAPSKY_EVENT__) {
-      clearInterval(timer);
-      try { window.MapSkyRenderSchedule(window.__MAPSKY_EVENT__, stage); } catch (e) {}
-    }
-    if (tries > 40) clearInterval(timer);
-  }, 250);
+    var ev = window.__MAPSKY_EVENT__;
+    if (!stage || !ev) return;
+    if (!stage.querySelector('section')) return;
+    try { window.MapSkyRenderSchedule(ev, stage); } catch (e) {}
+  }
+
+  setInterval(tryRender, 400);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryRender);
+  } else {
+    tryRender();
+  }
 })();
