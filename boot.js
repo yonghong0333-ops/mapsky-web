@@ -160,6 +160,13 @@ window.__msBootReveal = function () {
     window.__msHomeEventsPending = true;
     await (async function () { eval(code); }).call(window);
 
+    // 全螢幕：Safari 上下工具列顏色跟著畫面邊緣走
+    (function () {
+      var s = document.createElement('script');
+      s.src = '/bar-tint.js?v=1';
+      document.body.appendChild(s);
+    })();
+
     // 「最新消息」最上面貼上活動卡片（同 /events 頁）
     (function () {
       var s = document.createElement('script');
