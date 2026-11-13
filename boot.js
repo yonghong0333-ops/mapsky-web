@@ -170,7 +170,7 @@ window.__msBootReveal = function () {
     // 「最新消息」最上面貼上活動卡片（同 /events 頁）
     (function () {
       var s = document.createElement('script');
-      s.src = '/home-events.js?v=2';
+      s.src = '/home-events.js?v=3';
       s.onerror = function () { window.__msHomeEventsPending = false; };
       document.body.appendChild(s);
     })();
