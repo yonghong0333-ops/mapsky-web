@@ -1,57 +1,42 @@
 [
   {
-    "id": "qx-exam",
-    "currency": "TWD",
-    "appShowUntil": "2026-11-26 17:00:00",
-    "title": "Q8 定期評量",
-    "saleStart": "2026-11-13 10:03:00",
-    "ticketLabel": "購買入場券",
-    "schedule": "",
     "enabled": true,
+    "appShowFrom": "2026-11-13 05:22:00",
     "introHero": "Q8 定期評量",
     "introNote": "",
+    "badge": "定期評量",
+    "bossSchedule": [],
     "visibleFrom": "2026-11-13 05:22:00",
-    "appShowFrom": "2026-11-13 05:22:00",
-    "saleEnd": "2027-11-21 20:00:00",
-    "description": "",
-    "price": 0,
-    "priceLabel": "免費開放",
     "sessions": [
       {
-        "name": "123",
-        "syllabus": "123 2026/11/13 19:35 – 19:37 \n234 2026/11/13 19:38 – 19:39 ",
-        "saleEnd": "2027-11-21 20:00:00",
-        "subjects": "123、234",
+        "subjects": "",
+        "note": "",
+        "date": "2026/11/13",
+        "examEnd": "2026-11-13 20:52:45",
         "place": "線上",
         "examDate": "2026-11-13",
-        "id": "session-1794569484",
-        "subjectList": [
-          {
-            "boss": "BossDemonLord",
-            "name": "123",
-            "range": "",
-            "end": "2026-11-13 19:37:00",
-            "start": "2026-11-13 19:35:00"
-          },
-          {
-            "boss": "BossIceDragon",
-            "name": "234",
-            "range": "",
-            "start": "2026-11-13 19:38:00",
-            "end": "2026-11-13 19:39:00"
-          }
-        ],
-        "date": "2026/11/13",
-        "price": 0,
+        "saleEnd": "2027-11-21 20:00:00",
         "capacity": 0,
-        "examStart": "2026-11-13 19:35:00",
+        "examStart": "2026-11-13 20:52:45",
+        "price": 0,
+        "subjectList": [],
         "saleStart": "2026-11-13 10:03:00",
-        "note": "",
-        "examEnd": "2026-11-13 19:39:00"
+        "id": "session-1794569484",
+        "syllabus": "",
+        "name": "123"
       }
     ],
     "packages": [],
-    "bossSchedule": [],
-    "badge": "定期評量"
+    "appShowUntil": "2026-11-26 17:00:00",
+    "id": "qx-exam",
+    "saleEnd": "2027-11-21 20:00:00",
+    "schedule": "",
+    "currency": "TWD",
+    "price": 0,
+    "priceLabel": "免費開放",
+    "title": "Q8 定期評量",
+    "description": "",
+    "saleStart": "2026-11-13 10:03:00",
+    "ticketLabel": "購買入場券"
   }
 ]
