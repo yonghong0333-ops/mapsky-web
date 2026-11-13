@@ -186,7 +186,7 @@
         title: 'Qx 定期評量',
         sub: '選場次 · 選禮包 · 付款',
         cover: '/assets/qx-cover.svg',
-        ticketLabel: '購買入場券'
+        ticketLabel: '查看詳情'
       }];
 
       function loadConfig() {
@@ -302,7 +302,7 @@
           }
           var onSale = isOnSale(ev);
           var statusLbl = saleStatusLabel(ev);
-          var buyLabel = owned ? '已購買' : (!onSale ? (statusLbl || '無法購買') : (ev.ticketLabel || '購買入場券'));
+          var buyLabel = owned ? '已購買' : (!onSale ? (statusLbl || '無法購買') : (ev.ticketLabel || '查看詳情'));
           var cover = ev.cover || '/assets/qx-cover.svg';
           var subText = ev.sub || '';
           if (!owned && statusLbl) subText = statusLbl + (subText ? ' · ' + subText : '');

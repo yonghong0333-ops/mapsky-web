@@ -257,7 +257,7 @@
       var EV_DEFAULT = [{
         id: 'qx-exam', enabled: true, badge: '定期評量', title: 'Qx 定期評量',
         description: 'Qx 定期評量是 MapSky 官方線上評量活動。分場次報名、購票後資格綁定帳號，並可在 MapSky App 查詢入場與成績。',
-        schedule: '春／夏／秋三場 · 線上進行', price: 0, currency: 'TWD', priceLabel: '免費開放', ticketLabel: '購買入場券',
+        schedule: '春／夏／秋三場 · 線上進行', price: 0, currency: 'TWD', priceLabel: '免費開放', ticketLabel: '查看詳情',
         introHero: '定期評量 · 帳號綁定入場',
         introNote: '流程：介紹 → 選場次 → 選禮包 → 付款。基本入場可免費領取。',
         sessions: [
@@ -357,7 +357,7 @@
         ev.schedule = document.getElementById('evSchedule').value.trim();
         ev.price = Number(document.getElementById('evPrice').value) || 0;
         ev.priceLabel = document.getElementById('evPriceLabel').value.trim() || (ev.price === 0 ? '免費開放' : 'NT$ ' + ev.price);
-        ev.ticketLabel = document.getElementById('evTicketLabel').value.trim() || '購買入場券';
+        ev.ticketLabel = document.getElementById('evTicketLabel').value.trim() || '查看詳情';
         ev.introHero = (document.getElementById('evIntroHero').value || '').trim();
         ev.introNote = (document.getElementById('evIntroNote').value || '').trim();
         ev.sessions = readSessionsFromDom();
