@@ -7,60 +7,119 @@
   <meta name="theme-color" content="#07070a" />
   <link rel="icon" type="image/png" href="/assets/icon.png" />
   <style>
-    :root { --bg:#07070a; --text:#f5f5f7; --dim:rgba(255,255,255,0.6); --blue:#0A84FF; }
+    :root { --blue:#0A84FF; --violet:#5e5ce6; --pink:#bf5af2; --cyan:#64d2ff; }
     * { box-sizing:border-box; }
-    html,body { margin:0; min-height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-    .topbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:12px; padding:calc(10px + env(safe-area-inset-top,0px)) 16px 12px; background:rgba(7,7,10,0.9); border-bottom:1px solid rgba(255,255,255,0.08); }
-    .back-btn { width:36px; height:36px; border:0; border-radius:50%; background:rgba(255,255,255,0.1); color:#fff; font-size:18px; cursor:pointer; }
-    .topbar-title { flex:1; font-size:16px; font-weight:600; }
-    .stage { max-width:480px; margin:0 auto; padding:0 20px calc(110px + env(safe-area-inset-bottom,0px)); }
-    .cover { display:block; width:calc(100% + 40px); margin:0 -20px 18px; max-height:260px; object-fit:cover; background:#16161a; }
-    .badge { display:inline-block; font-size:12px; font-weight:600; color:#64d2ff; background:rgba(100,210,255,0.12); padding:4px 10px; border-radius:980px; margin-bottom:10px; }
-    h1 { font-size:26px; line-height:1.25; margin:0 0 6px; }
-    .hero { color:var(--dim); font-size:15px; margin:0 0 18px; }
-    .card { background:#16161a; border:1px solid rgba(255,255,255,0.08); border-radius:18px; padding:16px; margin:0 0 14px; }
-    .card h2 { font-size:14px; color:var(--dim); font-weight:600; margin:0 0 8px; }
-    .card p { margin:0; font-size:15px; line-height:1.6; white-space:pre-wrap; }
-    .row { display:flex; justify-content:space-between; gap:12px; padding:8px 0; font-size:14px; border-bottom:1px solid rgba(255,255,255,0.06); }
-    .row:last-child { border-bottom:0; }
-    .row span:first-child { color:var(--dim); }
-    .row span:last-child { text-align:right; }
-    .sess { padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
-    .sess:last-child { border-bottom:0; }
-    .sess .n { font-size:15px; font-weight:650; }
-    .sess .m { font-size:13px; color:var(--dim); margin-top:3px; line-height:1.5; }
-    .footer-bar { position:fixed; left:0; right:0; bottom:0; padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px)); background:rgba(7,7,10,0.95); }
-    .btn { width:100%; max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:center; padding:14px 18px; border-radius:980px; border:0; font-size:16px; font-weight:650; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); }
-    .btn:disabled { opacity:0.45; cursor:not-allowed; background:#3a3a3c; }
-    .empty { color:var(--dim); padding:40px 0; text-align:center; }
+    html { scroll-behavior:smooth; }
+    html,body { margin:0; background:#07070a; color:#f5f5f7; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"PingFang TC","Noto Sans TC",sans-serif; -webkit-font-smoothing:antialiased; }
+    .wrap { max-width:520px; margin:0 auto; padding:0 22px; position:relative; z-index:1; }
+    .topbar { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; gap:12px; padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px; }
+    .back-btn { width:38px; height:38px; border:0; border-radius:50%; background:rgba(30,30,36,0.55); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); color:#fff; font-size:18px; cursor:pointer; }
+    .topbar-title { font-size:15px; font-weight:600; opacity:0; transition:opacity .3s; padding:7px 14px; border-radius:980px; background:rgba(30,30,36,0.55); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+    .topbar.scrolled .topbar-title { opacity:1; }
+
+    /* 1 Hero */
+    .hero { position:relative; overflow:hidden; text-align:center; padding:calc(88px + env(safe-area-inset-top,0px)) 0 70px; background:radial-gradient(120% 80% at 50% 0%, #1b1f4a 0%, #0b0b1a 55%, #07070a 100%); }
+    .blob { position:absolute; border-radius:50%; filter:blur(60px); opacity:.55; animation:float 14s ease-in-out infinite; }
+    .b1 { width:300px; height:300px; background:var(--blue); top:-60px; left:-90px; }
+    .b2 { width:280px; height:280px; background:var(--pink); top:180px; right:-110px; animation-delay:-5s; }
+    .b3 { width:240px; height:240px; background:var(--cyan); bottom:-80px; left:20%; opacity:.35; animation-delay:-9s; }
+    @keyframes float { 0%,100% { transform:translate(0,0) scale(1); } 50% { transform:translate(24px,-30px) scale(1.12); } }
+    .badge { display:inline-block; font-size:13px; font-weight:650; letter-spacing:.06em; color:var(--cyan); background:rgba(100,210,255,.12); border:1px solid rgba(100,210,255,.3); padding:6px 14px; border-radius:980px; margin-bottom:18px; }
+    h1 { font-size:clamp(38px,11vw,54px); line-height:1.08; font-weight:800; letter-spacing:-.02em; margin:0 0 14px; background:linear-gradient(180deg,#fff 30%,#b9c4ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .tagline { font-size:17px; line-height:1.55; color:rgba(255,255,255,.72); margin:0 auto 22px; max-width:380px; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:30px; }
+    .chip { font-size:13px; padding:7px 13px; border-radius:980px; background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.14); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+    .cover-stage { perspective:900px; margin-top:6px; }
+    .cover { display:block; width:100%; border-radius:22px; transform:rotateX(6deg) rotateZ(-1.5deg); box-shadow:0 40px 80px -20px rgba(94,92,230,.65), 0 0 0 1px rgba(255,255,255,.12); background:#16161a; }
+
+    /* 2 Highlights (light) */
+    .light { background:linear-gradient(180deg,#f5f5f7,#e9ecff); color:#1d1d1f; padding:64px 0; }
+    .eyebrow { font-size:13px; font-weight:700; letter-spacing:.1em; color:var(--violet); text-transform:uppercase; margin:0 0 8px; }
+    h2 { font-size:clamp(28px,8vw,36px); line-height:1.15; font-weight:800; letter-spacing:-.015em; margin:0 0 22px; }
+    .stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .stat { background:#fff; border-radius:22px; padding:20px 18px; box-shadow:0 10px 30px -14px rgba(60,60,140,.25); }
+    .stat.wide { grid-column:1 / -1; background:linear-gradient(135deg,#0A84FF,#5e5ce6); color:#fff; }
+    .stat .big { font-size:34px; font-weight:800; letter-spacing:-.02em; line-height:1.1; }
+    .stat .lbl { font-size:13px; opacity:.65; margin-top:6px; }
+
+    /* 3 Sessions (gradient) */
+    .sessions { background:linear-gradient(160deg,#0f2a6b 0%,#3b2a8c 55%,#7a2fa8 100%); padding:64px 0; position:relative; overflow:hidden; }
+    .sessions::before { content:""; position:absolute; width:320px; height:320px; right:-120px; top:-80px; background:radial-gradient(circle,rgba(100,210,255,.35),transparent 70%); }
+    .sessions .eyebrow { color:var(--cyan); }
+    .scard { position:relative; display:flex; gap:16px; align-items:stretch; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border-radius:24px; padding:18px; margin-bottom:14px; }
+    .date { flex:0 0 78px; text-align:center; border-radius:18px; background:rgba(255,255,255,.95); color:#1d1d1f; padding:10px 0 8px; }
+    .date .m { font-size:12px; font-weight:700; color:#ff375f; }
+    .date .d { font-size:34px; font-weight:800; line-height:1.05; }
+    .date .w { font-size:12px; color:#6e6e73; }
+    .sinfo { flex:1; min-width:0; }
+    .sname { font-size:18px; font-weight:750; margin:0 0 4px; }
+    .smeta { font-size:14px; color:rgba(255,255,255,.75); line-height:1.5; }
+    .subj { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .subj span { font-size:12px; padding:4px 10px; border-radius:980px; background:rgba(255,255,255,.16); }
+
+    /* 4 Steps (white) */
+    .steps { background:#fff; color:#1d1d1f; padding:64px 0; }
+    .step { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid #ececf0; }
+    .step:last-child { border-bottom:0; }
+    .num { flex:0 0 44px; height:44px; border-radius:14px; display:grid; place-items:center; font-weight:800; font-size:18px; color:#fff; background:linear-gradient(135deg,#0A84FF,#bf5af2); }
+    .step h3 { margin:2px 0 4px; font-size:17px; }
+    .step p { margin:0; font-size:14px; color:#6e6e73; line-height:1.5; }
+
+    /* 5 Notes (warm) */
+    .notes { background:linear-gradient(160deg,#2a1a0a,#4a2a14 60%,#6b3a1a); padding:64px 0; }
+    .notes .eyebrow { color:#ffb45e; }
+    .note-card { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); border-radius:22px; padding:20px; margin-bottom:12px; }
+    .note-card h3 { margin:0 0 8px; font-size:15px; color:#ffcf99; }
+    .note-card p { margin:0; font-size:15px; line-height:1.7; white-space:pre-wrap; color:rgba(255,255,255,.88); }
+
+    /* 6 CTA */
+    .cta { text-align:center; padding:72px 0 calc(150px + env(safe-area-inset-bottom,0px)); background:radial-gradient(100% 70% at 50% 100%, #3b2a8c 0%, #0b0b1a 60%, #07070a 100%); }
+    .cta h2 { margin-bottom:10px; }
+    .cta p { color:rgba(255,255,255,.65); margin:0 0 6px; }
+
+    .footer-bar { position:fixed; left:0; right:0; bottom:0; z-index:60; padding:30px 20px calc(16px + env(safe-area-inset-bottom,0px)); background:linear-gradient(180deg,rgba(7,7,10,0),rgba(7,7,10,.85) 45%); pointer-events:none; }
+    .btn { pointer-events:auto; width:100%; max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:center; padding:16px 18px; border-radius:980px; border:0; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); box-shadow:0 14px 34px -10px rgba(94,92,230,.8); }
+    .btn:disabled { opacity:.6; cursor:not-allowed; background:#3a3a3c; box-shadow:none; }
+    .empty { color:rgba(255,255,255,.6); padding:160px 0; text-align:center; }
+
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity:1; transform:none; }
+    @media (prefers-reduced-motion:reduce) { .blob { animation:none; } .reveal { opacity:1; transform:none; transition:none; } html { scroll-behavior:auto; } }
   </style>
 </head>
 <body>
-  <header class="topbar">
+  <header class="topbar" id="topbar">
     <button type="button" class="back-btn" id="backBtn" aria-label="返回">‹</button>
-    <div class="topbar-title">活動介紹</div>
+    <div class="topbar-title" id="topTitle">活動介紹</div>
   </header>
-  <div class="stage" id="stage"><p class="empty">載入中…</p></div>
+  <main id="stage"><p class="empty">載入中…</p></main>
   <div class="footer-bar"><button type="button" class="btn" id="buyBtn" disabled>購買入場券</button></div>
   <script src="/auth.js"></script>
   <script>
   (function () {
     var EV_KEY = 'mapsky_events_config_v1';
-    var TICKETS_KEY = 'mapsky_tickets_v1';
     var eventId = new URLSearchParams(location.search).get('event') || 'qx-exam';
     var stage = document.getElementById('stage');
     var buyBtn = document.getElementById('buyBtn');
+    var topbar = document.getElementById('topbar');
     var ev = null, session = { loggedIn: false }, owned = false;
+    var WEEK = ['週日','週一','週二','週三','週四','週五','週六'];
 
     document.getElementById('backBtn').onclick = function () {
       if (history.length > 1) history.back(); else location.href = '/events';
     };
+    window.addEventListener('scroll', function () {
+      topbar.classList.toggle('scrolled', window.scrollY > 260);
+    }, { passive: true });
+
     function parseTW(s) {
       if (!s) return null;
       var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?/);
       if (!m) return null;
       return new Date(+m[1], +m[2]-1, +m[3], +(m[4]||0), +(m[5]||0), +(m[6]||0));
     }
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function hm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
     function saleStatus(e) {
       if (!e || e.enabled === false) return '目前無法購買';
       var now = new Date(), a = parseTW(e.saleStart), b = parseTW(e.saleEnd);
@@ -74,59 +133,158 @@
       if (text != null) n.textContent = text;
       return n;
     }
-    function card(title, bodyNode) {
-      var c = el('div', 'card');
-      c.appendChild(el('h2', null, title));
-      c.appendChild(bodyNode);
-      return c;
+    function section(cls, eyebrow, title) {
+      var s = el('section', cls);
+      var w = el('div', 'wrap reveal');
+      if (eyebrow) w.appendChild(el('p', 'eyebrow', eyebrow));
+      if (title) w.appendChild(el('h2', null, title));
+      s.appendChild(w);
+      stage.appendChild(s);
+      return w;
     }
+    function priceText() {
+      return ev.priceLabel || (ev.price ? 'NT$ ' + Number(ev.price).toLocaleString('zh-TW') : '免費');
+    }
+
     function render() {
       stage.innerHTML = '';
       if (!ev) { stage.appendChild(el('p', 'empty', '找不到這個活動')); return; }
       document.title = (ev.title || '活動介紹') + ' — MapSky';
+      document.getElementById('topTitle').textContent = ev.title || '活動介紹';
+      var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
+      var pk = Array.isArray(ev.packages) ? ev.packages : [];
+
+      /* Hero */
+      var hero = el('section', 'hero');
+      ['b1','b2','b3'].forEach(function (c) { hero.appendChild(el('div', 'blob ' + c)); });
+      var hw = el('div', 'wrap');
+      if (ev.badge) hw.appendChild(el('div', 'badge', ev.badge));
+      hw.appendChild(el('h1', null, ev.title || '活動'));
+      var tag = (ev.introHero && ev.introHero !== ev.title) ? ev.introHero
+        : '選場次、選禮包、付款，三步完成報名。';
+      hw.appendChild(el('p', 'tagline', tag));
+      var chips = el('div', 'chips');
+      chips.appendChild(el('span', 'chip', priceText()));
+      if (ss[0] && ss[0].place) chips.appendChild(el('span', 'chip', ss[0].place));
+      if (ss.length) chips.appendChild(el('span', 'chip', ss.length + ' 個場次'));
+      hw.appendChild(chips);
+      var cs = el('div', 'cover-stage');
       var img = el('img', 'cover');
       img.src = ev.cover || '/assets/qx-cover.svg';
       img.alt = ev.title || '';
-      stage.appendChild(img);
-      if (ev.badge) stage.appendChild(el('div', 'badge', ev.badge));
-      stage.appendChild(el('h1', null, ev.title || '活動'));
-      if (ev.introHero && ev.introHero !== ev.title) stage.appendChild(el('p', 'hero', ev.introHero));
-      if (ev.description) stage.appendChild(card('活動介紹', el('p', null, ev.description)));
-      if (ev.introNote) stage.appendChild(card('注意事項', el('p', null, ev.introNote)));
+      cs.appendChild(img);
+      hw.appendChild(cs);
+      hero.appendChild(hw);
+      stage.appendChild(hero);
 
-      var info = el('div');
-      function row(k, v) {
-        if (!v) return;
-        var r = el('div', 'row');
-        r.appendChild(el('span', null, k));
-        r.appendChild(el('span', null, v));
-        info.appendChild(r);
+      /* Highlights */
+      var hl = section('light', 'AT A GLANCE', '一眼看懂');
+      var stats = el('div', 'stats');
+      function stat(big, lbl, wide) {
+        var s = el('div', 'stat' + (wide ? ' wide' : ''));
+        s.appendChild(el('div', 'big', big));
+        s.appendChild(el('div', 'lbl', lbl));
+        stats.appendChild(s);
       }
-      row('時程', ev.schedule);
-      row('費用', ev.priceLabel || (ev.price ? 'NT$ ' + Number(ev.price).toLocaleString('zh-TW') : '免費'));
+      stat(priceText(), '參加費用', true);
+      if (ss.length) stat(String(ss.length), '可選場次');
+      if (ss[0] && ss[0].place) stat(ss[0].place, '進行方式');
       var a = parseTW(ev.saleStart), b = parseTW(ev.saleEnd);
-      if (a && b) row('販售期間', ev.saleStart.slice(0, 10) + ' ~ ' + ev.saleEnd.slice(0, 10));
-      if (info.children.length) stage.appendChild(card('活動資訊', info));
+      if (a && b) {
+        var wide = el('div', 'stat');
+        wide.style.gridColumn = '1 / -1';
+        wide.appendChild(el('div', 'big', ev.saleStart.slice(5, 10).replace('-', '/') + ' → ' + ev.saleEnd.slice(0, 10).replace(/-/g, '/')));
+        wide.appendChild(el('div', 'lbl', '販售期間'));
+        stats.appendChild(wide);
+      }
+      hl.appendChild(stats);
 
-      var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
-      if (ss.length) {
-        var sl = el('div');
-        ss.forEach(function (s) {
-          var d = el('div', 'sess');
-          d.appendChild(el('div', 'n', (s.name || '').trim() || s.date || '場次'));
-          var meta = [s.date, s.place].filter(Boolean).join(' · ');
-          if (meta) d.appendChild(el('div', 'm', meta));
-          if (s.subjects) d.appendChild(el('div', 'm', '科目:' + s.subjects));
-          if (s.note) d.appendChild(el('div', 'm', s.note));
-          sl.appendChild(d);
-        });
-        stage.appendChild(card('場次', sl));
+      /* Description (if any) */
+      if (ev.description) {
+        var dw = section('steps', 'ABOUT', '關於這場活動');
+        var dp = el('p', null, ev.description);
+        dp.style.cssText = 'font-size:16px;line-height:1.75;margin:0;white-space:pre-wrap;color:#3a3a3c';
+        dw.appendChild(dp);
       }
 
-      var st = saleStatus(ev);
+      /* Sessions */
+      if (ss.length) {
+        var sw = section('sessions', 'SESSIONS', '選擇你的場次');
+        ss.forEach(function (s) {
+          var card = el('div', 'scard');
+          var st = parseTW(s.examStart), en = parseTW(s.examEnd);
+          var d = el('div', 'date');
+          if (st) {
+            d.appendChild(el('div', 'm', (st.getMonth() + 1) + ' 月'));
+            d.appendChild(el('div', 'd', String(st.getDate())));
+            d.appendChild(el('div', 'w', WEEK[st.getDay()]));
+          } else {
+            d.appendChild(el('div', 'w', '場次'));
+          }
+          card.appendChild(d);
+          var info = el('div', 'sinfo');
+          info.appendChild(el('div', 'sname', (s.name || '').trim() || s.date || '場次'));
+          var time = (st && en) ? hm(st) + ' – ' + hm(en) : (s.date || '');
+          var meta = [time, s.place].filter(Boolean).join(' · ');
+          if (meta) info.appendChild(el('div', 'smeta', meta));
+          if (s.note) info.appendChild(el('div', 'smeta', s.note));
+          var names = Array.isArray(s.subjectList) && s.subjectList.length
+            ? s.subjectList.map(function (x) { return x.name; }).filter(Boolean)
+            : (s.subjects ? [s.subjects] : []);
+          if (names.length) {
+            var sj = el('div', 'subj');
+            names.forEach(function (n) { sj.appendChild(el('span', null, n)); });
+            info.appendChild(sj);
+          }
+          card.appendChild(info);
+          sw.appendChild(card);
+        });
+      }
+
+      /* Steps */
+      var stw = section('steps', 'HOW IT WORKS', '三步驟，輕鬆參加');
+      var stepList = [
+        ['登入帳號', '使用 MapSky 帳號登入，購票資格會綁定在你的帳號。'],
+        ['選擇場次' + (pk.length ? '與禮包' : ''), pk.length ? '挑選適合你的場次，再選一個禮包。' : '挑選適合你的場次。'],
+        ['完成付款', ev.price ? '確認訂單後完成付款。' : '這場活動免費開放，確認後即完成購票。']
+      ];
+      stepList.forEach(function (x, i) {
+        var r = el('div', 'step');
+        r.appendChild(el('div', 'num', String(i + 1)));
+        var t = el('div');
+        t.appendChild(el('h3', null, x[0]));
+        t.appendChild(el('p', null, x[1]));
+        r.appendChild(t);
+        stw.appendChild(r);
+      });
+
+      /* Notes */
+      if (ev.introNote) {
+        var nw = section('notes', 'NOTICE', '注意事項');
+        var nc = el('div', 'note-card');
+        nc.appendChild(el('p', null, ev.introNote));
+        nw.appendChild(nc);
+      }
+
+      /* CTA */
+      var cw = section('cta', null, '準備好了嗎?');
+      cw.appendChild(el('p', null, ev.title || ''));
+      cw.appendChild(el('p', null, priceText()));
+
+      var st2 = saleStatus(ev);
       if (owned) { buyBtn.textContent = '已購買'; buyBtn.disabled = true; }
-      else if (st) { buyBtn.textContent = st; buyBtn.disabled = true; }
+      else if (st2) { buyBtn.textContent = st2; buyBtn.disabled = true; }
       else { buyBtn.textContent = '購買入場券'; buyBtn.disabled = false; }
+      observe();
+    }
+
+    function observe() {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) { items.forEach(function (n) { n.classList.add('in'); }); return; }
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      items.forEach(function (n) { io.observe(n); });
     }
     function userKey(s) {
       if (!s || !s.loggedIn) return null;
@@ -143,12 +301,9 @@
       if (!Array.isArray(list)) return null;
       return list.find(function (e) { return e.id === eventId; }) || list[0] || null;
     }
-    function loadLocal() {
-      try { ev = pick(JSON.parse(localStorage.getItem(EV_KEY))); } catch (e) {}
-    }
     function boot(s) {
       session = s || { loggedIn: false };
-      loadLocal();
+      try { ev = pick(JSON.parse(localStorage.getItem(EV_KEY))); } catch (e) {}
       if (ev) render();
       fetch('/api/events/config', { credentials: 'include', headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
@@ -160,8 +315,7 @@
         })
         .catch(function () {})
         .then(function () {
-          var uid = userKey(session);
-          if (!uid) return;
+          if (!userKey(session)) return;
           return fetch('/api/events/tickets', { credentials: 'include', headers: { Accept: 'application/json' } })
             .then(function (r) { return r.json(); })
             .then(function (j) {
