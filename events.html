@@ -129,7 +129,17 @@
       animation: evSpin .8s linear infinite;
     }
     @keyframes evSpin { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) { .event-loading .spinner { animation-duration: 2s; } }
+    .event-loading { animation: evFadeIn .35s ease both; transition: opacity .22s ease, transform .22s ease; }
+    .event-loading.leave { opacity: 0; transform: scale(.96); pointer-events: none; }
+    .event-list.enter .event-card, .event-list.enter .event-empty { animation: evCardIn .5s cubic-bezier(.2,.8,.2,1) both; }
+    .event-list.enter .event-card:nth-child(2) { animation-delay: .08s; }
+    .event-list.enter .event-card:nth-child(n+3) { animation-delay: .16s; }
+    @keyframes evFadeIn { from { opacity: 0; } }
+    @keyframes evCardIn { from { opacity: 0; transform: translate3d(0, 14px, 0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .event-loading .spinner { animation-duration: 2s; }
+      .event-list.enter .event-card, .event-list.enter .event-empty { animation: none; }
+    }
     .site-footer {
       background: #f5f5f7;
       color: #6e6e73;
@@ -291,7 +301,19 @@
         return '';
       }
 
+      // 轉圈圈先淡出，再讓活動卡片淡入上浮
       function render(session, ticketsOverride) {
+        var list = document.getElementById('eventList');
+        var loading = list && list.querySelector('.event-loading');
+        if (!loading) { doRender(session, ticketsOverride); return; }
+        loading.classList.add('leave');
+        setTimeout(function () {
+          doRender(session, ticketsOverride);
+          list.classList.remove('enter'); void list.offsetWidth; list.classList.add('enter');
+        }, 230);
+      }
+
+      function doRender(session, ticketsOverride) {
         var list = document.getElementById('eventList');
         if (!list) return;
         var events = loadConfig().filter(function (e) { return e.enabled !== false; });
