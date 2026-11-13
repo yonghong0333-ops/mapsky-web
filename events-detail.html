@@ -73,6 +73,46 @@
     .note-card h3 { margin:0 0 8px; font-size:15px; color:#ffcf99; }
     .note-card p { margin:0; font-size:15px; line-height:1.7; white-space:pre-wrap; color:rgba(255,255,255,.88); }
 
+
+    /* ---- rich text / product-article blocks ---- */
+    .lead-date { font-size:clamp(20px,6vw,26px); font-weight:800; line-height:1.4; margin:0 0 18px; color:#fff; }
+    .intro-text { text-align:left; margin:0 0 24px; }
+    .intro-text p { margin:0 0 14px; font-size:16px; line-height:1.85; color:rgba(255,255,255,.82); }
+    .ticket { position:relative; text-align:left; border-radius:26px; padding:2px; background:linear-gradient(135deg,#64d2ff,#5e5ce6 55%,#bf5af2); margin:8px 0 30px; }
+    .ticket-in { border-radius:24px; background:linear-gradient(180deg,#14163a,#0d0e24); padding:22px 20px 20px; text-align:center; }
+    .ticket .tk-label { font-size:13px; font-weight:700; letter-spacing:.12em; color:var(--cyan); }
+    .ticket .tk-price { font-size:40px; font-weight:850; margin:6px 0 14px; letter-spacing:-.02em; }
+    .tk-rows { text-align:left; border-top:1px solid rgba(255,255,255,.12); padding-top:6px; margin-bottom:18px; }
+    .tk-row { display:flex; justify-content:space-between; gap:14px; padding:9px 0; font-size:14px; border-bottom:1px solid rgba(255,255,255,.07); }
+    .tk-row:last-child { border-bottom:0; }
+    .tk-row span:first-child { color:rgba(255,255,255,.55); flex:0 0 auto; }
+    .tk-row span:last-child { text-align:right; font-weight:600; }
+    .btn-inline { width:100%; display:flex; align-items:center; justify-content:center; padding:15px 18px; border-radius:980px; border:0; font-size:16px; font-weight:700; font-family:inherit; color:#fff; cursor:pointer; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); }
+    .btn-inline:disabled { opacity:.6; background:#3a3a3c; cursor:not-allowed; }
+
+    .article { background:linear-gradient(180deg,#f5f5f7,#eceefc); color:#1d1d1f; padding:64px 0 56px; }
+    .article h2 { background:linear-gradient(90deg,#0A84FF,#bf5af2); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .article h3 { font-size:20px; margin:30px 0 10px; letter-spacing:-.01em; }
+    .article p { margin:0 0 16px; font-size:16px; line-height:1.9; color:#3a3a3c; white-space:pre-wrap; }
+    .article .pull { margin:22px 0; padding:18px 20px; border-radius:20px; background:#fff; border-left:5px solid #5e5ce6; font-size:16px; line-height:1.75; font-weight:600; color:#1d1d1f; box-shadow:0 6px 18px -10px rgba(60,60,140,.3); }
+
+    .perks { background:linear-gradient(165deg,#062f3a 0%,#0b4a5c 50%,#14336b 100%); padding:64px 0; }
+    .perks .eyebrow { color:#7ff0d0; }
+    .perk { display:flex; gap:14px; align-items:flex-start; padding:16px; margin-bottom:12px; border-radius:20px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); }
+    .perk .ic { flex:0 0 48px; height:48px; border-radius:15px; display:grid; place-items:center; font-size:24px; background:linear-gradient(135deg,rgba(127,240,208,.35),rgba(100,210,255,.25)); }
+    .perk h3 { margin:2px 0 4px; font-size:17px; }
+    .perk p { margin:0; font-size:14px; line-height:1.65; color:rgba(255,255,255,.75); }
+
+    .faq { background:linear-gradient(180deg,#0b0b1a,#12123a); padding:64px 0; }
+    .faq .eyebrow { color:var(--cyan); }
+    details.q { border-radius:18px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); margin-bottom:10px; overflow:hidden; }
+    details.q summary { list-style:none; cursor:pointer; padding:17px 18px; font-size:16px; font-weight:650; display:flex; justify-content:space-between; gap:12px; align-items:center; }
+    details.q summary::-webkit-details-marker { display:none; }
+    details.q summary::after { content:"+"; font-size:22px; line-height:1; color:var(--cyan); transition:transform .25s; }
+    details.q[open] summary::after { transform:rotate(45deg); }
+    details.q .a { padding:0 18px 18px; font-size:15px; line-height:1.8; color:rgba(255,255,255,.75); }
+    .legal { text-align:center; font-size:12px; line-height:1.7; color:rgba(255,255,255,.4); padding:0 0 8px; }
+
     /* 6 CTA */
     .cta { text-align:center; padding:72px 0 calc(150px + env(safe-area-inset-bottom,0px)); background:radial-gradient(100% 70% at 50% 100%, #3b2a8c 0%, #0b0b1a 60%, #07070a 100%); }
     .cta h2 { margin-bottom:10px; }
@@ -162,60 +202,118 @@
       var ss = Array.isArray(ev.sessions) ? ev.sessions : [];
       var pk = Array.isArray(ev.packages) ? ev.packages : [];
 
-      /* Hero */
+      /* ---------- helpers ---------- */
+      var first = ss[0] ? parseTW(ss[0].examStart) : null;
+      var firstEnd = ss[0] ? parseTW(ss[0].examEnd) : null;
+      function ymd(d) { return d.getFullYear() + ' 年 ' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日'; }
+      var dateLine = first ? (ymd(first) + (ss.length > 1 ? ' 起' : '')) : '';
+      var timeLine = (first && firstEnd && ss.length === 1) ? hm(first) + ' – ' + hm(firstEnd) : '';
+      var place = (ss[0] && ss[0].place) || '';
+      var isOnline = /線上|online/i.test(place);
+      var paras = String(ev.description || '').split(/\n{2,}/).map(function (x) { return x.trim(); }).filter(Boolean);
+      if (!paras.length) {
+        paras = [
+          (ev.title || '本次活動') + '是 MapSky 官方舉辦的' + (isOnline ? '線上' : '') + '評量活動。分場次報名，購票後資格會綁定你的帳號，並可在 MapSky App 查詢入場與成績。',
+          ss.length ? '本次共開放 ' + ss.length + ' 個場次，請挑選最適合你的時間報名。' + (ev.price ? '' : '參加免費，登入帳號即可完成購票。') : ''
+        ].filter(Boolean);
+      }
+
+      /* ---------- Hero ---------- */
       var hero = el('section', 'hero');
       ['b1','b2','b3'].forEach(function (c) { hero.appendChild(el('div', 'blob ' + c)); });
       var hw = el('div', 'wrap');
       if (ev.badge) hw.appendChild(el('div', 'badge', ev.badge));
       hw.appendChild(el('h1', null, ev.title || '活動'));
-      var tag = (ev.introHero && ev.introHero !== ev.title) ? ev.introHero
-        : '選場次、選禮包、付款，三步完成報名。';
-      hw.appendChild(el('p', 'tagline', tag));
-      var chips = el('div', 'chips');
-      chips.appendChild(el('span', 'chip', priceText()));
-      if (ss[0] && ss[0].place) chips.appendChild(el('span', 'chip', ss[0].place));
-      if (ss.length) chips.appendChild(el('span', 'chip', ss.length + ' 個場次'));
-      hw.appendChild(chips);
+      if (dateLine) {
+        var ld = el('p', 'lead-date', dateLine);
+        if (timeLine) { var tl = el('span', null, timeLine); tl.style.cssText = 'display:block;font-size:.8em;font-weight:650;color:var(--cyan);margin-top:2px'; ld.appendChild(tl); }
+        hw.appendChild(ld);
+      }
       var cs = el('div', 'cover-stage');
       var img = el('img', 'cover');
       img.src = ev.cover || '/assets/qx-cover.svg';
       img.alt = ev.title || '';
       cs.appendChild(img);
       hw.appendChild(cs);
+      var it = el('div', 'intro-text');
+      it.style.marginTop = '28px';
+      if (ev.introHero && ev.introHero !== ev.title) {
+        var ih = el('p', null, ev.introHero);
+        ih.style.cssText = 'font-weight:700;color:#fff;font-size:17px';
+        it.appendChild(ih);
+      }
+      it.appendChild(el('p', null, paras[0]));
+      hw.appendChild(it);
+
+      /* ticket box */
+      var tk = el('div', 'ticket reveal');
+      var tki = el('div', 'ticket-in');
+      tki.appendChild(el('div', 'tk-label', '入場券'));
+      tki.appendChild(el('div', 'tk-price', priceText()));
+      var rows = el('div', 'tk-rows');
+      function trow(k, v) {
+        if (!v) return;
+        var r = el('div', 'tk-row');
+        r.appendChild(el('span', null, k));
+        r.appendChild(el('span', null, v));
+        rows.appendChild(r);
+      }
+      trow('活動地點', place);
+      trow('活動日期', first ? ymd(first) + (ss.length > 1 ? ' 起' : '') : '');
+      trow('活動時間', first && firstEnd ? hm(first) + ' – ' + hm(firstEnd) : '');
+      var sa = parseTW(ev.saleStart), sb = parseTW(ev.saleEnd);
+      trow('販售期間', sa && sb ? ev.saleStart.slice(0, 10).replace(/-/g, '/') + ' – ' + ev.saleEnd.slice(0, 10).replace(/-/g, '/') : '');
+      trow('場次數量', ss.length ? ss.length + ' 個場次' : '');
+      tki.appendChild(rows);
+      var inl = el('button', 'btn-inline', '立即購票');
+      inl.type = 'button';
+      inl.id = 'inlineBuy';
+      inl.onclick = function () { buyBtn.click(); };
+      tki.appendChild(inl);
+      tk.appendChild(tki);
+      hw.appendChild(tk);
       hero.appendChild(hw);
       stage.appendChild(hero);
 
-      /* Highlights */
-      var hl = section('light', 'AT A GLANCE', '一眼看懂');
-      var stats = el('div', 'stats');
-      function stat(big, lbl, wide) {
-        var s = el('div', 'stat' + (wide ? ' wide' : ''));
-        s.appendChild(el('div', 'big', big));
-        s.appendChild(el('div', 'lbl', lbl));
-        stats.appendChild(s);
+      /* ---------- Article (long text) ---------- */
+      var aw = section('article', 'ABOUT', '活動介紹');
+      if (paras.length > 1) {
+        aw.appendChild(el('h3', null, '活動說明'));
+        paras.slice(1).forEach(function (t) { aw.appendChild(el('p', null, t)); });
       }
-      stat(priceText(), '參加費用', true);
-      if (ss.length) stat(String(ss.length), '可選場次');
-      if (ss[0] && ss[0].place) stat(ss[0].place, '進行方式');
-      var a = parseTW(ev.saleStart), b = parseTW(ev.saleEnd);
-      if (a && b) {
-        var wide = el('div', 'stat');
-        wide.style.gridColumn = '1 / -1';
-        wide.appendChild(el('div', 'big', ev.saleStart.slice(5, 10).replace('-', '/') + ' → ' + ev.saleEnd.slice(0, 10).replace(/-/g, '/')));
-        wide.appendChild(el('div', 'lbl', '販售期間'));
-        stats.appendChild(wide);
-      }
-      hl.appendChild(stats);
+      aw.appendChild(el('div', 'pull', '購票後，入場資格會綁定在你的 MapSky 帳號，之後可以在 MapSky App 查詢。'));
+      aw.appendChild(el('h3', null, '怎麼參加?'));
+      aw.appendChild(el('p', null, '先登入 MapSky 帳號，接著挑選想參加的場次' + (pk.length ? '與禮包' : '') + '，確認訂單後就完成購票了。'));
+      aw.appendChild(el('h3', null, '成績與紀錄'));
+      aw.appendChild(el('p', null, '活動結束後，你可以在 MapSky App 查詢入場紀錄與成績，所有資料都與你的帳號連動。'));
+      var secs = Array.isArray(ev.introSections) ? ev.introSections : [];
+      secs.forEach(function (x) {
+        if (!x) return;
+        if (x.title) aw.appendChild(el('h3', null, x.title));
+        String(x.body || '').split(/\n{2,}/).forEach(function (t) { if (t.trim()) aw.appendChild(el('p', null, t.trim())); });
+      });
 
-      /* Description (if any) */
-      if (ev.description) {
-        var dw = section('steps', 'ABOUT', '關於這場活動');
-        var dp = el('p', null, ev.description);
-        dp.style.cssText = 'font-size:16px;line-height:1.75;margin:0;white-space:pre-wrap;color:#3a3a3c';
-        dw.appendChild(dp);
-      }
+      /* ---------- Perks (icon list) ---------- */
+      var pw = section('perks', 'HIGHLIGHTS', '活動亮點');
+      var perks = [
+        ['🎓', '官方' + (isOnline ? '線上' : '') + '評量', '由 MapSky 官方舉辦的評量活動。'],
+        ['🗓️', '分場次報名', ss.length ? '共 ' + ss.length + ' 個場次可選，挑選最適合你的時段。' : '依場次開放報名，挑選最適合你的時段。'],
+        ['🔗', '帳號綁定入場', '購票後資格綁定在你的 MapSky 帳號。'],
+        ['📱', 'App 查詢成績', '在 MapSky App 就能查詢入場紀錄與成績。']
+      ];
+      if (!ev.price) perks.splice(1, 0, ['🎁', priceText(), '不需要付費，登入帳號就能參加。']);
+      if (pk.length) perks.push(['📦', '專屬禮包', '共 ' + pk.length + ' 款禮包可選，購票時一併挑選。']);
+      perks.forEach(function (x) {
+        var d = el('div', 'perk');
+        d.appendChild(el('div', 'ic', x[0]));
+        var t = el('div');
+        t.appendChild(el('h3', null, x[1]));
+        t.appendChild(el('p', null, x[2]));
+        d.appendChild(t);
+        pw.appendChild(d);
+      });
 
-      /* Sessions */
+      /* ---------- Sessions ---------- */
       if (ss.length) {
         var sw = section('sessions', 'SESSIONS', '選擇你的場次');
         ss.forEach(function (s) {
@@ -249,12 +347,12 @@
         });
       }
 
-      /* Steps */
+      /* ---------- Steps ---------- */
       var stw = section('steps', 'HOW IT WORKS', '三步驟，輕鬆參加');
       var stepList = [
-        ['登入帳號', '使用 MapSky 帳號登入，購票資格會綁定在你的帳號。'],
-        ['選擇場次' + (pk.length ? '與禮包' : ''), pk.length ? '挑選適合你的場次，再選一個禮包。' : '挑選適合你的場次。'],
-        ['完成付款', ev.price ? '確認訂單後完成付款。' : '這場活動免費開放，確認後即完成購票。']
+        ['登入帳號', '使用 MapSky 帳號登入。購票資格會綁定在你的帳號，之後在 App 也能查詢。'],
+        ['選擇場次' + (pk.length ? '與禮包' : ''), pk.length ? '挑選適合你的場次，再選一個禮包，畫面會即時顯示訂單內容。' : '挑選適合你的場次，確認日期、時間與進行方式。'],
+        ['完成付款', ev.price ? '確認訂單後完成付款，購票成功後即可入場。' : '這場活動免費開放，確認後即完成購票，不需要付款。']
       ];
       stepList.forEach(function (x, i) {
         var r = el('div', 'step');
@@ -266,7 +364,23 @@
         stw.appendChild(r);
       });
 
-      /* Notes */
+      /* ---------- FAQ ---------- */
+      var fw = section('faq', 'FAQ', '常見問題');
+      var faqs = [
+        ['需要先登入才能購票嗎?', '需要。購票資格會綁定在你的 MapSky 帳號，所以購買前請先登入；沒登入的話，按下購買會先帶你到登入頁，登入後再回來繼續。'],
+        ['要付費嗎?', ev.price ? '費用為 ' + priceText() + '，實際金額以購票頁訂單為準。' : '這場活動為' + priceText() + '，不需要付款。'],
+        ['購票後怎麼入場?', '購票後資格已綁定你的帳號，活動當天請使用同一個 MapSky 帳號登入。'],
+        ['在哪裡查詢成績?', '活動結束後，可以在 MapSky App 查詢入場紀錄與成績。'],
+        ['可以參加多個場次嗎?', ss.length > 1 ? '購票時請依畫面提示選擇場次，每次購票會對應一個場次。' : '目前只開放 ' + (ss.length || 1) + ' 個場次，購票時直接選擇即可。']
+      ];
+      faqs.forEach(function (x) {
+        var d = el('details', 'q');
+        d.appendChild(el('summary', null, x[0]));
+        d.appendChild(el('div', 'a', x[1]));
+        fw.appendChild(d);
+      });
+
+      /* ---------- Notes ---------- */
       if (ev.introNote) {
         var nw = section('notes', 'NOTICE', '注意事項');
         var nc = el('div', 'note-card');
@@ -274,15 +388,20 @@
         nw.appendChild(nc);
       }
 
-      /* CTA */
+      /* ---------- CTA ---------- */
       var cw = section('cta', null, '準備好了嗎?');
       cw.appendChild(el('p', null, ev.title || ''));
       cw.appendChild(el('p', null, priceText()));
+      var lg = el('p', 'legal', 'MapSky 官方活動。活動內容、時間與規則以官方公告為準。');
+      lg.style.marginTop = '26px';
+      cw.appendChild(lg);
 
       var st2 = saleStatus(ev);
       if (owned) { buyBtn.textContent = '已購買'; buyBtn.disabled = true; }
       else if (st2) { buyBtn.textContent = st2; buyBtn.disabled = true; }
       else { buyBtn.textContent = '購買入場券'; buyBtn.disabled = false; }
+      var ib = document.getElementById('inlineBuy');
+      if (ib) { ib.disabled = buyBtn.disabled; ib.textContent = buyBtn.disabled ? buyBtn.textContent : '立即購票'; }
       observe();
     }
 
