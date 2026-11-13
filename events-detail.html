@@ -121,6 +121,11 @@
     .footer-bar { position:fixed; left:0; right:0; bottom:0; z-index:60; padding:30px 20px calc(16px + env(safe-area-inset-bottom,0px)); background:linear-gradient(180deg,rgba(7,7,10,0),rgba(7,7,10,.85) 45%); pointer-events:none; }
     .btn { pointer-events:auto; width:100%; max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:center; padding:16px 18px; border-radius:980px; border:0; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); box-shadow:0 8px 20px -8px rgba(94,92,230,.8); }
     .btn:disabled { opacity:.6; cursor:not-allowed; background:#3a3a3c; box-shadow:none; }
+
+    .spinner { width:38px; height:38px; border-radius:50%; border:3.5px solid rgba(255,255,255,.14); border-top-color:#64d2ff; border-right-color:#5e5ce6; animation:mskSpin .8s linear infinite; will-change:transform; }
+    @keyframes mskSpin { to { transform:rotate(360deg); } }
+    .loading { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:60vh; color:rgba(255,255,255,.6); font-size:14px; letter-spacing:.08em; }
+    @media (prefers-reduced-motion:reduce) { .spinner { animation-duration:1.6s; } }
     .empty { color:rgba(255,255,255,.6); padding:160px 0; text-align:center; }
 
     .reveal { opacity:0; transform:translate3d(0,22px,0); transition:opacity .55s ease-out, transform .55s cubic-bezier(.2,.8,.2,1); will-change:opacity,transform; }
@@ -133,7 +138,7 @@
     <button type="button" class="back-btn" id="backBtn" aria-label="返回">‹</button>
     <div class="topbar-title" id="topTitle">活動介紹</div>
   </header>
-  <main id="stage"><p class="empty">載入中…</p></main>
+  <main id="stage"><div class="loading" role="status" aria-live="polite"><div class="spinner"></div><span>載入中</span></div></main>
   <div class="footer-bar"><button type="button" class="btn" id="buyBtn" disabled>購買入場券</button></div>
   <script src="/auth.js"></script>
   <script>

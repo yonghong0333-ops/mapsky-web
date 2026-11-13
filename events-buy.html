@@ -25,6 +25,14 @@
     .btn { width:100%; max-width:480px; margin:0 auto; display:flex; align-items:center; justify-content:center; padding:14px 18px; border-radius:980px; border:0; font-size:16px; font-weight:650; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,#0A84FF,#5e5ce6,#bf5af2); }
     .btn:disabled { opacity:0.35; cursor:not-allowed; background:#3a3a3c; }
     .empty { color:var(--dim); padding:24px 0; }
+
+    .spinner { width:38px; height:38px; border-radius:50%; border:3.5px solid rgba(255,255,255,.14); border-top-color:#64d2ff; border-right-color:#5e5ce6; animation:mskSpin .8s linear infinite; will-change:transform; }
+    @keyframes mskSpin { to { transform:rotate(360deg); } }
+    .loading { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:60vh; color:rgba(255,255,255,.6); font-size:14px; letter-spacing:.08em; }
+    @media (prefers-reduced-motion:reduce) { .spinner { animation-duration:1.6s; } }
+    h1.is-loading { font-size:0; line-height:0; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:55vh; }
+    h1.is-loading::before { content:""; width:38px; height:38px; border-radius:50%; border:3.5px solid rgba(255,255,255,.14); border-top-color:#64d2ff; border-right-color:#5e5ce6; animation:mskSpin .8s linear infinite; }
+    h1.is-loading::after { content:"載入中"; font-size:14px; line-height:1.4; font-weight:400; letter-spacing:.08em; color:rgba(255,255,255,.6); }
     .pay-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14px; }
   </style>
   <script src="/page-transition.js"></script>
@@ -35,7 +43,7 @@
     <div class="topbar-title" id="topTitle">購買入場券</div>
   </header>
   <div class="stage" id="screenMain">
-    <h1 id="title">載入中…</h1>
+    <h1 id="title" class="is-loading" role="status">載入中…</h1>
     <p class="lead" id="lead"></p>
     <div id="sessionList"></div>
     <div id="packageList"></div>
@@ -64,6 +72,12 @@
       topTitle: document.getElementById('topTitle'),
       backBtn: document.getElementById('backBtn')
     };
+    (function () {
+      var t = document.getElementById('title');
+      if (!t || !window.MutationObserver) return;
+      var mo = new MutationObserver(function () { t.classList.remove('is-loading'); mo.disconnect(); });
+      mo.observe(t, { childList: true, characterData: true, subtree: true });
+    })();
     function parseTW(s) {
       if (!s) return null;
       var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?/);
