@@ -1,48 +1,48 @@
 [
   {
-    "visibleFrom": "2026-11-12 22:22:55",
-    "appShowUntil": "2027-11-12 22:22:55",
-    "priceLabel": "免費開放",
-    "badge": "定期評量",
-    "schedule": "",
-    "price": 0,
-    "saleEnd": "2027-11-12 22:22:55",
     "currency": "TWD",
     "appShowFrom": "2026-11-12 22:22:55",
-    "packages": [],
-    "introNote": "",
-    "ticketLabel": "購買入場券",
+    "saleEnd": "2027-11-12 22:22:55",
     "id": "qx-exam",
-    "title": "Qx 定期評量",
-    "description": "",
-    "introHero": "Qx 定期評量",
     "sessions": [
       {
-        "examDate": "2026-11-19",
-        "date": "2026/11/19 14:00 – 15:00",
         "saleEnd": "2027-11-12 22:22:55",
-        "place": "線上",
-        "name": "Test",
+        "note": "",
+        "id": "session-1794493658",
+        "price": 0,
         "saleStart": "2026-11-12 22:22:55",
-        "examEnd": "2026-11-19 15:00:00",
-        "capacity": 0,
+        "subjects": "test",
         "subjectList": [
           {
             "name": "test",
             "range": "",
-            "start": "2026-11-19 14:00:00",
-            "end": "2026-11-19 15:00:00"
+            "end": "2026-11-19 15:00:00",
+            "start": "2026-11-19 14:00:00"
           }
         ],
-        "price": 0,
-        "subjects": "test",
-        "id": "session-1794493658",
+        "capacity": 0,
+        "examDate": "2026-11-19",
+        "date": "2026/11/19 14:00 – 15:00",
         "syllabus": "test 2026/11/19 14:00 – 15:00 ",
+        "name": "Test",
+        "place": "線上",
         "examStart": "2026-11-19 14:00:00",
-        "note": ""
+        "examEnd": "2026-11-19 15:00:00"
       }
     ],
-    "saleStart": "2026-11-12 22:22:55",
-    "enabled": true
+    "price": 0,
+    "enabled": true,
+    "packages": [],
+    "visibleFrom": "2026-11-12 22:22:55",
+    "introHero": "Qx 定期評量",
+    "badge": "定期評量",
+    "schedule": "",
+    "ticketLabel": "購買入場券",
+    "priceLabel": "免費開放",
+    "description": "",
+    "introNote": "",
+    "appShowUntil": "2027-11-12 22:22:55",
+    "title": "Qx 定期評量",
+    "saleStart": "2026-11-12 22:22:55"
   }
 ]
