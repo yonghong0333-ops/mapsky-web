@@ -1,1 +1,22 @@
-{}
+{
+  "yonghong0333@gmail.com": {
+    "qx-exam": {
+      "eventId": "qx-exam",
+      "sessionId": "session-1794535933",
+      "packageId": "free",
+      "sessionName": "2026/11/24 08:20 – 10:40",
+      "packageName": "free",
+      "price": 0,
+      "subjects": "作文、自修",
+      "syllabus": "作文 2026/11/24 08:20 – 09:20 \n自修 2026/11/24 09:40 – 10:40 ",
+      "date": "2026/11/24 08:20 – 10:40",
+      "place": "線上",
+      "email": "yonghong0333@gmail.com",
+      "name": "小學生",
+      "at": "2026-11-13T05:26:33.969Z",
+      "bound": true,
+      "syncedToApp": true,
+      "orderId": "ORD-MWEJAWQJ"
+    }
+  }
+}
