@@ -5,6 +5,7 @@ window.__msBootReveal = function () {
   var start = Date.now(), MIN = 250, MAX = 2500, done = false;
   function ready() {
     var links = document.querySelectorAll('link[rel~="stylesheet"]');
+    if (window.__msHomeEventsPending) return false;
     for (var i = 0; i < links.length; i++) { if (!links[i].sheet) return false; }
     if (document.fonts && document.fonts.status === 'loading') return false;
     var imgs = document.images;
@@ -156,7 +157,16 @@ window.__msBootReveal = function () {
     blurFix.textContent='.iphone-modal-overlay,.iphone-modal-overlay::before{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:auto!important;min-height:100dvh!important;min-height:100svh!important;min-height:-webkit-fill-available!important;}';
     document.head.appendChild(blurFix);
 
+    window.__msHomeEventsPending = true;
     await (async function () { eval(code); }).call(window);
+
+    // 「最新消息」最上面貼上活動卡片（同 /events 頁）
+    (function () {
+      var s = document.createElement('script');
+      s.src = '/home-events.js?v=1';
+      s.onerror = function () { window.__msHomeEventsPending = false; };
+      document.body.appendChild(s);
+    })();
 
     (function () {
       function findIpadCard(node) {
