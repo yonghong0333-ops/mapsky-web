@@ -21,6 +21,7 @@
     BossCyclops: 1,
     QxEgg: 1
   };
+  var BOSS_CDN = 'https://mapskyweb.vercel.app/assets/bosses/';
 
   function bossName(id) {
     if (!id) return '自動輪替';
@@ -52,8 +53,8 @@
       '.day-head .dh-count{font-size:13px;padding:5px 12px;border-radius:980px;background:rgba(191,90,242,.28);color:#e0aaff;font-weight:600}',
       '.slot-row{display:flex;gap:16px;align-items:center;padding:18px;border-bottom:1px solid rgba(255,255,255,.07)}',
       '.slot-row:last-child{border-bottom:0}',
-      '.slot-boss{flex:0 0 96px;width:96px;height:96px;border-radius:20px;display:grid;place-items:center;font-size:32px;overflow:hidden;box-shadow:0 8px 24px -12px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18)}',
-      '.slot-boss img{width:100%;height:100%;object-fit:cover}',
+      '.slot-boss{flex:0 0 96px;width:96px;height:96px;border-radius:20px;display:grid;place-items:center;font-size:32px;overflow:hidden;box-shadow:0 8px 24px -12px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);background:#1a1030}',
+      '.slot-boss img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}',
       '.slot-body{flex:1;min-width:0}',
       '.slot-name{font-size:17px;font-weight:750;color:#fff;margin:0 0 6px}',
       '.slot-meta{font-size:13px;color:rgba(255,255,255,.65);margin:0 0 4px}',
@@ -136,22 +137,24 @@
     bossEl.style.background = 'linear-gradient(135deg,' + r.meta.color + '55,' + r.meta.color + '22)';
     bossEl.style.borderColor = r.meta.color + '77';
     var imgs = window.MAPSKY_BOSS_IMGS || {};
-    var imgId = HAS_IMG[r.id] ? r.id : null;
-    var src = imgs[r.id] || (imgId ? ('/assets/bosses/' + imgId + '.webp') : null);
-    if (src) {
-      var im = document.createElement('img');
-      im.src = src;
-      im.alt = r.meta.name;
-      im.loading = 'lazy';
-      im.decoding = 'async';
-      im.onerror = function () {
-        bossEl.innerHTML = '';
-        bossEl.textContent = r.meta.emoji;
-      };
-      bossEl.appendChild(im);
-    } else {
+    var imgId = r.id;
+    var src = imgs[imgId] || (BOSS_CDN + imgId + '.webp');
+    var im = document.createElement('img');
+    im.src = src;
+    im.alt = r.meta.name;
+    im.loading = 'eager';
+    im.decoding = 'async';
+    im.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+    im.onerror = function () {
+      if (im.dataset.tried !== '1') {
+        im.dataset.tried = '1';
+        im.src = BOSS_CDN + imgId + '.png';
+        return;
+      }
+      bossEl.innerHTML = '';
       bossEl.textContent = r.meta.emoji;
-    }
+    };
+    bossEl.appendChild(im);
     row.appendChild(bossEl);
     return r;
   }
