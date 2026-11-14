@@ -1,42 +1,88 @@
 [
   {
-    "saleStart": "2026-11-16 10:03:00",
-    "currency": "TWD",
-    "schedule": "",
+    "id": "qx-exam",
     "description": "",
-    "priceLabel": "免費開放",
-    "ticketLabel": "購買入場券",
-    "enabled": true,
-    "visibleFrom": "2026-11-24 05:22:00",
-    "appShowUntil": "2026-11-26 17:00:00",
+    "packages": [],
+    "visibleFrom": "2026-11-24 05:00:00",
     "price": 0,
+    "currency": "TWD",
+    "saleStart": "2026-11-16 10:00:00",
+    "enabled": true,
+    "badge": "定期評量",
+    "appShowUntil": "2026-11-26 17:00:00",
+    "ticketLabel": "購買入場券",
+    "saleEnd": "2027-11-21 20:00:00",
+    "appShowFrom": "2026-11-24 05:00:00",
+    "introHero": "Q8 定期評量",
     "introNote": "",
+    "priceLabel": "免費開放",
     "sessions": [
       {
-        "saleEnd": "2027-11-21 20:00:00",
+        "id": "session-1794660768",
         "note": "",
-        "name": "123",
-        "date": "2026/11/13",
+        "subjectList": [
+          {
+            "start": "2026-11-24 08:20:00",
+            "boss": "BossCrystalSpider",
+            "name": "作文",
+            "range": "面對Ai環境應做的準備",
+            "end": "2026-11-24 09:20:00"
+          },
+          {
+            "end": "2026-11-24 10:40:00",
+            "boss": "BossCrystalSpider",
+            "start": "2026-11-24 09:40:00",
+            "range": "",
+            "name": "自修"
+          },
+          {
+            "start": "2026-11-24 11:00:00",
+            "end": "2026-11-24 12:00:00",
+            "boss": "BossCrystalSpider",
+            "name": "自修",
+            "range": ""
+          },
+          {
+            "name": "自修",
+            "boss": "BossLavaDragon2",
+            "end": "2026-11-24 14:50:00",
+            "range": "",
+            "start": "2026-11-24 13:50:00"
+          },
+          {
+            "range": "",
+            "name": "",
+            "end": "2026-11-14 15:00:00",
+            "start": "2026-11-14 14:00:00"
+          },
+          {
+            "name": "",
+            "range": "",
+            "start": "2026-11-14 14:00:00",
+            "end": "2026-11-14 15:00:00"
+          }
+        ],
+        "date": "2026/11/14",
+        "saleStart": "2026-11-16 10:00:00",
         "price": 0,
-        "saleStart": "2026-11-16 10:03:00",
-        "examEnd": "2026-11-13 20:53:00",
-        "subjectList": [],
-        "capacity": 0,
-        "id": "session-1794569484",
+        "examStart": "2026-11-14 14:00:00",
+        "examDate": "2026-11-14",
+        "name": "2026/11/14",
         "place": "線上",
-        "examDate": "2026-11-13",
-        "examStart": "2026-11-13 20:53:00",
-        "syllabus": "",
-        "subjects": ""
+        "saleEnd": "2027-11-21 20:00:00",
+        "subjects": "作文、自修、自修、自修",
+        "syllabus": "作文 2026/11/24 08:20 – 09:20 面對Ai環境應做的準備\n自修 2026/11/24 09:40 – 10:40 \n自修 2026/11/24 11:00 – 12:00 \n自修 2026/11/24 13:50 – 14:50 \n 2026/11/14 14:00 – 15:00 \n 2026/11/14 14:00 – 15:00 ",
+        "examEnd": "2026-11-24 14:50:00",
+        "capacity": 0
       }
     ],
-    "introHero": "Q8 定期評量",
-    "saleEnd": "2027-11-21 20:00:00",
-    "packages": [],
-    "id": "qx-exam",
-    "badge": "定期評量",
+    "bossSchedule": [
+      {
+        "end": "2026-11-14 15:00:00",
+        "start": "2026-11-14 14:00:00"
+      }
+    ],
     "title": "Q8 定期評量",
-    "appShowFrom": "2026-11-24 05:22:00",
-    "bossSchedule": []
+    "schedule": ""
   }
 ]
