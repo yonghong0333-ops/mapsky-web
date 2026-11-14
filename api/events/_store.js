@@ -190,6 +190,99 @@ async function saveTickets(tickets) {
   return put;
 }
 
+/** 把「yyyy-MM-dd HH:mm:ss」當成台灣時間（UTC+8）轉成 Date */
+function parseTwDate(s) {
+  if (!s) return null;
+  const str = String(s).trim().replace(/\//g, '-');
+  // 已有時區標記
+  if (/[zZ]|[+-]\d{2}:?\d{2}$/.test(str)) {
+    const d = new Date(str);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  // ISO 無時區：當台灣時間
+  const m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+  if (!m) {
+    const d = new Date(str);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  const y = +m[1], mo = +m[2] - 1, day = +m[3];
+  const h = +(m[4] || 0), mi = +(m[5] || 0), se = +(m[6] || 0);
+  // 台灣 = UTC+8 → UTC = 本地 - 8h
+  return new Date(Date.UTC(y, mo, day, h - 8, mi, se));
+}
+
+/**
+ * 活動結束時間：
+ * 1) 優先 appShowUntil（後台「結束顯示」）
+ * 2) 否則取各場次 examEnd 最晚者
+ * 3) 再否則取 saleEnd
+ */
+function eventEndTime(ev) {
+  if (!ev) return null;
+  const candidates = [];
+  if (ev.appShowUntil) candidates.push(parseTwDate(ev.appShowUntil));
+  const sessions = Array.isArray(ev.sessions) ? ev.sessions : [];
+  for (const s of sessions) {
+    if (s && s.examEnd) candidates.push(parseTwDate(s.examEnd));
+    if (s && s.end) candidates.push(parseTwDate(s.end));
+  }
+  if (ev.saleEnd) candidates.push(parseTwDate(ev.saleEnd));
+  const valid = candidates.filter((d) => d && !Number.isNaN(d.getTime()));
+  if (!valid.length) return null;
+  return new Date(Math.max(...valid.map((d) => d.getTime())));
+}
+
+function isEventEnded(ev, now = new Date()) {
+  const end = eventEndTime(ev);
+  if (!end) return false;
+  return now.getTime() > end.getTime();
+}
+
+/**
+ * 掃過所有票券：活動已結束就自動刪除（收回入場券）。
+ * 在 GET /api/events/tickets、購票前呼叫。
+ * @returns {{ revoked: number, eventIds: string[] }}
+ */
+async function revokeExpiredTickets() {
+  const config = await loadConfig();
+  const all = await loadTickets();
+  const now = new Date();
+  const endedIds = new Set();
+
+  for (const ev of config || []) {
+    if (ev && ev.id && isEventEnded(ev, now)) {
+      endedIds.add(String(ev.id));
+    }
+  }
+
+  // 沒有設定結束時間的活動不自動收回
+  if (!endedIds.size) {
+    return { revoked: 0, eventIds: [] };
+  }
+
+  let revoked = 0;
+  const emails = Object.keys(all || {});
+  for (const email of emails) {
+    const byEvent = all[email] || {};
+    for (const eventId of Object.keys(byEvent)) {
+      if (endedIds.has(String(eventId))) {
+        delete byEvent[eventId];
+        revoked += 1;
+      }
+    }
+    if (Object.keys(byEvent).length === 0) {
+      delete all[email];
+    } else {
+      all[email] = byEvent;
+    }
+  }
+
+  if (revoked > 0) {
+    await saveTickets(all);
+  }
+  return { revoked, eventIds: Array.from(endedIds) };
+}
+
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS,DELETE');
@@ -229,5 +322,6 @@ function isAdmin(session) {
 
 module.exports = {
   loadConfig, saveConfig, loadTickets, saveTickets,
-  cors, verifySession, userKey, isAdmin, mem, getToken
+  cors, verifySession, userKey, isAdmin, mem, getToken,
+  parseTwDate, eventEndTime, isEventEnded, revokeExpiredTickets
 };

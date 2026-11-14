@@ -1,5 +1,6 @@
 const {
-  loadTickets, saveTickets, loadConfig, cors, verifySession, userKey, isAdmin
+  loadTickets, saveTickets, loadConfig, cors, verifySession, userKey, isAdmin,
+  revokeExpiredTickets, isEventEnded
 } = require('./_store');
 
 module.exports = async function handler(req, res) {
@@ -19,6 +20,15 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'GET') {
     if (!uid) return res.status(401).json({ ok: false, reason: 'login_required', tickets: [] });
+
+    // 活動已結束 → 自動收回入場券
+    let cleanup = { revoked: 0, eventIds: [] };
+    try {
+      cleanup = await revokeExpiredTickets();
+    } catch (e) {
+      console.error('revokeExpiredTickets', e && e.message);
+    }
+
     const all = await loadTickets();
     if (isAdmin(session) && (req.query.all === '1' || req.query.all === 'true')) {
       const flat = [];
@@ -28,11 +38,24 @@ module.exports = async function handler(req, res) {
           flat.push({ email, eventId, ...(byEvent[eventId] || {}) });
         });
       });
-      return res.status(200).json({ ok: true, tickets: flat, admin: true, raw: all });
+      return res.status(200).json({
+        ok: true,
+        tickets: flat,
+        admin: true,
+        raw: all,
+        autoRevoked: cleanup.revoked,
+        endedEvents: cleanup.eventIds
+      });
     }
     const mine = all[uid] || {};
     const list = Object.keys(mine).map((eventId) => ({ eventId, ...mine[eventId] }));
-    return res.status(200).json({ ok: true, tickets: list, email: uid });
+    return res.status(200).json({
+      ok: true,
+      tickets: list,
+      email: uid,
+      autoRevoked: cleanup.revoked,
+      endedEvents: cleanup.eventIds
+    });
   }
 
   if (req.method === 'POST') {
@@ -62,14 +85,34 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // 一般購票
+    // 管理員手動觸發「收回所有已結束活動的票」
+    if (body.action === 'revoke-expired') {
+      if (!isAdmin(session)) return res.status(403).json({ ok: false, reason: 'admin_required' });
+      try {
+        const cleanup = await revokeExpiredTickets();
+        return res.status(200).json({ ok: true, ...cleanup });
+      } catch (e) {
+        return res.status(500).json({ ok: false, error: String((e && e.message) || e).slice(0, 200) });
+      }
+    }
+
+    // 一般購票前：先清掉已結束活動的票，並禁止買已結束的活動
+    try {
+      await revokeExpiredTickets();
+    } catch (e) {
+      console.error('revokeExpiredTickets before buy', e && e.message);
+    }
+
     const eventId = String(body.eventId || 'qx-exam');
     const sessionId = String(body.sessionId || '');
-    const packageId = String(body.packageId || 'basic');
-    if (!sessionId) return res.status(400).json({ ok: false, reason: 'session_required' });
+    const packageId = String(body.packageId || body.package || 'free');
 
     const config = await loadConfig();
     const ev = (config || []).find((e) => e.id === eventId) || (config || [])[0];
+    if (ev && isEventEnded(ev)) {
+      return res.status(400).json({ ok: false, reason: 'event_ended', message: '活動已結束，無法再購買入場券' });
+    }
+
     const sess = ((ev && ev.sessions) || []).find((s) => s.id === sessionId) || {};
     const pkg = ((ev && ev.packages) || []).find((p) => p.id === packageId) || { id: packageId, name: packageId, price: 0 };
 
