@@ -1,63 +1,72 @@
 [
   {
-    "priceLabel": "免費開放",
-    "introHero": "Q8 定期評量",
-    "id": "qx-exam",
-    "appShowFrom": "2026-11-24 05:00:00",
-    "title": "Q8 定期評量",
-    "description": "",
     "schedule": "",
+    "description": "",
+    "badge": "定期評量",
+    "appShowFrom": "2026-11-24 05:00:00",
+    "priceLabel": "免費開放",
+    "introNote": "",
+    "title": "Q8 定期評量",
+    "saleStart": "2026-11-16 10:00:00",
+    "price": 0,
+    "saleEnd": "2027-11-21 20:00:00",
+    "id": "qx-exam",
+    "ticketLabel": "購買入場券",
+    "visibleFrom": "2026-11-24 05:00:00",
     "sessions": [
       {
-        "examDate": "2026-11-24",
-        "price": 0,
-        "examStart": "2026-11-24 08:20:00",
         "subjects": "作文、自修、自修、自修、國語文、數位邏輯設計、自修、自修、自修、英語文 、電子學、自修、自修、自修、數學",
-        "note": "",
+        "id": "session-1794660768",
         "syllabus": "作文 2026/11/24 08:20 – 09:20 面對Ai環境應做的準備\n自修 2026/11/24 09:40 – 10:40 \n自修 2026/11/24 11:00 – 12:00 \n自修 2026/11/24 13:50 – 14:50 \n國語文 2026/11/24 15:00 – 16:15 課本：L2、L3、L9 閱讀文選：L2、L5\n數位邏輯設計 2026/11/25 08:20 – 09:20 \n自修 2026/11/25 09:40 – 10:40 \n自修 2026/11/25 11:00 – 12:00 \n自修 2026/11/25 13:50 – 14:50 \n英語文  2026/11/25 15:15 – 16:15 L3、L4\n電子學 2026/11/26 08:20 – 09:20 \n自修 2026/11/26 09:40 – 10:40 \n自修 2026/11/26 11:00 – 12:00 \n自修 2026/11/26 13:50 – 14:50 \n數學 2026/11/26 15:15 – 15:15 2-2 - 2-5",
+        "saleStart": "2026-11-16 10:00:00",
+        "name": "2026/11/24",
+        "capacity": 0,
+        "examStart": "2026-11-24 08:20:00",
+        "examEnd": "2026-11-26 15:15:00",
+        "date": "2026/11/24",
         "place": "線上",
         "subjectList": [
           {
+            "range": "面對Ai環境應做的準備",
+            "name": "作文",
             "start": "2026-11-24 08:20:00",
             "end": "2026-11-24 09:20:00",
-            "range": "面對Ai環境應做的準備",
-            "boss": "BossCrystalSpider",
-            "name": "作文"
+            "boss": "BossCrystalSpider"
           },
           {
-            "end": "2026-11-24 10:40:00",
-            "range": "",
-            "boss": "BossCrystalSpider",
             "start": "2026-11-24 09:40:00",
+            "end": "2026-11-24 10:40:00",
+            "boss": "BossCrystalSpider",
+            "range": "",
             "name": "自修"
           },
           {
-            "start": "2026-11-24 11:00:00",
             "end": "2026-11-24 12:00:00",
-            "boss": "BossCrystalSpider",
             "name": "自修",
-            "range": ""
+            "range": "",
+            "start": "2026-11-24 11:00:00",
+            "boss": "BossCrystalSpider"
           },
           {
+            "end": "2026-11-24 14:50:00",
             "name": "自修",
-            "start": "2026-11-24 13:50:00",
             "range": "",
             "boss": "BossLavaDragon2",
-            "end": "2026-11-24 14:50:00"
+            "start": "2026-11-24 13:50:00"
           },
           {
-            "start": "2026-11-24 15:00:00",
+            "end": "2026-11-24 16:15:00",
             "boss": "BossLavaDragon2",
             "name": "國語文",
-            "range": "課本：L2、L3、L9 閱讀文選：L2、L5",
-            "end": "2026-11-24 16:15:00"
+            "start": "2026-11-24 15:00:00",
+            "range": "課本：L2、L3、L9 閱讀文選：L2、L5"
           },
           {
+            "start": "2026-11-25 08:20:00",
+            "range": "",
             "end": "2026-11-25 09:20:00",
             "boss": "BossCyclops",
-            "name": "數位邏輯設計",
-            "range": "",
-            "start": "2026-11-25 08:20:00"
+            "name": "數位邏輯設計"
           },
           {
             "end": "2026-11-25 10:40:00",
@@ -69,84 +78,76 @@
           {
             "name": "自修",
             "range": "",
-            "boss": "BossCyclops",
             "end": "2026-11-25 12:00:00",
-            "start": "2026-11-25 11:00:00"
+            "start": "2026-11-25 11:00:00",
+            "boss": "BossCyclops"
           },
           {
-            "end": "2026-11-25 14:50:00",
             "start": "2026-11-25 13:50:00",
-            "boss": "BossDeathKnight",
+            "end": "2026-11-25 14:50:00",
+            "name": "自修",
             "range": "",
+            "boss": "BossDeathKnight"
+          },
+          {
+            "range": "L3、L4",
+            "name": "英語文 ",
+            "end": "2026-11-25 16:15:00",
+            "boss": "BossDeathKnight",
+            "start": "2026-11-25 15:15:00"
+          },
+          {
+            "range": "",
+            "start": "2026-11-26 08:20:00",
+            "boss": "BossDemonLord",
+            "end": "2026-11-26 09:20:00",
+            "name": "電子學"
+          },
+          {
+            "range": "",
+            "start": "2026-11-26 09:40:00",
+            "end": "2026-11-26 10:40:00",
+            "boss": "BossCrystalSpider",
             "name": "自修"
           },
           {
-            "end": "2026-11-25 16:15:00",
-            "boss": "BossDeathKnight",
-            "range": "L3、L4",
-            "start": "2026-11-25 15:15:00",
-            "name": "英語文 "
-          },
-          {
-            "range": "",
-            "end": "2026-11-26 09:20:00",
-            "name": "電子學",
-            "start": "2026-11-26 08:20:00",
-            "boss": "BossDemonLord"
-          },
-          {
-            "name": "自修",
-            "range": "",
-            "end": "2026-11-26 10:40:00",
-            "start": "2026-11-26 09:40:00",
-            "boss": "BossCrystalSpider"
-          },
-          {
             "boss": "BossCrystalSpider",
             "name": "自修",
+            "start": "2026-11-26 11:00:00",
             "range": "",
-            "end": "2026-11-26 12:00:00",
-            "start": "2026-11-26 11:00:00"
+            "end": "2026-11-26 12:00:00"
           },
           {
-            "name": "自修",
+            "range": "",
             "start": "2026-11-26 13:50:00",
-            "boss": "BossCrystalSpider",
             "end": "2026-11-14 14:50:00",
-            "range": ""
+            "boss": "BossCrystalSpider",
+            "name": "自修"
           },
           {
-            "name": "數學",
             "range": "2-2 - 2-5",
             "start": "2026-11-26 15:15:00",
-            "end": "2026-11-26 15:15:00"
+            "boss": "BossDemonLord",
+            "end": "2026-11-26 15:15:00",
+            "name": "數學"
           }
         ],
-        "saleStart": "2026-11-16 10:00:00",
-        "name": "2026/11/24",
-        "date": "2026/11/24",
-        "id": "session-1794660768",
-        "capacity": 0,
-        "examEnd": "2026-11-26 15:15:00",
-        "saleEnd": "2027-11-21 20:00:00"
+        "saleEnd": "2027-11-21 20:00:00",
+        "examDate": "2026-11-24",
+        "note": "",
+        "price": 0
       }
     ],
-    "visibleFrom": "2026-11-24 05:00:00",
-    "badge": "定期評量",
     "appShowUntil": "2026-11-26 17:00:00",
-    "packages": [],
-    "saleStart": "2026-11-16 10:00:00",
-    "introNote": "",
-    "currency": "TWD",
     "bossSchedule": [
       {
         "start": "2026-11-14 14:00:00",
         "end": "2026-11-14 15:00:00"
       }
     ],
+    "packages": [],
+    "introHero": "Q8 定期評量",
     "enabled": true,
-    "saleEnd": "2027-11-21 20:00:00",
-    "ticketLabel": "購買入場券",
-    "price": 0
+    "currency": "TWD"
   }
 ]
